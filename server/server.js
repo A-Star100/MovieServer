@@ -278,9 +278,12 @@ process.on('SIGINT', () => {
   process.exit();
 });
 
-const os = require('os');
+// Check if the '--disable-meminfo' flag is passed in the command-line arguments
+const isMemInfoEnabled = process.argv.includes('--enable-memreport');
 
-// Run Node.js with the --expose-gc flag to enable garbage collection, set at an interval to avoid high usage of RAM, especially on systems with low RAM
+// Function to log memory information
+
+// Check if manual GC is available (i.e., Node was started with --expose-gc)
 if (global.gc) {
   console.log('Garbage collection is available!');
 } else {
@@ -289,6 +292,7 @@ if (global.gc) {
 
 // Function to check memory usage and trigger garbage collection if needed
 function monitorMemoryUsage() {
+  if (isMemInfoEnabled) {
   const memoryStats = process.memoryUsage();
   const usedMemory = memoryStats.rss / 1024 / 1024; // Convert to MB
   const heapUsed = memoryStats.heapUsed / 1024 / 1024; // Convert to MB
@@ -309,10 +313,27 @@ function monitorMemoryUsage() {
     // Trigger garbage collection
     global.gc();
   }
-}
+  } else {
+    const memoryStats = process.memoryUsage();
+  const usedMemory = memoryStats.rss / 1024 / 1024; // Convert to MB
+  
+  // Check if used memory exceeds 50% of total available system memory
+  const totalMemory = os.totalmem() / 1024 / 1024; // Total system memory in MB
+  const usedPercentage = (usedMemory / totalMemory) * 100;
+  
+  if (usedPercentage > 40) {
+    console.log(`Memory usage is over 40%! Running GC...`);
+    
+    // Trigger garbage collection
+    global.gc();
+  }
+}}
 
-// Run memory check every 5 seconds
-setInterval(monitorMemoryUsage, 5000);
+// Run memory check every 10 seconds
+setInterval(monitorMemoryUsage, 10000);
+if (!isMemInfoEnabled) {
+  console.log("Memory and heap info reporting disabled, start Node with the --enable-memreport flag to see this info in the console")
+}
 
 
 
