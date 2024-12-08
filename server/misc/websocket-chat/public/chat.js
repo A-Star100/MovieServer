@@ -134,3 +134,8 @@ messageInput.addEventListener('keydown', function(event) {
 socket.addEventListener('close', () => {
   alert('Disconnected from the chat server.');
 });
+
+ // Save messages before the page is unloaded (including refresh)
+    window.addEventListener('beforeunload', () => {
+      saveMessagesToLocalStorage();
+    });
