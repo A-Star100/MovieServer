@@ -4,6 +4,6 @@ This is not a tool that creates a movie server, rather source code for a potenti
 | -------- | ------- |
 | Node.js  | **Mandatory**    |
 | Python 3 | **Optional**    |
-| Jellyfin    | **Optional, but recommended for more media UI*** |
+| Jellyfin    | **Optional, but recommended for more media UI** |
 
 Any Node.js libraries will be included in the node_modules folder(s)
