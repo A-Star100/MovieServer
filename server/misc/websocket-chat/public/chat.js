@@ -14,31 +14,54 @@ if (!username) {
 }
 
 // Function to read the cookie and restore the messages
+// Function to read the cookie and restore the messages
 // Save messages to localStorage
 function saveMessagesToCookie() {
   const messagesList = document.getElementById('messages');
   const messages = [];
-
+  
   // Loop through <li> elements and save their text content
   for (const messageElement of messagesList.children) {
     messages.push(messageElement.textContent);
   }
 
-  // Store the messages in localStorage
-  localStorage.setItem('messages', JSON.stringify(messages));
+  // Get the current time (in milliseconds)
+  const currentTime = Date.now();
+  
+  // Set expiration time to 1 week (7 days)
+  const expirationTime = 7 * 24 * 60 * 60 * 1000;  // 1 week in milliseconds
+  
+  // Store messages along with the timestamp and expiration time
+  const data = {
+    messages: messages,
+    timestamp: currentTime,
+    expiration: expirationTime
+  };
+
+  localStorage.setItem('messages', JSON.stringify(data));
 }
 
 // Restore messages from localStorage
 function restoreMessagesFromCookie() {
-  const messages = JSON.parse(localStorage.getItem('messages'));
+  const storedData = JSON.parse(localStorage.getItem('messages'));
 
-  if (messages) {
-    const messagesList = document.getElementById('messages');
-    messages.forEach(message => {
-      const messageElement = document.createElement('li');
-      messageElement.textContent = message;
-      messagesList.appendChild(messageElement);
-    });
+  if (storedData) {
+    const currentTime = Date.now();
+    const timeElapsed = currentTime - storedData.timestamp;
+    
+    // If the stored data is older than 1 week, remove it
+    if (timeElapsed > storedData.expiration) {
+      localStorage.removeItem('messages');
+      console.log('Stored messages expired, removing from localStorage');
+    } else {
+      // Otherwise, restore the messages
+      const messagesList = document.getElementById('messages');
+      storedData.messages.forEach(message => {
+        const messageElement = document.createElement('li');
+        messageElement.textContent = message;
+        messagesList.appendChild(messageElement);
+      });
+    }
   }
 }
 
