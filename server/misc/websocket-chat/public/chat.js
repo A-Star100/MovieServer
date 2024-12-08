@@ -13,6 +13,34 @@ if (!username) {
   username = "Anonymous";  // Default to "Anonymous" if no username is provided
 }
 
+// Function to read the cookie and restore the messages
+// Save messages to localStorage
+function saveMessagesToCookie() {
+  const messagesList = document.getElementById('messages');
+  const messages = [];
+
+  // Loop through <li> elements and save their text content
+  for (const messageElement of messagesList.children) {
+    messages.push(messageElement.textContent);
+  }
+
+  // Store the messages in localStorage
+  localStorage.setItem('messages', JSON.stringify(messages));
+}
+
+// Restore messages from localStorage
+function restoreMessagesFromCookie() {
+  const messages = JSON.parse(localStorage.getItem('messages'));
+
+  if (messages) {
+    const messagesList = document.getElementById('messages');
+    messages.forEach(message => {
+      const messageElement = document.createElement('li');
+      messageElement.textContent = message;
+      messagesList.appendChild(messageElement);
+    });
+  }
+}
 
 // Log when WebSocket is connected
 socket.addEventListener('open', () => {
