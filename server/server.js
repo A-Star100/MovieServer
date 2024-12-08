@@ -332,7 +332,7 @@ function monitorMemoryUsage() {
 // Run memory check every 10 seconds
 setInterval(monitorMemoryUsage, 10000);
 if (!isMemInfoEnabled) {
-  console.log("Memory and heap info reporting disabled, start Node with the --enable-memreport flag to see this info in the console")
+  console.log("Memory and heap info reporting disabled, start Node with the --enable-memreport flag at the end of the command to see this info in the console")
 }
 
 
