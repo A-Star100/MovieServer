@@ -1,19 +1,21 @@
 // Connect to WebSocket server
-const socket = new WebSocket('ws://192.168.254.137:3000');
+const socket = new WebSocket('ws://localhost:3000');
 
 // Get references to DOM elements
 const messages = document.getElementById('messages');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
+const overlay = document.getElementById('overlay');
+overlay.style.display = "none";
 
 
 // Prompt user for username when they first load the page
-let username = prompt("Enter your username:");
+/*let username = prompt("Enter your username:");
 if (!username) {
   username = "Anonymous";  // Default to "Anonymous" if no username is provided
-}
+  alert("Your username will be Anonymous since you provided no username.")
+}*/
 
-// Function to read the cookie and restore the messages
 // Function to read the cookie and restore the messages
 // Save messages to localStorage
 function saveMessagesToCookie() {
@@ -42,6 +44,7 @@ function saveMessagesToCookie() {
 }
 
 // Restore messages from localStorage
+const messagesList = document.getElementById('messages');
 function restoreMessagesFromCookie() {
   const storedData = JSON.parse(localStorage.getItem('messages'));
 
@@ -52,10 +55,10 @@ function restoreMessagesFromCookie() {
     // If the stored data is older than 1 week, remove it
     if (timeElapsed > storedData.expiration) {
       localStorage.removeItem('messages');
+      messagesList.innerHTML = '';
       console.log('Stored messages expired, removing from localStorage');
     } else {
       // Otherwise, restore the messages
-      const messagesList = document.getElementById('messages');
       storedData.messages.forEach(message => {
         const messageElement = document.createElement('li');
         messageElement.textContent = message;
@@ -69,6 +72,7 @@ function restoreMessagesFromCookie() {
 socket.addEventListener('open', () => {
   console.log('WebSocket connection established');
 });
+
 
 
 // Handle incoming messages
@@ -111,6 +115,7 @@ sendBtn.addEventListener('click', () => {
     messageInput.value = '';  // Clear the input field after sending
     scrollToBottom();
     smallText.style.display = "none";
+    saveMessagesToCookie();
   }
 });
 // Select the message input element from the DOM
@@ -126,16 +131,24 @@ messageInput.addEventListener('keydown', function(event) {
         messageInput.value = '';  // Clear the input field after sending
         smallText.style.display = "none";
         scrollToBottom();
+        saveMessagesToCookie();
       }
     }
 });
 
 // Optionally, handle WebSocket close event
 socket.addEventListener('close', () => {
-  alert('Disconnected from the chat server.');
+  overlay.style.display = "block";
 });
 
  // Save messages before the page is unloaded (including refresh)
-    window.addEventListener('beforeunload', () => {
-      saveMessagesToLocalStorage();
-    });
+ window.addEventListener('beforeunload', () => {
+  saveMessagesToCookie();
+});
+
+function hideOverlay() {
+overlay.style.display = "none";
+}
+
+// Call this function when the page loads to restore any saved messages
+window.addEventListener('load', restoreMessagesFromCookie);
