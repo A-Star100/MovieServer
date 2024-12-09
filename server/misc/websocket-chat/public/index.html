@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JCDBME Chat</title>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <title>Chat</title>
   <style>
    /* Global Resets */
    * {
@@ -15,7 +13,7 @@
 
     /* Default (Light) Mode Styles */
     body {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Inter', sans-serif;
       background-color: #f5f5f5;
       color: #121212;
       display: flex;
@@ -41,8 +39,6 @@
     }
 
     #jellyfinIframe {
-      width: 100%;
-      height: 700px;
       border: none;
       transition: all 0.3s ease;
     }
@@ -94,7 +90,7 @@
       color: #121212;
     }
 
-    #sendBtn, #sendBtn2 {
+    #sendBtn, #sendBtn2, #sendBtn3 {
       cursor: pointer;
       width: 100%;
       padding: 10px;
@@ -106,7 +102,7 @@
       transition: background-color 0.2s ease;
     }
 
-    #sendBtn:hover, #sendBtn2:hover {
+    #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover {
       background-color: #777777;
     }
 
@@ -184,12 +180,12 @@
         color: #ffffff;
       }
 
-      #sendBtn, #sendBtn2 {
+      #sendBtn, #sendBtn2, #sendBtn3 {
         background-color: #555555;
         color: #ffffff;
       }
 
-      #sendBtn:hover, #sendBtn2:hover {
+      #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover {
         background-color: #777777;
       }
 
@@ -234,12 +230,12 @@
         color: #121212;
       }
 
-      #sendBtn, #sendBtn2 {
+      #sendBtn, #sendBtn2, #sendBtn3 {
         background-color: #555555;
         color: #ffffff;
       }
 
-      #sendBtn:hover, #sendBtn2:hover {
+      #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover{
         background-color: #777777;
       }
 
@@ -255,44 +251,13 @@
     html, body {
   overflow: hidden;
 }
-  </style>
-</head>
-
-<body>
-  <!-- Arrow Menu for toggling -->
-  <button id="menuArrow">→</button>
-
-  <!-- Main container holding iframe -->
-  <div id="mainContainer">
-    <iframe id="jellyfinIframe" src="http://192.168.254.177:8096" scrolling="yes" allowfullscreen></iframe>
-  </div>
-
-  <!-- Side Menu for Chat -->
-  <div id="sideMenu">
-    <h2>JCDBME Chat</h2>
-    <ul id="messages"></ul>
-    <input id="messageInput" type="text" placeholder="Type a message" />
-    <button id="sendBtn">Send</button>
-    <div class="border-box"></div>
-    <small id="heythere"></small>
-    <div class="border-box"></div>
-    <button id="sendBtn2" onclick="closeChatBox()">Close chatbox</button>
-  </div>
-
-
-  <script src="/chat.js"></script>
-  <noscript>
-    <style>
-      body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
 .overlay {
     display: none; /* Hide overlay by default */
+    text-align: center; 
+    margin: auto;
     position: fixed;
     top: 0;
+    bottom: 0;
     left: 0;
     width: 100%;
     height: 100%;
@@ -306,6 +271,87 @@
 }
 
 .overlay-content {
+  text-align: center; 
+    display: inline-block;
+    max-width: 80%;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    color: white;
+    border-radius: 5px;
+}
+
+.border-box {
+  height: 200px;
+}
+  </style>
+</head>
+
+<body>
+      <!-- Username Prompt --> <div id="usernamePrompt" style=" position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; display: flex; align-items: center; justify-content: center; flex-direction: column;"> <h2>Please enter your username:</h2> <input id="usernameInput" type="text" placeholder="Your username" style=" padding: 10px; font-size: 1rem; border: none; border-radius: 5px; margin-bottom: 10px;"> <button id="submitUsername" style=" padding: 10px 20px; font-size: 1rem; border: none; background-color: #555; color: white; border-radius: 5px; cursor: pointer;">Submit</button> </div>
+
+  <!-- Arrow Menu for toggling -->
+  <button id="menuArrow">→</button>
+
+  <!-- Main container holding iframe -->
+  <div id="mainContainer">
+    <h3>You can put something here for users to chat about, like a YouTube video, a movie, and much more!</h3>
+  </div>
+
+ <div id="overlay" class="overlay" style="display: block;">
+        <div class="overlay-content">
+            <p>Oops! Looks like you got disconnected from the server. This means it has either been shut down for the day or has run into an issue.</p>
+            <div class="border-box"></div>
+            <button onclick="hideOverlay()">OK
+            <!--<a href="http://192.168.254.137:3000"><button>Ok!</button></a>-->
+        </button></div>
+    </div>
+
+  <!-- Side Menu for Chat -->
+  <div id="sideMenu">
+    <h2>Chat</h2>
+    <div class="border-box"></div>
+    <ul id="messages"></ul>
+    <input id="messageInput" type="text" placeholder="Type a message">
+    <button id="sendBtn">Send</button>
+    <div class="border-box"></div>
+    <small id="heythere" style="display: block;"><i>Try not to spam messages, and be kind while you chat, <b></b>.</i></small>
+    <div class="border-box"></div>
+    <button id="sendBtn2" onclick="closeChatBox()">Close chatbox</button>
+    <div class="border-box"></div>
+    <button id="sendBtn3">Clear Messages</button>
+  </div>
+
+
+  <script src="./chat.js"></script>
+  <noscript>
+    <style>
+      body {
+    font-family: Inter, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.overlay {
+    display: none; /* Hide overlay by default */
+    text-align: center; 
+    margin: auto;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding-top: 100px;
+    font-size: 18px;
+    z-index: 1000;
+    display: block;
+}
+
+.overlay-content {
+  text-align: center; 
     display: inline-block;
     max-width: 80%;
     background-color: rgba(0, 0, 0, 0.5);
@@ -323,21 +369,42 @@ p {
 }
 
     </style>
-      <div id="overlay" class="overlay">
+          <div id="overlay" class="overlay">
         <div class="overlay-content">
             <p>Hey there! This chat won't work with JavaScript disabled, nor will streaming. Please enable JavaScript in your browser and come back once you're done!</p>
             <div class="border-box"></div>
-            <a href="http://192.168.254.137:3000"><button>Ok!</button></a>
+            <!--<a href="http://192.168.254.137:3000"><button>Ok!</button></a>-->
         </div>
     </div>
   </noscript>
 
   <script>
+    const clearBtn = document.getElementById('sendBtn3');
     const smallText = document.getElementById('heythere');
     smallText.style.display = "block";
     const menuArrow = document.getElementById('menuArrow');
     const sideMenu = document.getElementById('sideMenu');
+    const usernamePrompt = document.getElementById('usernamePrompt');
+    const usernameInput = document.getElementById('usernameInput');
+    const submitUsername = document.getElementById('submitUsername');
     let isMenuOpen = false;
+
+    let username = "";
+
+    // Username prompt handling
+    submitUsername.addEventListener('click', () => {
+      username = usernameInput.value.trim();
+      if (username) {
+        username = usernameInput.value.trim();
+        usernamePrompt.style.display = 'none';
+        smallText.innerHTML = `<i>Try not to spam messages, and be kind while you chat, <b>${username}</b>.</i>`;
+      } else if (username == "") {
+        username = "Anonymous";
+        usernamePrompt.style.display = 'none';
+        alert("Your username is Anonymous since you didn't enter a username.")
+      }
+    });
+
 
     menuArrow.addEventListener('click', () => {
       isMenuOpen = !isMenuOpen;
@@ -358,6 +425,18 @@ p {
         menuArrow.style.right = "10px"
     }
     smallText.innerHTML = `<i>Try not to spam messages, and be kind while you chat, <b>${username}</b>.</i>`
+    // Clear localStorage when the "Clear Messages" button is clicked
+    clearBtn.addEventListener('click', () => {
+      const confirmationMessage = "Are you sure you want to clear all messages? Messages that have been remembered will be deleted and won't be accessible again.";
+
+      if (confirm(confirmationMessage)) {
+        localStorage.removeItem('messages'); // Remove messages from localStorage
+        messagesList.innerHTML = '';  // Clear the message list from the page
+        console.log('Messages cleared from localStorage');
+        smallText.style.display = "block";
+      }
+    });
   </script>
-</body>
-</html>
+
+
+</body></html>
