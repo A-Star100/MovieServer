@@ -1,7 +1,9 @@
-<html lang="en"><head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <title>Chat</title>
   <style>
    /* Global Resets */
@@ -131,6 +133,41 @@
     #menuArrow.open {
       transform: rotate(180deg);
     }
+    
+    /* Basic dialog styling */
+    #downloadDialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      border: 1px solid #333;
+      padding: 20px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: none;
+    }
+
+    #androidOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      display: none;
+      z-index: 999;
+    }
+
+    .dialog-buttons {
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    button {
+      margin-left: 5px;
+      cursor: pointer;
+    }
 
     #menuArrow:hover {
       background-color: #777777;
@@ -251,7 +288,7 @@
     html, body {
   overflow: hidden;
 }
-.overlay {
+#overlay {
     display: none; /* Hide overlay by default */
     text-align: center; 
     margin: auto;
@@ -283,10 +320,43 @@
 .border-box {
   height: 200px;
 }
+
+.border-box-small {
+  height: 30px;
+}
+
+/* Rooms list styling */
+.rooms-list {
+    flex: 1;
+    margin-right: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-right: 2px solid #ccc;
+}
+
+/* Styling for select dropdown */
+#roomSelect {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
   </style>
 </head>
 
 <body>
+<div id="androidOverlay">
+<div id="downloadDialog">
+  <p>Join everybody on the Android app</p>
+  <div class="dialog-buttons">
+    <button id="downloadBtn">Download</button>
+    <button id="noThanksBtn">No Thanks</button>
+  </div>
+</div>
+</div>
       <!-- Username Prompt --> <div id="usernamePrompt" style=" position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; display: flex; align-items: center; justify-content: center; flex-direction: column;"> <h2>Please enter your username:</h2> <input id="usernameInput" type="text" placeholder="Your username" style=" padding: 10px; font-size: 1rem; border: none; border-radius: 5px; margin-bottom: 10px;"> <button id="submitUsername" style=" padding: 10px 20px; font-size: 1rem; border: none; background-color: #555; color: white; border-radius: 5px; cursor: pointer;">Submit</button> </div>
 
   <!-- Arrow Menu for toggling -->
@@ -294,30 +364,43 @@
 
   <!-- Main container holding iframe -->
   <div id="mainContainer">
-    <h3>You can put something here for users to chat about, like a YouTube video, a movie, and much more!</h3>
+    <h1>Put something here for users to chat about, like a YouTube video or a movie!</h1>
   </div>
 
- <div id="overlay" class="overlay" style="display: block;">
+ <div id="overlay" class="overlay">
         <div class="overlay-content">
             <p>Oops! Looks like you got disconnected from the server. This means it has either been shut down for the day or has run into an issue.</p>
             <div class="border-box"></div>
-            <button onclick="hideOverlay()">OK
+            <button onclick="hideOverlay()">OK</b>
             <!--<a href="http://192.168.254.137:3000"><button>Ok!</button></a>-->
-        </button></div>
+        </div>
     </div>
 
   <!-- Side Menu for Chat -->
   <div id="sideMenu">
     <h2>Chat</h2>
-    <div class="border-box"></div>
     <ul id="messages"></ul>
-    <input id="messageInput" type="text" placeholder="Type a message">
+    <input id="messageInput" type="text" placeholder="Type a message" />
     <button id="sendBtn">Send</button>
-    <div class="border-box"></div>
-    <small id="heythere" style="display: block;"><i>Try not to spam messages, and be kind while you chat, <b></b>.</i></small>
-    <div class="border-box"></div>
+    <div class="border-box-small"></div>
+    <small id="heythere"></small>
+    <div class="border-box-small"></div>
+    <!-- Room Selection Dropdown -->
+<select id="roomSelect">
+  <option value="" disabled selected>Select a room</option>
+  <option value="Nonexistent" selected>Select...</option>
+  <option value="Room 1">Room 1</option>
+  <option value="Room 2">Room 2</option>
+  <option value="Room 3">Room 3</option>
+  <option value="Room 4">Room 4</option>
+  <option value="Room 5">Room 5</option>
+  <option value="Room 6">Room 6</option>
+  <option value="Room 7">Room 7</option>
+  <option value="Room 8">Room 8</option>
+  <!-- Add more rooms here as necessary -->
+</select>
     <button id="sendBtn2" onclick="closeChatBox()">Close chatbox</button>
-    <div class="border-box"></div>
+    <div class="border-box-small"></div>
     <button id="sendBtn3">Clear Messages</button>
   </div>
 
@@ -356,7 +439,7 @@
     max-width: 80%;
     background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
-    color: white;
+    color: black;
     border-radius: 5px;
 }
 
@@ -424,7 +507,11 @@ p {
         menuArrow.classList.remove('open');
         menuArrow.style.right = "10px"
     }
+    if (username == "" || username == "Anonymous") {
+    smallText.innerHTML = `<i>Try not to spam messages, and be kind while you chat, <b>Anonymous</b>.</i>`
+    } else {
     smallText.innerHTML = `<i>Try not to spam messages, and be kind while you chat, <b>${username}</b>.</i>`
+    }
     // Clear localStorage when the "Clear Messages" button is clicked
     clearBtn.addEventListener('click', () => {
       const confirmationMessage = "Are you sure you want to clear all messages? Messages that have been remembered will be deleted and won't be accessible again.";
@@ -436,7 +523,84 @@ p {
         smallText.style.display = "block";
       }
     });
+document.addEventListener('DOMContentLoaded', function () {
+    const dialog = document.getElementById('downloadDialog');
+    const androidOverlay = document.getElementById('androidOverlay');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const noThanksBtn = document.getElementById('noThanksBtn');
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Check if the dialog has already been shown
+    if (!localStorage.getItem('dialogShown')) {
+if (/android/i.test(userAgent)) {
+        console.log("On Android")
+    }
+    }
+
+    function showDialog() {
+      dialog.style.display = 'block';
+      androidOverlay.style.display = 'block';
+    }
+
+    function hideDialog() {
+      dialog.style.display = 'none';
+      androidOverlay.style.display = 'none';
+    }
+
+    // When "Download" is clicked
+    downloadBtn.addEventListener('click', function () {
+      localStorage.setItem('dialogShown', 'true');
+      hideDialog();
+      window.open("Link for Android app here");
+    });
+
+    // When "No Thanks" is clicked
+    noThanksBtn.addEventListener('click', function () {
+      localStorage.setItem('dialogShown', 'true');
+      hideDialog();
+    });
+
+    // Close the dialog if clicking on overlay
+    androidOverlay.addEventListener('click', hideDialog);
+  });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const messages = document.getElementById('messages');
+
+    // Function to scroll to the bottom
+    function scrollToBottom() {
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    // Observer to detect when new messages are added
+    const observer = new MutationObserver(() => {
+        scrollToBottom();
+    });
+
+    // Start observing the `messages` list for child additions
+    observer.observe(messages, { childList: true });
+
+    // Optional: Scroll to bottom on page load
+    scrollToBottom();
+});
+
+// Add an event listener for the 'keydown' event
+usernameInput.addEventListener("keydown", function(event) {
+  // Check if the pressed key is Enter
+  if (event.key === "Enter") {
+    // Perform your desired action here
+      if (username) {
+        username = usernameInput.value.trim();
+        usernamePrompt.style.display = 'none';
+        smallText.innerHTML = `<i>Try not to spam messages, and be kind while you chat, <b>${username}</b>.</i>`;
+      } else if (username == "") {
+        username = "Anonymous";
+        usernamePrompt.style.display = 'none';
+        alert("Your username is Anonymous since you didn't enter a username.")
+      }
+  }
+});
+
   </script>
-
-
-</body></html>
+</body>
+</html>
