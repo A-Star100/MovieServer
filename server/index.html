@@ -447,7 +447,7 @@
 
             // Example: Redirect if the port is not the one expected (e.g., not 8080)
             if (currentPort !== '8080') {
-                fetch('http://192.168.254.137:4443')  // Replace with your server's URL
+                fetch('http://localhost:4443')  // Replace with your server's URL
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Server is down');
