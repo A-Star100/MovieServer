@@ -53,6 +53,8 @@ To start or stop the container dynamically, type in:
 
 Enjoy using Docker!
 
+*NOTE: The dockerfile does not include Jellyfin Media Server or its service, you will have to start it on your device locally or modify the dockerfile if you want to*.
+
 ## NAS-specific instructions
 NAS devices aren't as flexible as computers when it comes to installing tools. For example, on a Synology NAS using SSH, you will have to use some commands using sudo (even as admin).
 For example, instead of 
