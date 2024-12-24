@@ -30,7 +30,9 @@ First, install [Docker](https://docker.com), then use Git to clone the repositor
 
 This will copy all contents of *just* the source code into a directory. The dockerfile already installs dependencies. Then type this in Terminal:
 
-`docker build -t movieserver-image .` (this will build a usable Docker image from the dockerfile)
+`docker build -t movieserver-image .` 
+
+This will build a usable Docker image from the dockerfile
 
 then type:
 
