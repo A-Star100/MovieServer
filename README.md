@@ -34,7 +34,7 @@ This will copy all contents of *just* the source code into a directory. The dock
 
 This will build a usable Docker image from the dockerfile
 
-then type:
+then edit the installed version of the *server.js* file and remove or add proper file paths for any SSL certificates, and then type in:
 
 `docker run -d \
   -p 8080:8080 \
