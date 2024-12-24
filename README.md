@@ -3,7 +3,7 @@ This is not a tool that creates a movie server, rather source code for a potenti
 | Software | Status |
 | -------- | ------- |
 | Node.js & npx  | **Mandatory**    |
-| Jellyfin/Plex    | **Optional, but recommended for more media UI** |
+| Jellyfin/Plex    | **Optional** |
 
 Any Node.js libraries will be included in the node_modules folder(s)
 Installers for the tools will be included.
