@@ -24,5 +24,7 @@ And last but not least, the HTTP server running on port 3000 serves as a chat se
 ## NAS-specific instructions
 NAS devices aren't as flexible as computers when it comes to installing tools. For example, on a Synology NAS using SSH, you will have to use some commands using sudo (even as admin).
 For example, instead of 
+
 `npm install DEPENDENCY` or `npm install -g DEPENDENCY`, you need to use sudo, otherwise your NAS will return an error of not being able to write to the directory /var/services/HOME/user, which is only granted if you use sudo, like this
+
 `sudo npm install DEPENDENCY` or `sudo npm install -g DEPENDENCY` (you will need your password for npm installations, but not for npx HTTP servers).
