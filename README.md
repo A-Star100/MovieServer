@@ -24,7 +24,7 @@ And last but not least, the HTTP server running on port 3000 serves as a chat se
 ## Docker
 A *dockerfile* is available for those who would rather use a Docker container to start the servers. This is viable especially if you're willing to experiment with tasks that could cause problems if running outside of a sandboxed Docker container.
 
-First, install [Docker](https://docker.com), then either use the MovieServer installer (not recommended because it installs dependencies locally on your device) or use Git to clone the repository like this (better because it just installs the source code and also lets you use only Docker to install dependencies) in Terminal:
+First, install [Docker](https://docker.com), then use Git to clone the repository like this in Terminal:
 
 `git clone https://github.com/A-Star100/MovieServer.git`.
 
