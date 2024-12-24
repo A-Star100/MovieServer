@@ -1,4 +1,3 @@
-// Hey there! Try modifying this code
 const express = require('express');
 const path = require('path');
 const { spawn } = require('child_process');
@@ -8,11 +7,21 @@ const process = require('process');
 // Create an Express app
 const app = express();
 const app2 = express();
-const directoryToServe = path.join(__dirname);  // Change this to your desired folder to serve
+const directoryToServe = path.join(__dirname, '/folder');  // Change this to your desired folder
 app.use((req, res, next) => {
-  // Content Security Policy to block iframe embedding, delete this or modify it however you please
+  // Content Security Policy to block iframe embedding
   res.setHeader('Content-Security-Policy', "frame-ancestors 'none';", "default-src https:; script-src https: http:; style-src https: http:; img-src https: http:; video-src https: http:;");
   next();
+});
+
+// Middleware to handle URLs without the .html extension
+app.use((req, res, next) => {
+  const filePath = path.join(__dirname, `${req.path}.html`);
+  res.sendFile(filePath, (err) => {
+      if (err) {
+          next(); // Proceed to next middleware if the file doesn't exist
+      }
+  });
 });
 
 app.use((req, res, next) => {
@@ -25,7 +34,7 @@ app.use((req, res, next) => {
 });
 // Middleware to block access to specified folders and their contents
 app.use((req, res, next) => {
-  const forbiddenPaths = ['/certs', '/server.js', '/python/https-server.py'];  // List of forbidden paths
+  const forbiddenPaths = ['/server.js', '/python/https-server.py', '/certs'];  // List of forbidden paths (in local copy, certs directory is no longer in public directory, but if you wish to put it there it is listed as a forbidden path so users cannot access your SSL keys and decrypt encrypted data).
 
   // Check if the requested URL contains any of the forbidden paths
   for (const forbiddenPath of forbiddenPaths) {
@@ -38,7 +47,7 @@ app.use((req, res, next) => {
   next(); // Continue to the next middleware if no match is found
 });
 
-// Inject code to check if offline, this is a hit or miss, delete it, but if you want keep it
+// Middleware to inject code
 app.use((req, res, next) => {
   const send = res.send;
   res.send = function (html) {
@@ -64,11 +73,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static('./public'));  // Assuming your static files are in the "public" directory
+app.use(express.static('/volume1/family/Anirudh/Misc/jcdbmeserver/'));  // Assuming your static files are in the "public" directory
 // Set the directory you want to serve as the root
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');  // Assuming index.html is your landing page
+  res.sendFile(__dirname + '/index.html');  // Serve index.html as the landing page
 });
 // Serve static files from the specified directory
 app.use(express.static(directoryToServe));
@@ -158,8 +167,8 @@ app.use('/volume1/family/Anirudh/Misc/jcdbmeserver/favicon.ico', express.static(
 
 // Create an HTTPS server
 const options = {
-  key: fs.readFileSync('./private.key'), // HTTPS path for private key, you can generate one using OpenSSL or get one from a trusted CA to avoid browser warnings
-  cert: fs.readFileSync('./certificate.crt'), // HTTPS path for public key, you can generate one using OpenSSL or get one from a trusted CA to avoid browser warnings
+  key: fs.readFileSync('/volume1/family/Anirudh/Misc/jcdbmeservercerts/server.key'),
+  cert: fs.readFileSync('/volume1/family/Anirudh/Misc/jcdbmeservercerts/server.crt'),
 };
 
 process.on('unhandledRejection', (reason, promise) => {
@@ -177,15 +186,19 @@ const httpsBackupPort = 4443;
 
 // Start the HTTP and HTTPS servers
 httpsServer.listen(httpsPort, () => {
-  console.log(`HTTPS main server running on https://localhost:${httpsPort}`);
-  console.log(`HTTPS backup server started on https://localhost:${httpsBackupPort}`);
+  console.log(`HTTPS main server running on https://192.168.254.137:${httpsPort}`);
+  console.log(`HTTP backup server started on http://192.168.254.137:${httpsBackupPort}`);
 });
 
+const targetDirectory = path.join("/volume1/family/Anirudh/Anirudh_Movies/Fandubs-JCDBME/movies/"); // Adjust this path
+const targetDirectory2 = path.join("/volume1/family/Anirudh/Misc/jcdbmeserver/misc/websocket-chat"); // Adjust this path
+
 // Command to run the Python HTTP server
-const pythonProcess = spawn('python3', ['./python/https-server-backup.py']);  // You can change port if needed
+// Run npx http-server with sudo
+const pythonProcess = spawn('sudo', ['npx', 'http-server', '-p', '4443'], {
+  stdio: 'inherit'  // This will let you see the output in the terminal
+});
 // Define the target directory where we want to change
-const targetDirectory = path.join("./PythonMovies"); // Adjust this path, for Python movie server
-const targetDirectory2 = path.join("./websocket-chat"); // Adjust this path, for chat server
 
 // Ensure the target directory exists (optional for debugging)
 if (!fs.existsSync(targetDirectory)) {
@@ -201,9 +214,9 @@ if (!fs.existsSync(targetDirectory2)) {
 
 
 
-// Spawn the child process
-const child = spawn('python3', ['-m', 'http.server', '8000'], {
-  cwd: targetDirectory, // Change to the target directory
+const child = spawn('sudo', ['npx', 'http-server', '-p', '8000'], {
+  cwd: targetDirectory,  // Change to the target directory
+  stdio: 'inherit'  // Inherit stdio to see the output in the terminal
 });
 
 // Spawn the child process
@@ -211,25 +224,6 @@ const child2 = spawn('node', ['server.js'], {
   cwd: targetDirectory2, // Change to the target directory
 });
 
-// Handle output from the child process (stdout)
-child.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-});
-
-// Handle errors from the child process (stderr)
-child.stderr.on('data', (data) => {
-    console.error(`stderror: ${data}`);
-});
-
-// Handle when the child process exits
-child.on('close', (code) => {
-    console.log(`child process exited with code ${code}`);
-});
-
-// Handle output from the child process (stdout)
-child2.stdout.on('data', (data) => {
-  console.log(`child 2 stdout: ${data}`);
-});
 
 // Handle errors from the child process (stderr)
 child2.stderr.on('data', (data) => {
@@ -241,6 +235,14 @@ child2.on('close', (code) => {
   console.log(`child 2 process exited with code ${code}`);
 });
 
+const isChatInTerminal = process.argv.includes('--view-chat');
+if (!isChatInTerminal) {
+  console.log("Chat in Terminal disabled, start Node with the --view-chat flag at the end of the command to see this info in the console.")
+} else {
+  child2.stdout.on('data', (data) => {
+    console.log(`child 2 stdout: ${data}`);
+  });  
+}
 
 
 
@@ -262,7 +264,7 @@ cdProcess.stdout.on('data', (data) => {
 
 // When the process exits
 pythonProcess.on('close', (code) => {
-    console.log(`HTTPS backup server process exited with code ${code}`);
+    console.log(`HTTP backup server process exited with code ${code}`);
 });
 
 
@@ -278,6 +280,7 @@ process.on('SIGINT', () => {
   process.exit();
 });
 
+const os = require('os');
 // Check if the '--disable-meminfo' flag is passed in the command-line arguments
 const isMemInfoEnabled = process.argv.includes('--enable-memreport');
 
@@ -287,7 +290,7 @@ const isMemInfoEnabled = process.argv.includes('--enable-memreport');
 if (global.gc) {
   console.log('Garbage collection is available!');
 } else {
-  console.log('GC is not available. Start Node with --expose-gc flag.');
+  console.log('Garbage collection is not available. Start Node with --expose-gc flag to enable it.');
 }
 
 // Function to check memory usage and trigger garbage collection if needed
@@ -332,10 +335,8 @@ function monitorMemoryUsage() {
 // Run memory check every 10 seconds
 setInterval(monitorMemoryUsage, 10000);
 if (!isMemInfoEnabled) {
-  console.log("Memory and heap info reporting disabled, start Node with the --enable-memreport flag at the end of the command to see this info in the console")
+  console.log("Memory and heap info reporting disabled, start Node with the --enable-memreport flag at the end of the command to see this info in the console.")
 }
-
-
 
 
 
