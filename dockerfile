@@ -20,4 +20,4 @@ WORKDIR /app/MovieServer/server
 EXPOSE 8080 8000 4443 3000
 
 # Run the server
-CMD ["node", "server.js"]
+CMD ["node", "dockerserver.js"]
