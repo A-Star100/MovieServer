@@ -1,8 +1,9 @@
 <!DOCTYPE HTML>
 <head>
-    <title>Movie 1</title>
-    <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
+    <title>MPEG-DASH demo</title>
     <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
+    <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
     <link
       href="https://unpkg.com/@videojs/themes@1/dist/forest/index.css"
       rel="stylesheet"
@@ -20,13 +21,22 @@
             background-color: black;
         }
         .video-js {
-            width: 1280px;
-            height: 720px;
+            width: 100vw;
+            height: 100vh;
             font-family: Arial, Helvetica, sans-serif;
   font-size: inherit;
   background: inherit;
   border: none;
   box-shadow: none;
+        }
+        .glossy-yellow-text {
+            font-weight: bold;
+            color: #FFD700; /* Yellow color */
+            background: linear-gradient(45deg, #ffeb3b, #fdd835);
+            background-clip: text;
+            -webkit-background-clip: text; /* For Safari */
+            display: inline;
+            text-shadow: 0 0 5px rgba(255, 223, 0, 0.7), 0 0 10px rgba(255, 223, 0, 0.4);
         }
         .video-js .vjs-control-bar {
   background: rgba(0, 0, 0, 0.7);
@@ -78,7 +88,7 @@
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
-            width: 300px;
+            width: 500px;
             text-align: center;
         }
 
@@ -87,7 +97,7 @@
             color: #000;
         }
 
-        .download-button {
+        .download-button, .download-hls-button {
             padding: 10px 20px;
             font-size: 16px;
             background-color: #007bff;
@@ -97,8 +107,16 @@
             border-radius: 5px;
         }
 
+        .download-hls-button {
+            background-color: green;
+        }
+
         .download-button:hover {
             background-color: #0056b3;
+        }
+
+        .download-hls-button:hover {
+            background-color: darkgreen;
         }
         #vjs-no-js {
             z-index: 9999;
@@ -175,12 +193,43 @@
     height="720"
     data-setup="{}"
     autoplay
-    src=""
+    src="h264.mp4"
   >
      <track src="subtitles.vtt" label="English"
      kind="subtitles"
      srclang="en">
   </video>
+</div>
+
+<ul id="custom-menu">
+    <li id="menu-item-4">Enable video looping</li>
+    <li id="menu-item-5">Get sharable link</li>
+    <li id="menu-item-6">Download Video</li>
+    <li id="menu-item-7" style="display:none;">Close Menu</li>
+</ul>
+
+<div id="download-dialog">
+    <div class="dialog-content">
+        <h3>Download Options</h3>
+        <button class="download-hls-button" title="WEBM download supported on most browsers and some video players, usually smaller than an MP4 download with similar conveniency." id="download-btn" onclick="downloadVP9Video()"><img height="70px" width="80px" src="/images/downloadimg.png">
+            <h4></h4>
+            WEBM
+        </button>
+    </a>
+        <button class="download-button" title="MP4 download that can be used on most devices offline, which is viewable through most video players." id="download-btn" onclick="downloadVideo()"><img height="70px" width="80px" src="/images/downloadimg.png">
+            <h4></h4>
+            MP4
+            <p><span class="glossy-yellow-text">Recommended</span></p>
+        </button>
+    </a>
+    <button class="download-hls-button" title="MPD download intended to be used with the MPEG-DASH streaming technology, which isn't viewable without extra software or tools." id="download-btn" onclick="downloadHLSVideo()"><img height="70px" width="80px" src="/images/downloadimg.png">
+        <h4></h4>
+        MPD
+    </button>
+</a>
+        <h3>  </h3>
+        <button id="close-button" onclick="closeDownloadDialog()">X</button>
+    </div>
 </div>
 <!-- JavaScript disabled fallback-->
 <noscript>
@@ -225,58 +274,38 @@ track {
     padding: 5px;
 }
 
+.video-js.vjs-http-source-selector{display:block}
 </style>
 </noscript>
 <!-- End of JavaScript disabled fallback-->
 
-<ul id="custom-menu">
-    <li id="menu-item-4">Enable video looping</li>
-    <li id="menu-item-5">Get sharable link</li>
-    <li id="menu-item-6">Download Video</li>
-</ul>
-
-<div id="download-dialog">
-    <div class="dialog-content">
-        <h3>Your download is ready!</h3>
-        <button class="download-button" id="download-btn" onclick="downloadVideo()"><img height="70px" width="80px" src="downloadimg.png"></button></a>
-        <h3>  </h3>
-        <button id="close-button" onclick="closeDownloadDialog()">X</button>
-    </div>
-</div>
-
+<!--<script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>-->
 <script>
-    alert("Open your IDE and modify this HTML to have proper links, avid coder!")
+window.onload = function () {
+      window.scrollTo(0, document.body.scrollHeight);
+    };
+    if (!('MediaSource' in window)) {
+            console.log('MSE not supported. Falling back to traditional video source.');
+
+            // Fallback: If MSE is not supported, use a regular video source
+            // For example, you can directly set the src of the video element to a traditional format:
+            videoElement.src = 'h264-1.mp4';  // Fallback to a standard video source
+            console.log("MSE is not supported - loading traditional stream")
+        } else {
+              // Path to your MPD file
+              console.log("MSE is supported - loading MPEG-DASH/HLS stream")
+    var mpdUrl = 'output.mpd'; // Replace this with the actual path to your MPD file
+    var player = dashjs.MediaPlayer().create();
     
-
-    var video = document.getElementById('my-video');
-     // Initialize Video.js player
-     var player = videojs('my-video', {
-      techOrder: ['html5'],  // Make sure the HTML5 tech is the first choice
-    });
-
+    player.initialize(document.querySelector("#my-video"), mpdUrl, true); // Initialize the player  
+      // Initialize the quality selector plugin
+        }
     // Show the button only on mobile devices
-    function checkFileAndShowAlert() {
-  // Assuming the file is being fetched via a request
-  fetch('h264.mp4')
-    .then(response => {
-      if (!response.ok) {
-        // File not found or some error occurred, show the alert
-        alert("The server is having some technical difficulties or is unavailable - The video could not be streamed, you can still download the video by right-clicking and selecting Download Video");
-      } else {
-        // Proceed with streaming the video
-        // You can handle video playback logic here
-      }
-    })
-    .catch(error => {
-      // Handle network error, alert the user
-      alert("The server is having some technical difficulties or is unavailable - The video could not be streamed, you can still download the video by right-clicking and selecting Download Video");
-    });
-}
 
 
-    // Custom context menu
-    $(document).ready(function() {
-    $('#context-area').on('contextmenu', function(e) {
+        // Custom context menu
+        $(document).ready(function () {
+    $('#context-area').on('contextmenu', function (e) {
         e.preventDefault();
         $('#custom-menu')
             .css({
@@ -286,18 +315,17 @@ track {
             .show();
     });
 
-    $(document).on('click', function() {
+    $(document).on('click', function () {
         $('#custom-menu').hide();
     });
 
-    $('#custom-menu li').on('click', function() {
+    $('#custom-menu li').on('click', function () {
         if ($(this).text() === "Download Video") {
             $('#download-dialog').show(); // Show the "download ready" dialog
-            
 
         } else if ($(this).text() === "Get sharable link") {
-            window.open('// your sharable link here');
-        } else if ($(this).text() === "Enable video looping") { 
+            window.open("https://drive.google.com/file/d/1o0f-588dCsI1WMxriHEfmtulyq70JrCt/view?usp=sharing");
+        } else if ($(this).text() === "Enable video looping") {
             var loopElement = document.getElementById("menu-item-4")
             const videoElement = videojs('my-video');
             videoElement.loop(true);
@@ -309,25 +337,115 @@ track {
             videoElement.loop(false);
             loopElement.innerText = "Enable video looping"
             console.log("Looping disabled");
+        } else if ($(this).text() === "Close Menu") {
+            $('#custom-menu').hide();
         }
-        $('#custom-menu').hide();
     });
 });
+
 
 function closeDownloadDialog() {
     $('#download-dialog').hide(); // Show the "download ready" dialog 
 }
 function downloadVideo() {
-    window.open("h264.mp4")
+    window.open("h264-1.mp4")
 }
+
+function downloadHLSVideo() {
+    window.open("output.mpd")
+}
+
+function downloadVP9Video() {
+    window.open("vp9.webm")
+}
+
+function isMobileDevice() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const mobileUserAgents = [
+                'android', 'iphone', 'ipod', 'ipad', 'windows phone',
+                'blackberry', 'mobile', 'kindle', 'silk', 'opera mini'
+            ];
+            return mobileUserAgents.some(agent => userAgent.includes(agent));
+        }
 
 window.onload = function () {
       window.scrollTo(0, document.body.scrollHeight);
     };
 
+let pressTimer;
+
+var contextMenu = document.getElementById("custom-menu")
+
+if (isMobileDevice()) {
+    $('#menu-item-7').show(); // Show the "download ready" dialog 
+// Detect long press on the context menu div
+contextMenu.addEventListener('touchstart', function(e) {
+    // Start a timer to detect long press
+    pressTimer = setTimeout(function() {
+        // Trigger the dialog to open after long press
+        $('#custom-menu').show(); // Show the "download ready" dialog 
+    }, 1000); // 1000ms (1 second) for long press
+});
+
+// If the touch ends before 1 second, cancel the action
+contextMenu.addEventListener('touchend', function(e) {
+    clearTimeout(pressTimer); // Clear the timer if the press was too short
+});
+
+}
 
 </script>
 
+<style>
+    .tip-container {
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      font-size: 16px;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      text-align:center;
+    }
+
+    .tip-container.show {
+      opacity: 1;
+    }
+  </style>
+
+
+  <div class="tip-container" id="tipMessage">
+    Tip! On mobile devices, you can long press to activate a menu with extra features!
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tipMessage = document.getElementById('tipMessage');
+      const tipShown = localStorage.getItem('tipShown');
+
+      if (isMobileDevice()) {
+      if (!tipShown) {
+        // Show the tip message after a slight delay
+        setTimeout(() => {
+          tipMessage.classList.add('show');
+        }, 100); // 1-second delay
+
+        // Hide the tip message after a longer delay
+        setTimeout(() => {
+          tipMessage.classList.remove('show');
+        }, 4000); // 10 seconds display duration
+
+        // Store in localStorage to prevent re-showing
+        localStorage.setItem('tipShown', 'true');
+      }
+      }
+    });
+  </script>
 
 </body>
 </html>
