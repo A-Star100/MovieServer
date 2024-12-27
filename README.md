@@ -24,34 +24,44 @@ And last but not least, the HTTP server running on port 3000 serves as a chat se
 ## Docker (BETA)
 A *dockerfile* is available for those who would rather use a Docker container to start the servers. This is viable especially if you're willing to experiment with tasks that could cause problems if running outside of a sandboxed Docker container.
 
-First, install [Docker](https://docker.com), then use Git to clone the repository like this in Terminal:
+First, make sure Docker is installed on your computer (if not, visit https://docker.com and go through the installation). Open Terminal and type in:
 
-`git clone https://github.com/A-Star100/MovieServer.git`.
+`cd ~/MovieServer` -(or wherever your MovieServer directory is located)-
+`docker build -t movieserver-image .`
 
-This will copy all contents of *just* the source code into a directory. The dockerfile already installs dependencies. Then type this in Terminal:
+Now that you have built your Docker image out of the dockerfile, we need to build the container for MovieServer to run in. Type in:
 
-`docker build -t movieserver-image .` 
+`docker run -d \ -p 8080:8080 \ -p 8000:8000 \ -p 4443:4443 \ -p 3000:3000 \ --name movieserver-container \ movieserver-image`
 
-This will build a usable Docker image from the dockerfile
+You have now exposed ports 8080, 8000, 4443, and 3000 (ports used with MovieServer) for your Docker container.
 
-then edit the installed version of the *server.js* file and remove or add proper file paths for any SSL certificates, and then type in:
+Then type:
 
-`docker run -d \
-  -p 8080:8080 \
-  -p 8000:8000 \
-  -p 4443:4443 \
-  -p 3000:3000 \
-  --name movieserver-container \
-  movieserver-image`
+`docker exec -it movieserver-container /bin/bash`
 
-This will expose needed ports and run the Docker image you created using a Docker container.
+Now use the following to figure out the IPv4 address of your container:
 
-To start or stop the container dynamically, type in:
+`ip addr show eth0`
 
-`docker start movieserver-container`
-`docker stop movieserver-container`
+Go ahead and install nano and vim in your Docker Container by using:
 
-Enjoy using Docker!
+`apt-get update && apt-get install nano vim`
+
+Choose your preferred editor (this example uses vim), and type:
+
+`vim dockerserver.js`
+
+or if you are using nano:
+
+`nano dockerserver.js`
+
+Go ahead and replace any file paths or IP addresses however you please, then save your edited file.
+
+Now start the servers by typing:
+
+`node server.js`
+You should be ready to go.
+
 
 *NOTE: The dockerfile does not include Jellyfin Media Server or its service, you will have to start it on your device locally or modify the dockerfile if you want to*.
 
