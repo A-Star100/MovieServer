@@ -8,6 +8,8 @@ This is not a tool that creates a movie server, rather source code for a potenti
 Any Node.js libraries will be included in the node_modules folder(s)
 Installers for the tools will be included.
 
+For a more comprehensive guide, take a look at DOCUMENTATION.md.
+
 ## Servers
 There are 5 servers that will be running on your device, if you include Jellyfin.
 
