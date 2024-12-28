@@ -23,50 +23,6 @@ The Jellyfin HTTP server on port 8096 (or a Plex HTTP server on port 32400) on t
 
 And last but not least, the HTTP server running on port 3000 serves as a chat server built with plain WebSockets where users can chat in a selection of pre-made rooms.
 
-## Docker (BETA)
-A *dockerfile* is available for those who would rather use a Docker container to start the servers. This is viable especially if you're willing to experiment with tasks that could cause problems if running outside of a sandboxed Docker container.
-
-First, make sure Docker is installed on your computer (if not, visit https://docker.com and go through the installation). Open Terminal and type in:
-
-`cd ~/MovieServer` -(or wherever your MovieServer directory is located)-
-`docker build -t movieserver-image .`
-
-Now that you have built your Docker image out of the dockerfile, we need to build the container for MovieServer to run in. Type in:
-
-`docker run -d \ -p 8080:8080 \ -p 8000:8000 \ -p 4443:4443 \ -p 3000:3000 \ --name movieserver-container \ movieserver-image`
-
-You have now exposed ports 8080, 8000, 4443, and 3000 (ports used with MovieServer) for your Docker container.
-
-Then type:
-
-`docker exec -it movieserver-container /bin/bash`
-
-Now use the following to figure out the IPv4 address of your container:
-
-`ip addr show eth0`
-
-Go ahead and install nano and vim in your Docker Container by using:
-
-`apt-get update && apt-get install nano vim`
-
-Choose your preferred editor (this example uses vim), and type:
-
-`vim dockerserver.js`
-
-or if you are using nano:
-
-`nano dockerserver.js`
-
-Go ahead and replace any file paths or IP addresses however you please, then save your edited file.
-
-Now start the servers by typing:
-
-`node server.js`
-You should be ready to go.
-
-
-*NOTE: The dockerfile does not include Jellyfin Media Server or its service, you will have to start it on your device locally or modify the dockerfile if you want to*.
-
 ## NAS-specific instructions
 NAS devices aren't as flexible as computers when it comes to installing tools. For example, on a Synology NAS using SSH, you will have to use some commands using sudo (even as admin).
 For example, instead of 
