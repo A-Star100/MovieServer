@@ -16,6 +16,8 @@
     /* Default (Light) Mode Styles */
     body {
       font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #4a90e2, #1375fe);
+      transition: background 0.3s ease, background-color 0.3s ease; /* Transition for both gradient and solid color */
       background-color: #f5f5f5;
       color: #121212;
       display: flex;
@@ -23,7 +25,7 @@
       align-items: center;
       justify-content: flex-start;
       padding: 10px;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      transition: color 0.3s ease;
     }
 
     h1 {
@@ -46,8 +48,9 @@
     }
 
     #sideMenu {
+      background: linear-gradient(135deg, #4a90e2, #1375fe);
       background-color: #ffffff;
-      color: #121212;
+      color: white;
       width: 300px;
       position: fixed;
       top: 0;
@@ -92,7 +95,7 @@
       color: #121212;
     }
 
-    #sendBtn, #sendBtn2, #sendBtn3 {
+    #sendBtn, #sendBtn2, #sendBtn3, #sendBtn4 {
       cursor: pointer;
       width: 100%;
       padding: 10px;
@@ -104,7 +107,7 @@
       transition: background-color 0.2s ease;
     }
 
-    #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover {
+    #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover, #sendBtn4:hover {
       background-color: #777777;
     }
 
@@ -188,6 +191,9 @@
 }
     /* DARK MODE (prefers-color-scheme: dark) */
     @media (prefers-color-scheme: dark) {
+      iframe {
+        color: white;
+      }
       body {
         background-color: #121212;
         color: #ffffff;
@@ -197,10 +203,6 @@
         color: #ffffff;
       }
 
-      #sideMenu {
-        background-color: #333333;
-        color: #ffffff;
-      }
 
       #messages {
         background-color: #222222;
@@ -217,12 +219,12 @@
         color: #ffffff;
       }
 
-      #sendBtn, #sendBtn2, #sendBtn3 {
+      #sendBtn, #sendBtn2, #sendBtn3, #sendBtn4 {
         background-color: #555555;
         color: #ffffff;
       }
 
-      #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover {
+      #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover, #sendBtn4:hover {
         background-color: #777777;
       }
 
@@ -243,12 +245,11 @@
         color: #121212;
       }
 
-      h1 {
-        color: #121212;
+      iframe {
+        color: black;
       }
 
-      #sideMenu {
-        background-color: #ffffff;
+      h1 {
         color: #121212;
       }
 
@@ -267,12 +268,12 @@
         color: #121212;
       }
 
-      #sendBtn, #sendBtn2, #sendBtn3 {
+      #sendBtn, #sendBtn2, #sendBtn3, #sendBtn4 {
         background-color: #555555;
         color: #ffffff;
       }
 
-      #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover{
+      #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover, #sendBtn4:hover{
         background-color: #777777;
       }
 
@@ -285,10 +286,7 @@
         background-color: #777777;
       }
     }
-    html, body {
-  overflow: hidden;
-}
-#overlay {
+#overlay, #overlay-nojs {
     display: none; /* Hide overlay by default */
     text-align: center; 
     margin: auto;
@@ -344,6 +342,73 @@
     background-color: #f9f9f9;
     cursor: pointer;
 }
+
+/* Styles for mobile devices */
+@media (max-width: 768px) {
+  html, body {
+    overflow: auto; /* Allows scrolling on mobile */
+  }
+}
+/* Style for the buttons */
+.buttons {
+      margin: 20px;
+    }
+/* Button */
+.more-button {
+            padding: 12px 30px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: -30px;
+            letter-spacing: 1px;
+        }
+
+        .more-button:hover {
+            background-color: #d64545;
+            transform: translateY(-3px);
+        }
+
+        .color-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    z-index: 10;
+}
+
+.color-button:hover {
+    background-color: #45a049;
+}
+
+.color-icon {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: white;
+    display: inline-block;
+}
+
+.color-icon::before {
+    content: "🎨"; /* Using a simple paint palette emoji for the icon */
+    font-size: 20px;
+    line-height: 1;
+    color: #4CAF50;
+}
+
   </style>
 </head>
 
@@ -364,7 +429,19 @@
 
   <!-- Main container holding iframe -->
   <div id="mainContainer">
-    <h1>Put something here for users to chat about, like a YouTube video or a movie!</h1>
+    <!--<iframe width="100%" height="685px" id="jellyfinIframe" src="" scrolling="yes" allowfullscreen></iframe>-->
+    <h3>You can put something here for users to chat about, like a movie.</h3>
+    <div class="buttons">
+      <!-- Custom buttons to control iframe history -->
+      <button id="backBtn">Back</button>
+      <button id="forwardBtn">Forward</button>
+       <!-- Button with a color icon -->
+    <button id="colorButton" class="color-button">
+      <span id="colorIcon" class="color-icon"></span>
+  </button>
+    </div>
+    <h1></h1>
+    
   </div>
 
  <div id="overlay" class="overlay">
@@ -388,7 +465,7 @@
     <!-- Room Selection Dropdown -->
 <select id="roomSelect">
   <option value="" disabled selected>Select a room</option>
-  <option value="Nonexistent" selected>Select...</option>
+  <option value="Blah" selected>Select...</option>
   <option value="Room 1">Room 1</option>
   <option value="Room 2">Room 2</option>
   <option value="Room 3">Room 3</option>
@@ -402,6 +479,8 @@
     <button id="sendBtn2" onclick="closeChatBox()">Close chatbox</button>
     <div class="border-box-small"></div>
     <button id="sendBtn3">Clear Messages</button>
+    <div class="border-box-small"></div>
+    <!--<a href="http://192.168.254.161:3000/"><button id="sendBtn4">BETA - Chat with AI</button></a>-->
   </div>
 
 
@@ -439,7 +518,8 @@
     max-width: 80%;
     background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
-    color: black;
+    color: white;
+    z-index: 999999;
     border-radius: 5px;
 }
 
@@ -452,17 +532,26 @@ p {
 }
 
     </style>
-          <div id="overlay" class="overlay">
+          <div id="overlay-nojs" class="overlay">
         <div class="overlay-content">
             <p>Hey there! This chat won't work with JavaScript disabled, nor will streaming. Please enable JavaScript in your browser and come back once you're done!</p>
             <div class="border-box"></div>
-            <!--<a href="http://192.168.254.137:3000"><button>Ok!</button></a>-->
+            <a href="#please-turn-on-javascript"><button>Ok!</button></a>
         </div>
     </div>
+            <header id="please-turn-on-javascript">
+              <p></p>
+            </header>
   </noscript>
 
   <script>
+    function hideOverlay() {
+ closedOverlay.style.display = "none";
+}
     const clearBtn = document.getElementById('sendBtn3');
+    // Get reference to the color button and icon
+const colorButton = document.getElementById("colorButton");
+const colorIcon = document.getElementById("colorIcon");
     const smallText = document.getElementById('heythere');
     smallText.style.display = "block";
     const menuArrow = document.getElementById('menuArrow');
@@ -495,8 +584,12 @@ p {
       if (isMenuOpen) {
         sideMenu.classList.add('open');
         menuArrow.classList.add('open');
+        colorIcon.style.display = 'none';
+        colorButton.style.display = 'none';
         menuArrow.style.right = "300px"
       } else {
+        colorIcon.style.display = 'inline-block';
+        colorButton.style.display = 'flex';
         sideMenu.classList.remove('open');
         menuArrow.classList.remove('open');
         menuArrow.style.right = "10px"
@@ -533,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Check if the dialog has already been shown
     if (!localStorage.getItem('dialogShown')) {
 if (/android/i.test(userAgent)) {
-        console.log("On Android")
+        showDialog()
     }
     }
 
@@ -551,7 +644,7 @@ if (/android/i.test(userAgent)) {
     downloadBtn.addEventListener('click', function () {
       localStorage.setItem('dialogShown', 'true');
       hideDialog();
-      window.open("Link for Android app here");
+      window.open('http://192.168.254.137:4443/JCDBMEServer.apk');
     });
 
     // When "No Thanks" is clicked
@@ -589,8 +682,8 @@ usernameInput.addEventListener("keydown", function(event) {
   // Check if the pressed key is Enter
   if (event.key === "Enter") {
     // Perform your desired action here
+    username = usernameInput.value.trim();
       if (username) {
-        username = usernameInput.value.trim();
         usernamePrompt.style.display = 'none';
         smallText.innerHTML = `<i>Try not to spam messages, and be kind while you chat, <b>${username}</b>.</i>`;
       } else if (username == "") {
@@ -600,6 +693,69 @@ usernameInput.addEventListener("keydown", function(event) {
       }
   }
 });
+
+const iframe = document.getElementById('jellyfinIframe');
+
+// Send "back" or "forward" to the iframe
+document.getElementById("backBtn").addEventListener("click", () => {
+  iframe.contentWindow.postMessage("back", "http://192.168.254.137:8000/site-root/iframe.html");
+});
+
+document.getElementById("forwardBtn").addEventListener("click", () => {
+  iframe.contentWindow.postMessage("forward", "http://192.168.254.137:8000/site-root/iframe.html");
+});
+
+function more() {
+        window.open("https://google.com", '_self')
+    }
+    function more2() {
+        window.open("https://google.com", '_self')
+    }
+
+
+// Variable to track the current background state
+let currentState = 'default';  // Start with the default state (gradient)
+
+// Function to change the background CSS property
+function changeBackgroundColor(color) {
+    switch(color) {
+        case "default":
+            // Change to the default blue gradient for both body and sideMenu
+            document.body.style.background = "linear-gradient(135deg, #4a90e2, #1375fe)";
+            sideMenu.style.background = "linear-gradient(135deg, #4a90e2, #1375fe)";
+            sideMenu.style.color = "#f5f5f5";
+            break;
+        case "black":
+            // Change to black background for both body and sideMenu
+            document.body.style.background = "#121212";
+            sideMenu.style.background = "#121212";
+            sideMenu.style.color = "#f5f5f5";
+            break;
+        case "white":
+            // Change to white background for both body and sideMenu
+            document.body.style.background = "#f5f5f5";
+            sideMenu.style.background = "#f5f5f5";
+            sideMenu.style.color = "#121212";
+            break;
+    }
+}
+
+// Set up the color change when the button is clicked
+colorButton.addEventListener("click", () => {
+    // Cycle through the background colors based on the current state
+    if (currentState === "default") {
+        changeBackgroundColor("white");
+        currentState = "white";  // Update the state
+    } else if (currentState === "white") {
+        changeBackgroundColor("black");
+        currentState = "black";  // Update the state
+    } else if (currentState === "black") {
+        changeBackgroundColor("default");
+        currentState = "default";  // Update the state
+    }
+});
+
+
 
   </script>
 </body>
