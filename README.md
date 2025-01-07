@@ -29,4 +29,4 @@ For example, instead of
 
 `npm install DEPENDENCY` or `npm install -g DEPENDENCY`, you need to use sudo, otherwise your NAS will return an error of not being able to write to the directory /var/services/HOME/user, which is only granted if you use sudo, like this
 
-`sudo npm install DEPENDENCY` or `sudo npm install -g DEPENDENCY` (you will need your password for npm installations, but not *always* for npx HTTP servers).
+`sudo npm install DEPENDENCY` or `sudo npm install -g DEPENDENCY` (you will need your password for npm installations *and* for npx HTTP servers).
