@@ -1,5 +1,5 @@
 # MovieServer
-This is not a tool that creates a movie server, rather source code for a potential movie server setup. To use this code, you will need:
+This tool creates a Node.js server to serve movies with a pre-built UI. To use this code, you will need:
 | Software | Status |
 | -------- | ------- |
 | Node.js & npx  | **Mandatory**    |
