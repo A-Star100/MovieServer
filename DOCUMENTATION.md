@@ -230,7 +230,7 @@ You could, for example, make a **mobile chatting app** for the chat server, whic
 
 You could also enhance the UI, by adding support for more buttons.
 
-You could even ***add a load balancer*****,** which will be very helpful with handling lots of load, since MovieServer is a server-side app, tools like Hostinger, Wix, GitHub Pages, etc, won’t work. 
+You could even ***add a load balancer*****,** which will be very helpful with handling lots of load, since MovieServer is a server-side app, tools like Hostinger, Wix, GitHub Pages, etc, won’t work for serving movies. Using the pre-built UI will work with static website hosting platforms though as long as the streams are on another server.
 
 You’ll probably need **Google Cloud**, or you’ll need to configure **port forwarding or a proxy** (to expose the server anyway).
 
