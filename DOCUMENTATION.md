@@ -186,7 +186,8 @@ Once you’ve succeeded in getting all of your movies on Jellyfin, you can go ah
 
 FFmpeg command for making an adaptive bitrate (360p, 480p, 720p, 1080p) HLS stream with master playlist:
 
-`ffmpeg -i input.mp4 \`  
+```shell 
+ffmpeg -i input.mp4 \`  
   `-filter_complex "\`  
     `[0:v]split=4[1080p][720p][480p][360p];\`  
     `[1080p]scale=-2:1080[v1080p];\`  
@@ -199,6 +200,7 @@ FFmpeg command for making an adaptive bitrate (360p, 480p, 720p, 1080p) HLS stre
   `-map "[v360p]" -c:v:3 libx264 -b:v:3 1000k -maxrate 1100k -bufsize 1500k -c:a aac -b:a 128k -ac 2 -y -hls_time 6 -hls_playlist_type vod -hls_segment_filename "hls/360p/segment_%03d.ts" hls/360p.m3u8 \`  
   `# Create HLS Master Playlist`  
   `-f hls -y hls/master.m3u8`
+```
 
 FFmpeg command for making an adaptive bitrate (360p, 480p, 720p, 1080p) MPEG-DASH stream with master manifest:
 
