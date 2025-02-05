@@ -206,7 +206,8 @@ FFmpeg command for making an adaptive bitrate (360p, 480p, 720p, 1080p) MPEG-DAS
 
 6
 
-`ffmpeg -i input.mp4 \`  
+```shell
+ffmpeg -i input.mp4 \`  
   `-filter_complex "\`  
     `[0:v]split=4[1080p][720p][480p][360p];\`  
     `[1080p]scale=-2:1080[v1080p];\`  
@@ -217,7 +218,7 @@ FFmpeg command for making an adaptive bitrate (360p, 480p, 720p, 1080p) MPEG-DAS
   `-map "[v720p]" -c:v:1 libx264 -b:v:1 3500k -maxrate 3850k -bufsize 5250k -c:a aac -b:a 128k -ac 2 -y -f dash -dash_segment_filename "dash/720p/segment_%03d.m4s" dash/720p.mpd \`  
   `-map "[v480p]" -c:v:2 libx264 -b:v:2 2000k -maxrate 2200k -bufsize 3000k -c:a aac -b:a 128k -ac 2 -y -f dash -dash_segment_filename "dash/480p/segment_%03d.m4s" dash/480p.mpd \`  
   `-map "[v360p]" -c:v:3 libx264 -b:v:3 1000k -maxrate 1100k -bufsize 1500k -c:a aac -b:a 128k -ac 2 -y -f dash -dash_segment_filename "dash/360p/segment_%03d.m4s" dash/360p.mpd`
-
+```
 7
 
 **More…**  
