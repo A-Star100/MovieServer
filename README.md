@@ -9,6 +9,7 @@ This tool creates a Node.js server to serve movies with a pre-built UI. To use t
 
 Any Node.js libraries will be included in the node_modules folder(s)
 Installers for the tools will be included.
+
 And keep in mind that Video.js, HLS.js, and DASH.js (Plyr.io is way better but I'm too tired to migrate), are included via CDN URLs, so Node.js integration won't work (unless you install them as npm packages instead)
 
 For a more comprehensive guide, take a look at DOCUMENTATION.md.
