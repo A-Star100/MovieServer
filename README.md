@@ -8,7 +8,7 @@ This tool creates a Node.js server to serve movies with a pre-built UI. To use t
 Any Node.js libraries will be included in the node_modules folder(s)
 Installers for the tools will be included.
 
-For a more comprehensive guide, take a look at DOCUMENTATION.md.
+For a more comprehensive guide, take a look at [DOCUMENTATION.md](https://github.com/A-Star100/MovieServer/blob/main/DOCUMENTATION.md).
 
 ## Servers
 There are 5 servers that will be running on your device, if you include Jellyfin.
