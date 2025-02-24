@@ -5,17 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <title>Chat</title>
+  <script>
+   let username = ""
+  </script>
   <style>
    /* Global Resets */
    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: 'Inter', Arial, sans-serif;
     }
 
     /* Default (Light) Mode Styles */
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
       background: linear-gradient(135deg, #4a90e2, #1375fe);
       transition: background 0.3s ease, background-color 0.3s ease; /* Transition for both gradient and solid color */
       background-color: #f5f5f5;
@@ -413,15 +417,6 @@
 </head>
 
 <body>
-<div id="androidOverlay">
-<div id="downloadDialog">
-  <p>Join everybody on the Android app</p>
-  <div class="dialog-buttons">
-    <button id="downloadBtn">Download</button>
-    <button id="noThanksBtn">No Thanks</button>
-  </div>
-</div>
-</div>
       <!-- Username Prompt --> <div id="usernamePrompt" style=" position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; display: flex; align-items: center; justify-content: center; flex-direction: column;"> <h2>Please enter your username:</h2> <input id="usernameInput" type="text" placeholder="Your username" style=" padding: 10px; font-size: 1rem; border: none; border-radius: 5px; margin-bottom: 10px;"> <button id="submitUsername" style=" padding: 10px 20px; font-size: 1rem; border: none; background-color: #555; color: white; border-radius: 5px; cursor: pointer;">Submit</button> </div>
 
   <!-- Arrow Menu for toggling -->
@@ -429,12 +424,13 @@
 
   <!-- Main container holding iframe -->
   <div id="mainContainer">
-    <!--<iframe width="100%" height="685px" id="jellyfinIframe" src="" scrolling="yes" allowfullscreen></iframe>-->
-    <h3>You can put something here for users to chat about, like a movie.</h3>
+    <h3>Do something while you chat! :)</h3>
+    <div style="height: 3px;"></div>
+    <iframe width="100%" height="685px" id="jellyfinIframe" src="https://a-star100.github.io" scrolling="yes" allowfullscreen></iframe>
     <div class="buttons">
       <!-- Custom buttons to control iframe history -->
-      <button id="backBtn">Back</button>
-      <button id="forwardBtn">Forward</button>
+      <button id="backBtn" style="display:none;">Back</button>
+      <button id="forwardBtn" style="display:none;">Forward</button>
        <!-- Button with a color icon -->
     <button id="colorButton" class="color-button">
       <span id="colorIcon" class="color-icon"></span>
@@ -476,7 +472,10 @@
   <option value="Room 8">Room 8</option>
   <!-- Add more rooms here as necessary -->
 </select>
-    <button id="sendBtn2" onclick="closeChatBox()">Close chatbox</button>
+<div class="border-box-small"></div>
+    <button id="sendBtn2" onclick="sideMenu.classList.remove('open');
+    menuArrow.classList.remove('open');
+    menuArrow.style.right = '10px'">Close chatbox</button>
     <div class="border-box-small"></div>
     <button id="sendBtn3">Clear Messages</button>
     <div class="border-box-small"></div>
@@ -545,6 +544,8 @@ p {
   </noscript>
 
   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
     function hideOverlay() {
  closedOverlay.style.display = "none";
 }
@@ -560,8 +561,6 @@ const colorIcon = document.getElementById("colorIcon");
     const usernameInput = document.getElementById('usernameInput');
     const submitUsername = document.getElementById('submitUsername');
     let isMenuOpen = false;
-
-    let username = "";
 
     // Username prompt handling
     submitUsername.addEventListener('click', () => {
@@ -616,47 +615,6 @@ const colorIcon = document.getElementById("colorIcon");
         smallText.style.display = "block";
       }
     });
-document.addEventListener('DOMContentLoaded', function () {
-    const dialog = document.getElementById('downloadDialog');
-    const androidOverlay = document.getElementById('androidOverlay');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const noThanksBtn = document.getElementById('noThanksBtn');
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-    // Check if the dialog has already been shown
-    if (!localStorage.getItem('dialogShown')) {
-if (/android/i.test(userAgent)) {
-        showDialog()
-    }
-    }
-
-    function showDialog() {
-      dialog.style.display = 'block';
-      androidOverlay.style.display = 'block';
-    }
-
-    function hideDialog() {
-      dialog.style.display = 'none';
-      androidOverlay.style.display = 'none';
-    }
-
-    // When "Download" is clicked
-    downloadBtn.addEventListener('click', function () {
-      localStorage.setItem('dialogShown', 'true');
-      hideDialog();
-      window.open('http://192.168.254.137:4443/app.apk');
-    });
-
-    // When "No Thanks" is clicked
-    noThanksBtn.addEventListener('click', function () {
-      localStorage.setItem('dialogShown', 'true');
-      hideDialog();
-    });
-
-    // Close the dialog if clicking on overlay
-    androidOverlay.addEventListener('click', hideDialog);
-  });
-
 document.addEventListener('DOMContentLoaded', () => {
     const messages = document.getElementById('messages');
 
@@ -686,24 +644,16 @@ usernameInput.addEventListener("keydown", function(event) {
       if (username) {
         usernamePrompt.style.display = 'none';
         smallText.innerHTML = `<i>Try not to spam messages, and be kind while you chat, <b>${username}</b>.</i>`;
-      } else if (username == "") {
-        username = "Anonymous";
-        usernamePrompt.style.display = 'none';
-        alert("Your username is Anonymous since you didn't enter a username.")
+      } else if (!username || username === "") { 
+      username = "Anonymous";
+      usernamePrompt.style.display = 'none';
+      alert("Your username is Anonymous since you didn't enter a username.");
       }
+
   }
 });
 
 const iframe = document.getElementById('jellyfinIframe');
-
-// Send "back" or "forward" to the iframe
-document.getElementById("backBtn").addEventListener("click", () => {
-  iframe.contentWindow.postMessage("back", "http://192.168.254.137:8000/site-root/iframe.html");
-});
-
-document.getElementById("forwardBtn").addEventListener("click", () => {
-  iframe.contentWindow.postMessage("forward", "http://192.168.254.137:8000/site-root/iframe.html");
-});
 
 function more() {
         window.open("https://google.com", '_self')
@@ -753,6 +703,7 @@ colorButton.addEventListener("click", () => {
         changeBackgroundColor("default");
         currentState = "default";  // Update the state
     }
+});
 });
 
 
