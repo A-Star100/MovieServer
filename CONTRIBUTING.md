@@ -3,4 +3,4 @@ To contribute to the MovieServer project, simply fork the repository, add your c
 
 Note that if we encounter any malicious code, your contribution will be denied.
 
-And use your existing fork, don't make another fork for any contribution. If you want you can separate versions into folders.
+And use your existing fork, don't make another fork for any contribution. If you want you can separate versions into folders/branches.
