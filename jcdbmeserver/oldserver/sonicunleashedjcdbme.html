@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="/Users/sevuganfamily/jcdbmeserver/images.ico">
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JCDBME Server - Sonic Unleashed JCDBME</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+            background-color: black;
+        }
+        label {
+            color: white;
+        }
+        #subtitle {
+            position: fixed; /* Use fixed positioning */
+            bottom: 80px; /* Adjust based on your layout */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+        #customControls {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            bottom: 30px;
+            margin-bottom: 20px;
+        }
+        #toggleCaptions, #fullscreenButton, #playPause, #sts, #cast {
+            padding: 5px 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        #toggleCaptions:hover, #fullscreenButton:hover, #playPause:hover, #sts:hover, #cast:hover {
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.7s;
+        }
+
+        /* Slider styles */
+        #progressContainer {
+            width: 100%;
+            cursor: pointer;
+            position: relative;
+            margin-top: 10px; /* Added margin for better spacing */
+        }
+        #progressSlider {
+            width: 100%;
+            -webkit-appearance: none; /* Remove default styles for Webkit */
+            background: #ddd; /* Background color */
+            height: 5px; /* Slider height */
+        }
+        #progressSlider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Remove default styles for Webkit */
+            appearance: none; /* Remove default styles for other browsers */
+            width: 15px; /* Thumb width */
+            height: 15px; /* Thumb height */
+            background: #33a7ff; /* Thumb color */
+            border-radius: 50%; /* Make it round */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+        #progressSlider::-moz-range-thumb {
+            width: 15px; /* Thumb width */
+            height: 15px; /* Thumb height */
+            background: #33a7ff; /* Thumb color */
+            border-radius: 50%; /* Make it round */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        /* Styling options */
+        #stylingOptions {
+            bottom: 0px;
+        }
+        .js-disabled-message {
+            background-color: red; /* Red background */
+            color: white; /* White text */
+            padding: 20px; /* Padding around the text */
+            text-align: center; /* Center text */
+            font-size: 24px; /* Font size */
+            position: absolute; /* Position it to cover the whole page */
+            top: 0; /* Align to the top */
+            left: 0; /* Align to the left */
+            right: 0; /* Align to the right */
+            bottom: 0; /* Align to the bottom */
+            z-index: 9999; /* Ensure it's on top */
+        }
+    </style>
+</head>
+<body>
+<noscript>
+    <div class="js-disabled-message" id="jsDisabledMessage">
+    JavaScript is disabled! Please enable JavaScript to view this page properly.
+</div>
+</noscript>
+<div style="position: relative;">
+    <video id="myVideo" width="640" height="720" controls>
+        <source src="http://192.168.254.161:8000/media/Sonic%20Unleashed%20JCDBME/Sonic%20Unleashed%20Japanese%20Cutscenes%20-%20Dubbed%20by%20Me.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <cast-media-player></cast-media-player>
+    
+    <div id="customControls">
+        <button id="playPause">Play</button>
+        <!--<button id="toggleCaptions">Toggle Captions</button>-->
+        <button onclick="cast()" id="cast">Cast To TV</button></a>
+        <button id="fullscreenButton">Fullscreen</button> <!-- Fullscreen Button -->
+    </div>
+
+    <div id="progressContainer">
+        <input id="progressSlider" type="range" value="0" min="0" max="100" step="1">
+    </div>
+    
+    <div id="subtitle"></div> <!-- Subtitle container -->
+
+    <!-- Styling Options Dropdowns -->
+    <div id="stylingOptions">
+        <label for="videoSize">Video Size:</label>
+        <select id="videoSize">
+            <option value="custom">Custom Video Size</option>
+            <option value="small" selected>Mobile Mode</option>
+        </select>
+
+        <!--<label for="subtitleSize">Subtitle Size:</label>
+        <select id="subtitleSize">
+            <option value="small">Small</option>
+            <option value="medium" selected>Medium (Default)</option>
+            <option value="large">Large</option>
+        </select>
+
+        <label for="subtitleColor">Subtitle Color:</label>
+        <input type="color" id="subtitleColor" value="#FFFFFF" />
+
+        
+            <a href="/Users/sevuganfamily/jcdbmeserver/check-if-server-online.html"><button id="sts">Check server status</button></a> -->
+        
+    </div>
+</div>
+
+<!-- Embedded WebVTT -->
+<script type="text/vtt" id="vtt-content">
+    
+          
+</script>
+
+<script>
+myVideo.removeAttribute('controls');
+
+// Function to cast
+function cast() {
+    alert("To cast in Chrome, click on the three dots, click on Cast, Save, & Share, click on Cast, and choose your preferences. Make sure to set the video size to Casting Mode.")
+}
+
+    // Function to parse WebVTT and extract subtitles
+    function parseWebVTT(vttContent) {
+        const lines = vttContent.split('\n');
+        const subtitles = [];
+        let currentSubtitle = {};
+
+        lines.forEach(line => {
+            const timestampMatch = line.match(/(\d+:\d+:\d+\.\d+) --> (\d+:\d+:\d+\.\d+)/);
+            if (timestampMatch) {
+                if (currentSubtitle.text) {
+                    subtitles.push(currentSubtitle);
+                }
+                currentSubtitle = {
+                    start: parseTime(timestampMatch[1]),
+                    end: parseTime(timestampMatch[2]),
+                    text: ''
+                };
+            } else if (line.trim()) {
+                currentSubtitle.text += (currentSubtitle.text ? ' ' : '') + line.trim();
+            }
+        });
+
+        if (currentSubtitle.text) {
+            subtitles.push(currentSubtitle);
+        }
+
+        return subtitles;
+    }
+
+    function parseTime(timeStr) {
+        const parts = timeStr.split(':');
+        const seconds = parseFloat(parts.pop());
+        return parts.reduceRight((acc, part) => {
+            return acc + parseInt(part, 10) * 60 ** (parts.length - 1);
+        }, seconds);
+    }
+
+    const vttElement = document.getElementById('vtt-content');
+    const subtitles = parseWebVTT(vttElement.textContent.trim());
+
+    const videoElement = document.getElementById('myVideo');
+    const subtitleElement = document.getElementById('subtitle');
+    const playPauseButton = document.getElementById('playPause');
+    const fullscreenButton = document.getElementById('fullscreenButton'); // Fullscreen button
+    const progressSlider = document.getElementById('progressSlider');
+    let captionsVisible = false;
+
+    // Function to display subtitles based on current time
+    function displaySubtitles() {
+        const currentTime = videoElement.currentTime;
+        const currentSubtitle = subtitles.find(sub => currentTime >= sub.start && currentTime <= sub.end);
+
+        if (currentSubtitle) {
+            subtitleElement.textContent = currentSubtitle.text;
+            subtitleElement.style.display = captionsVisible ? 'block' : 'none'; // Show or hide based on toggle
+        } else {
+            subtitleElement.style.display = 'none'; // Hide if no subtitle
+        }
+        const percentage = (currentTime / videoElement.duration) * 100;
+        progressSlider.value = percentage; // Update slider value
+    }
+
+    // Play/Pause function
+    playPauseButton.addEventListener('click', () => {
+        if (videoElement.paused) {
+            videoElement.play();
+            playPauseButton.textContent = 'Pause';
+        } else {
+            videoElement.pause();
+            playPauseButton.textContent = 'Play';
+        }
+    });
+
+    // Toggle captions function
+
+    // Fullscreen functionality for the browser
+    fullscreenButton.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen(); // Request fullscreen for the entire document
+            //videoElement.width = 1440; // Medium size
+            //videoElement.height = 1080;
+            fullscreenButton.textContent = 'Exit Fullscreen'; // Change button text
+        } else {
+            document.exitFullscreen(); // Exit fullscreen
+            //videoElement.width = 1280; // Small size
+            //videoElement.height = 720;
+            fullscreenButton.textContent = 'Fullscreen'; // Change button text back
+        }
+    });
+
+    // Update subtitles as the video plays
+    videoElement.addEventListener('timeupdate', displaySubtitles);
+
+    // Sync slider with video playback
+    progressSlider.addEventListener('input', () => {
+        const percentage = progressSlider.value / 100; // Get slider percentage
+        videoElement.currentTime = percentage * videoElement.duration; // Set video time based on slider
+        percentage = videoElement.duration;
+    });
+
+    // Hide default video controls
+    videoElement.controls = false; // Disable built-in controls
+
+    // Update subtitle position on fullscreen change
+    videoElement.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+            subtitleElement.style.bottom = '20px'; // Adjust for fullscreen
+        } else {
+            subtitleElement.style.bottom = '20px'; // Reset for regular mode
+        }
+    });
+
+    // Video size adjustment
+    const videoSizeSelect = document.getElementById('videoSize');
+    videoSizeSelect.addEventListener('change', () => {
+        const size = videoSizeSelect.value;
+        if (size === 'custom') {
+            let text;
+  let width = prompt("Please enter your custom video size width:", "1440");
+  if (width == null || width == "") {
+    videoElement.width = 1440;
+  } else {
+    videoElement.width = width;
+    console.log("Custom width is: " + width);
+    let text2;
+  let height = prompt("Please enter your custom video size height:", "720");
+  if (height == null || height == "") {
+    videoElement.height = 720;
+  } else {
+    videoElement.height = height;
+    console.log("Custom height is: " + height);
+  }
+  }
+
+        }
+         else if (size === 'cast') {
+            videoElement.width = 1200; // Casting size
+            videoElement.height = 1100;
+        } else if (size === 'small') {   
+            videoElement.width = 640; // Small size
+            videoElement.height = 720;
+        } else if (size === 'medium') {
+            videoElement.width = 1440; // Medium size
+            videoElement.height = 1080;
+        } else if (size === 'large') {
+            videoElement.width = 1720; // Large size
+            videoElement.height = 1080;
+        }
+    });
+
+    // Subtitle size adjustment
+
+
+    // Subtitle color adjustment
+    
+    // Wait until the Cast API is available
+    window['__onGCastApiAvailable'] = function(isAvailable) {
+      if (isAvailable) {
+        initializeCastApi();
+      }
+    };
+
+    // Initialize Cast API
+    function initializeCastApi() {
+      const context = cast.framework.CastContext.getInstance();
+      context.setOptions({
+        receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+        autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+      });
+
+    }
+</script>
+
+</body>
+</html>

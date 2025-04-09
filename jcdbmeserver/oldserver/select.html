@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JCDBME Server - Select a Movie</title>
+    <style>
+        body {
+        background-color: black;
+        }
+        h1 {
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+            text-align: center;
+        }
+        #sa2b, #unleash, #riders, #riderszg, #colors {
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 5px 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: 0.7s;
+            
+        }
+        .status {
+        color:red;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+        #select-movie {
+            margin-left: auto;
+  margin-right: auto;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+        }
+        #sa2b:hover, #unleash:hover, #riders:hover, #riderszg:hover, #colors:hover {
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.7s;
+        }
+    </style>
+  </head>
+  <body>
+    <h1>Select a Movie:</h1>
+    <div id="select-movie">
+    <a href="sa2bjcdbme.html"><button id="sa2b">Watch Sonic Adventure 2 Battle JCDBME</button></a>
+    <a href="sonicunleashedjcdbme.html"><button id="unleash">Watch Sonic Unleashed JCDBME</button></a>
+    <a href="sr-jcdbmeserver.html"><button id="riders">Watch Sonic Riders JCDBME</button></a>
+    <a href="srzg-jcdbmeserver.html"><button id="riderszg">Watch Sonic Riders: Zero Gravity JCDBME</button></a>
+    <a href="colors.html"><button id="riderszg">Watch Sonic Colors JCDBME</button></a>
+    <div id="status"></div>
+    </div>
+    <p id="info"></p>
+  </body>
+</html>

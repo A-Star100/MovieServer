@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JCDBME Server</title>
+    <style>
+    /* Global reset */
+    .noscript-tatus {
+        color:orange;
+    }
+
+    #download-dialog {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+    top: 0; /* Position the button at the top */
+    left: 0; /* Position the button at the left */
+    width: 100%; /* Make the button fill the entire width */
+    height: 100%; /* Make the button fill the entire height */
+    display: none; /* Use flexbox to center the text */
+    justify-content: center; /* Horizontally center the text */
+    align-items: center; /* Vertically center the text */
+    color: black; /* White text */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove the underline from the link */
+    /*font-weight: bold; /* Make the text bold */
+    z-index: 1000; /* Ensure the button is on top of other elements */
+    transition: background-color 0.3s ease; /* Smooth background color change */
+        }
+
+        #download-dialog .dialog-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        #download-dialog .dialog-content h3 {
+            margin: 0 0 20px 0;
+            color: #000;
+        }
+
+        .download-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .download-button:hover {
+            background-color: #0056b3;
+        }
+
+        .volume-container {
+      display: flex;
+      align-items: center;
+      margin: 20px;
+      position: fixed;
+      bottom: 15px; /* Distance from the bottom */
+      right: 90px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .volume-slider {
+      width: 200px;
+      margin-right: 10px;
+    }
+    .volume-percentage {
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    .volume-icon {
+      font-size: 24px;
+    }
+
+    #muteButton {
+      position: fixed;
+      bottom: 40px; /* Distance from the bottom */
+      right: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #muteButton:hover {
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Icon styles */
+    .file-icon, .clapper-icon, .oldserver-icon {
+        position: fixed;
+        bottom: 40px; /* Distance from the bottom */
+        width: 50px;  /* Icon size */
+        height: 50px; /* Icon size */
+        background-size: contain; /* Makes sure the icon fits the container */
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 1000; /* Ensure it stays on top of other elements */
+        background-color: #fff;
+        border: 2px solid #333;
+        color: #333;
+        font-size: 1rem;
+        padding: 15px 30px;
+        cursor: pointer;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .file-icon {
+        left: 90px; /* Distance from the left */
+        background-image: url('/images/past.png'); /* Path to your icon */
+    }
+
+    .clapper-icon {
+        left: 20px; /* Distance from the left */
+        background-image: url('/images/behindthescenes.png'); /* Path to your icon */
+    }
+
+    .oldserver-icon {
+        left: 160.5px; /* Distance from the left */
+        background-image: url('/images/party-popper.png'); /* Path to your icon */
+    }
+
+    .file-icon:hover, .clapper-icon:hover, .oldserver-icon:hover {
+        background-color: #333;
+        transform: scale(1.23);
+    }
+
+    .file-icon:active, .clapper-icon:active, .oldserver-icon:active {
+        transform: scale(0.93);
+    }
+    
+    .misciconcontainer {
+        display: flex;
+        gap: 70px; /* Spacing between buttons */
+    }
+    html, body {
+        font-family: Arial, sans-serif;
+        height: 100%;
+        margin: 0;
+    }
+
+    .backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 150%;
+        object-fit: cover; /* Ensures the video covers the entire screen */
+        z-index: -1; /* Place the video behind other content */
+    }
+
+    body {
+        background-color: #f4f4f4; /* Light background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: Helvetica, sans-serif;
+    }
+    /* Container for centering content */
+    .container {
+        text-align: center;
+    }
+
+    /* Heading styles */
+    h1 {
+        font-size: 2.5rem;
+        color: #fff;
+        margin-bottom: 40px;
+    }
+
+    /* Button container for alignment */
+    .button-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom:-90px;
+    display: flex; /* Use flexbox to center the text */
+    justify-content: center; /* Horizontally center the text */
+    align-items: center; /* Vertically center the text */
+    color: black; /* White text */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove the underline from the link */
+    /*font-weight: bold; /* Make the text bold */
+        gap: 20px; /* Spacing between buttons */
+    }
+    .button-container2 {
+        display: flex;
+        justify-content: center;
+        margin-bottom:-130px;
+    display: flex; /* Use flexbox to center the text */
+    justify-content: center; /* Horizontally center the text */
+    align-items: center; /* Vertically center the text */
+    color: black; /* White text */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove the underline from the link */
+    /*font-weight: bold; /* Make the text bold */
+        gap: 20px; /* Spacing between buttons */
+    }
+
+
+
+    /* Button styles */
+    .movie-button {
+        justify-content: center;
+        background-color: #fff;
+        border: 2px solid #333;
+        color: #333;
+        font-size: 1rem;
+        padding: 15px 30px;
+        cursor: pointer;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    /* Mobile styles */
+    @media (max-width: 943px) {
+        .movie-button {
+            font-size: 0.75rem; /* Smaller font size */
+            padding: 10px 20px; /* Reduced padding */
+            border-radius: 8px; /* Smaller border radius */
+            max-width: 90%; /* Set max-width */
+            margin: 10px auto; /* Center the button */
+            width: fit-content;
+            height: fit-content;
+        }
+
+        .file-icon, .clapper-icon, .oldserver-icon {
+            width: 40px; /* Smaller icon size */
+            height: 40px; /* Smaller icon size */
+            margin-bottom: -10px;
+            padding: 8px 16px; /* Adjust padding */
+            font-size: 0.75rem; /* Smaller font size for icons */
+        }
+
+        .preview {
+            width: 240px;
+            height: 140px;
+        }
+
+        .backdrop {
+            width: 100%;
+            height: 120%;
+        }
+        .border-box {
+        height: 0px;
+    }
+        .preview {
+          margin-right: 30px;  
+        }
+        .status {
+            top: 170px
+        }
+    }
+    
+    /* Hover effect */
+    .movie-button:hover {
+        background-color: #333;
+        color: #fff;
+        transform: scale(1.03);
+    }
+
+    /* Active state (when clicked) */
+    .movie-button:active {
+        transform: scale(0.98);
+    }
+
+
+    img {
+        padding: 20px;
+        border-radius: 25px;
+    }
+    .status {
+        color:red;
+        margin-bottom: 80px
+    }
+    
+    .border-box {
+        height: 110px;
+    }
+    </style>
+</head>
+<body>
+    <div id="download-dialog">
+        <div class="dialog-content">
+            <h3>Party Mode!</h3>
+            <p id="advice"></p>
+            <h3>  </h3>
+            <button id="close-button" onclick="closeDownloadDialog()">Ok!</button>
+        </div>
+    </div>
+    <div id="status"></div>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/src/howler.core.js"></script>
+    <div class="video-container">
+    <video autoplay muted loop class="backdrop">
+        <source src="background.webm" type="video/webm">
+        Your browser does not support the video tag.
+    </video>
+</div>
+    <div class="container">
+        <div class="border-box"></div>
+        <div class="border-box"></div>
+        <h1>Select a Movie</h1>
+        <div class="button-container">
+            <a href="/sonicxshadowhls/stream.html"><button class="movie-button" id="sonicxshadow">Sonic X Shadow - JCDBME Short
+                <h3>  </h3>
+                <img width="480" height="290" class="preview" src="/images/previewimg1.png">
+            </button>
+            </a>
+            <a href="/knuxmpegdash/stream.html"><button class="movie-button" id="knuckles">Knuckles's Story - JCDBME Short
+                <h3>  </h3>
+                <img width="480" height="290" class="preview" src="/images/previewimg2.png">
+            </button>
+            </a>
+        </div>
+        <div class="border-box"></div>
+        <div class="container">
+            <div class="button-container2">
+                <a href="https://bit.ly/jcdbme"><button class="movie-button" id="knuckles">JCDBME Website
+                    <h3>  </h3>
+                    <img width="480" height="290" class="preview" src="/images/previewimg3.jpg">
+                </button>  
+            </div>
+        <div class="misciconcontainer">
+            <a class="clapper-icon" href="https://docs.google.com/document/d/1c9PwXChWVek5vQbJVrVw8nk7dZn72LElTYOWb9CiG5w/edit?usp=sharing" title="Behind The Scenes - Learn more about how this was made."></a>
+            <!--<a class="file-icon" href="" title="File browser to browse root directory of server."></a>-->
+            <a onclick="partyMode()" title="Party Mode - Where a random sentence will make up what you have to do for the time being." class="oldserver-icon"></a>
+            <a href="/oldserver/select.html" title="Older layout of JCDBME Server for its Electron app (which no longer works)." class="file-icon"></a>
+        </div>
+    </div>
+    <div class="volume-container">
+        <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="50">
+        <span id="volume-percentage" class="volume-percentage">100%</span>
+        <span id="volume-icon" class="volume-icon">🔊</span>
+      </div>
+    <button id="muteButton">🔉</button>
+    <noscript>
+        <div id="noscript-status"><B>JavaScript has been disabled. Parts of the site may not function as expected.</B></div>
+        <audio id="menuost">
+            <source src="/audio/what-u-need-sonicrush.mp3" type="audio/mp3">
+            <!-- Fallback content for unsupported browsers -->
+            Your browser does not support the audio tag.
+        </audio> 
+    </noscript>
+<script>
+    // Create a Howler sound object
+    var sound = new Howl({
+      src: ['/audio/what-u-need-sonicrush.mp3'], // Your sound file
+      volume: 0.5,
+      loop: true,
+    });
+    sound.play();
+ 
+    // Volume slider functionality
+  const volumeSlider = document.getElementById('volume-slider');
+  const volumePercentage = document.getElementById('volume-percentage');
+  const volumeIcon = document.getElementById('volume-icon');
+
+  // Update Howler volume and UI elements based on slider
+  volumeSlider.addEventListener('input', function() {
+    const volume = volumeSlider.value / 100;
+    sound.volume(volume);
+
+    // Update volume percentage text
+    volumePercentage.textContent = `${volumeSlider.value}%`;
+
+    // Change volume icon/text based on volume level
+    if (volume === 0) {
+      volumeIcon.textContent = '🔇';  // Mute icon
+    } else if (volume <= 0.33) {
+      volumeIcon.textContent = '🔈';  // Low volume icon
+    } else if (volume <= 0.66) {
+      volumeIcon.textContent = '🔉';  // Medium volume icon
+    } else {
+      volumeIcon.textContent = '🔊';  // High volume icon
+    }
+  });
+
+  // Initialize volume to match the slider's initial position
+  volumeSlider.value = sound.volume() * 100;
+  volumePercentage.textContent = `${volumeSlider.value}%`;
+
+    function checkServerStatus() {
+            // Try fetching the server's status (use your API endpoint or any valid route)
+            fetch('https://192.168.254.137:4443/')  // Replace with your server's URL
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Server is down');
+                        console.error('Server is down')
+                    }
+                    document.getElementById('status').innerHTML = ''; // Clear any error messages
+                    document.getElementById('status').style.display = 'none'; // Clear any error messages
+                })
+                .catch(error => {
+                    document.getElementById('status').style.display = 'block'; // Clear any error messages
+                    // If the server is down or unreachable, show an alert
+                    console.error('Server is down/unreachable - expect videos to freeze if not fully downloaded on any page of site')
+                    document.getElementById('status').style.color = 'red';
+                    document.getElementById('status').innerHTML = '<b>Server has shut down or files on it aren\'t accessible for now, you\'ll need to wait to be able to stream or visit the site again.</b>';
+                    alert("Server has shut down or files on it aren't accessible for now")
+                    clearInterval(intervalId);
+                });
+        }
+
+        window.onload = closeDownloadDialog()
+
+        // Check server status every 10 seconds (adjust as needed)
+        intervalId = setInterval(checkServerStatus, 3000);  // 10000ms = 10 seconds
+
+        // Initial check on page load
+        checkServerStatus();
+    
+        function handleVisibilityChange() {
+            if (document.hidden) {
+                // Page is hidden (minimized or switched to a background tab)
+                //console.log('Page is hidden. Pausing sound.');
+                sound.pause();  // Pause the sound
+            } else {
+                // Page is visible (user returns to the tab)
+                //console.log('Page is visible. Resuming sound.');
+                sound.play();   // Resume the sound
+            }
+        }
+
+        // Check for the visibilitychange event (works in modern browsers)
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        // Initial check (if the page was already hidden before the script loaded)
+        if (document.hidden) {
+            sound.pause();
+        } else {
+            sound.play();
+        }
+        // Mute/Unmute button functionality
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const muteButton = document.getElementById('muteButton');
+      let isMuted = false;
+
+      muteButton.addEventListener('click', () => {
+        isMuted = !isMuted;  // Toggle mute state
+
+        if (isMuted) {
+            const volumeSlider = document.getElementById('volume-slider');
+  const volumePercentage = document.getElementById('volume-percentage');
+  const volumeIcon = document.getElementById('volume-icon');   
+          sound.mute(true);  // Mute the sound
+          muteButton.textContent = '🔇';  // Change button text
+            // Volume slider functionality
+  volumeSlider.value = 0;
+          volumeIcon.textContent = '🔇';  // Mute icon
+          volumePercentage.textContent = `${volumeSlider.value}%`;
+        } else {
+          sound.mute(false);  // Unmute the sound
+          const volumeSlider = document.getElementById('volume-slider');
+  const volumePercentage = document.getElementById('volume-percentage');
+  const volumeIcon = document.getElementById('volume-icon');
+          volumeSlider.value = sound.volume() * 100;;
+          const volume = volumeSlider.value / 100;
+          if (volume === 0) {
+      volumeIcon.textContent = '🔇';  // Mute icon
+    } else if (volume <= 0.33) {
+      volumeIcon.textContent = '🔈';  // Low volume icon
+    } else if (volume <= 0.66) {
+      volumeIcon.textContent = '🔉';  // Medium volume icon
+    } else {
+      volumeIcon.textContent = '🔊';  // High volume icon
+    }
+  ;
+          volumePercentage.textContent = `${volumeSlider.value}%`;
+          muteButton.textContent = volumeIcon.textContent;  // Change button text
+        }
+      });
+    });
+    function partyMode() {
+        var adviceElement = document.getElementById("advice")
+        var advice = Math.floor(Math.random() * 4) + 1;  
+        var dialog = document.getElementById("download-dialog")
+        dialog.style.display = 'flex';
+        adviceElement.innerHTML = "Get a dice and roll it. Then, the number you rolled is the number of a scene in the movie you watched, which you must then try to draw one frame of.  If you presume are more than 6 scenes in the video, roll the dice twice and add the numbers you rolled each time, then round the sum, and draw one frame from the <i>rounded</i> scene of the video (e.g if the rounded number is 10 the 10th scene of the video)"     
+       
+        if (advice == 1) {
+            adviceElement.innerText = "Watch a movie of your choice with a friend or two nearby, then tell each other what you liked best about your experience!"
+        } 
+        
+        if (advice == 2) {
+            adviceElement.innerText = "Cosplay (with or without costumes) as the character you liked the best in the movie you chose to watch, then take on the adventure of thinking of what you would\'ve wanted to happen and bring it to life! (That is, if you want to)"    
+        }
+
+        if (advice == 4) {
+            adviceElement.innerHTML = "Take a piece of paper and cut it out to make 5 cards. Draw a small frame of each movie on each card and try to get your friends to guess which movie the frame was from! If they guess correctly, they can pick a random challenge from Party Mode."    
+            // OLD 4TH CHALLENGE "Take a piece of paper and cut it out to make 5 cards. The first card should say: <i>Which movie do you choose? Movie 1 or 2?</i>. The second card should say: <i>Congratulations if you have found this card... but it's useless...</i>. Make the third and fourth card say what the second card says and make the fifth card say what the first card does. Lay the cards around in random places. Whoever returns the first and fifth cards gets to choose another challenge from Party Mode. If the challenge is this same one, retry it again but place all the cards in reverse order from where you placed them earlier."
+        }
+     
+     
+        $('#download-dialog').show(); // Show the "download ready" dialog 
+    }
+    function closeDownloadDialog() {
+        $('#download-dialog').hide(); // Hide the "download ready" dialog  
+    }
+function downloadVideo() {
+    window.open("h264.mp4")
+}
+function checkOrientation() {
+    const imgElements = document.getElementsByClassName("preview");
+    const backdrop = document.getElementById("backdrop");
+
+    // Check if imgElements and backdrop are found before modifying styles
+    if (backdrop) {
+        if (window.screen.orientation.type.startsWith("portrait") && window.matchMedia("(max-width: 767px)").matches) {
+            // Hide preview images in portrait mode
+            for (var i = 0; i < imgElements.length; i++) {
+                imgElements[i].style.width = "100px";
+                imgElements[i].style.height = "90px";
+            }
+            // Resize the backdrop video
+            backdrop.style.height = "100%";
+            backdrop.style.width = "100%";
+        } else if (window.screen.orientation.type.startsWith("landscape") && window.matchMedia("(max-width: 767px)").matches) {
+            // Show preview images in landscape mode
+            for (var i = 0; i < imgElements.length; i++) {
+                imgElements[i].style.width = "240px";
+                imgElements[i].style.height = "140px";
+            }
+            backdrop.style.height = "fit-content";
+            backdrop.style.width = "100%";
+        }
+    }
+}
+
+// Ensure the DOM is loaded before trying to manipulate elements
+document.addEventListener("DOMContentLoaded", function() {
+    checkOrientation();
+    window.addEventListener('orientationchange', checkOrientation);
+});
+
+</script>
+</body>
+</html>

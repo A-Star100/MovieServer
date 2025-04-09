@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<head>
+    <title>JCDBME Server - JCDBME Generations Trailer</title>
+  <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
+  <link
+  href="https://unpkg.com/@videojs/themes@1/dist/forest/index.css"
+  rel="stylesheet"
+/>
+<style>
+html, body {margin: 0; height: 100%; overflow: hidden}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <button class="full-screen-button" id="videoButton">Watch Video</button>
+
+
+  <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+  <!-- <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script> -->
+   <style>
+    body {
+        font-family:  Helvetica, Arial, sans-serif;
+        background-color: black;
+    }
+    
+    #context-area {
+        margin: auto;
+  width: 90%;
+  padding: 10px;
+    }
+    #vjs-no-js {
+        z-index: 9999;
+    }
+    #custom-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            list-style-type: none;
+            padding: 5px;
+        }
+        #custom-menu li {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        #custom-menu li:hover {
+            background-color: #f0f0f0;
+        }
+        .dialog {
+    display: none; /* Hide dialog by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.dialog-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.full-screen-button {
+            position: fixed; /* Fixed position to cover the whole viewport */
+            top: 0;          /* Align to the top */
+            left: 0;         /* Align to the left */
+            width: 100%;     /* Full width */
+            height: 100%;    /* Full height */
+            background-color: rgba(0, 123, 255, 0.8); /* Semi-transparent blue */
+            color: white;    /* White text */
+            font-size: 36px; /* Large font size */
+            display: flex;    /* Flexbox to center text */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            border: none;     /* No border */
+            cursor: pointer;  /* Pointer cursor */
+            z-index: 999;     /* Ensure it’s above other elements */
+            opacity: 0;       /* Start hidden */
+            transition: opacity 0.3s; /* Smooth transition for opacity */
+        }
+
+        .full-screen-button.visible {
+            opacity: 1; /* Show button when visible class is added */
+        }
+   </style>
+</head>
+
+<body>
+<div id="context-area">
+  <video
+    id="my-video"
+    class="video-js vjs-theme-forest"
+    controls
+    preload="auto"
+    poster="https://www.dropbox.com/scl/fi/d4gp4zl9pa3d5zoktwiv0/Screenshot-2024-10-23-at-7.19.29-PM.png?rlkey=gdg36liosl47f7at5b64ydqt9&st=3srex2tl&raw=1"
+    width="1040"
+    height="480"
+    data-setup="{}"
+  >
+    <source src="" type="video/mp4" />
+
+  </video>
+</div>
+<ul id="custom-menu">
+    <li id="menu-item-4">Enable video looping</li>
+    <li id="menu-item-5">Get sharable link</li>
+<li id="menu-item-6">Open video in New Tab</li>
+</ul>
+
+  <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
+
+
+    <script>
+        function isMobile() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
+        const videoUrl = "https://www.dropbox.com/scl/fi/t3sbolpaxqn4bg2x7m97n/JCDBME-Generations-Trailer-Full.mp4?rlkey=q6pclg0wqsedlej3szdnl1bot&st=s66jlbex&raw=1";
+
+        // Function to handle button click
+        function handleButtonClick() {
+            window.location.href = videoUrl; // Replace with your video URL
+        }
+        fetch(videoUrl)
+            .then(response => {
+                // Ensure the response is ok
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob(); // Convert the response to a Blob
+            })
+            .then(blob => {
+                // Create a Blob URL and set it as the video source
+                const videoElement = document.getElementById('my-video');
+                const blobUrl = URL.createObjectURL(blob); // Create a blob URL
+                videoElement.src = blobUrl; // Set the video src to the blob URL
+                console.log('Video Blob URL:', blobUrl);
+            })
+        // Show the button only on mobile devices
+        if (isMobile()) {
+            const button = document.getElementById('videoButton');
+            button.classList.add('visible'); // Add visible class to show button
+
+            // Add click event listener
+            button.onclick = handleButtonClick;
+        } else {
+            const button = document.getElementById('videoButton');
+            button.style.display = 'none'; // Hide the button on desktop
+        }
+
+        // others
+        document.addEventListener('DOMContentLoaded', function() {
+
+    // Close the dialog if the user clicks anywhere outside of the dialog content
+    window.onclick = function(event) {
+        if (event.target === dialog) {
+            dialog.style.display = 'none';
+        }
+    }
+});
+
+        $(document).ready(function() {
+            // Prevent the default context menu on right-click
+            $('#context-area').on('contextmenu', function(e) {
+                e.preventDefault();
+
+                // Show custom context menu at mouse position
+                $('#custom-menu')
+                    .css({
+                        top: e.pageY + 'px',
+                        left: e.pageX + 'px'
+                    })
+                    .show();
+            });
+
+            // Hide custom context menu when clicking anywhere
+            $(document).on('click', function() {
+                $('#custom-menu').hide();
+            });
+
+            // Optional: Handle click on a context menu item
+            $('#custom-menu li').on('click', function() {
+                //alert($(this).text() + ' clicked!');
+                if ($(this).text() === "Open video in New Tab") {
+                    window.open("https://www.dropbox.com/scl/fi/t3sbolpaxqn4bg2x7m97n/JCDBME-Generations-Trailer-Full.mp4?rlkey=q6pclg0wqsedlej3szdnl1bot&st=s66jlbex&raw=1"
+                    )
+                } else if ($(this).text() === "View video on JCDBME website") {
+                    window.open("https://bit.ly/jcdbme")
+                } else if ($(this).text() === "Check server availability") {
+                    function openDialog() {
+        dialog.style.display = 'block';
+    }
+                  openDialog();
+                } else if ($(this).text() === "Enable video looping") { 
+                    
+                   // Get the video element
+const player = videojs('my-video');
+const looping = document.getElementById("menu-item-4");
+
+// Enable looping
+player.loop(true); // Enable loop
+console.log("loop was enabled")
+looping.innerText = "Disable video looping"; 
+                } else if ($(this).text() === "Disable video looping") {
+                    const player = videojs('my-video');
+                    const looping = document.getElementById("menu-item-4");
+
+// Disable looping
+player.loop(false); // Enable loop
+console.log("loop was disabled")
+    looping.innerText = "Enable video looping";
+                } else if ($(this).text() === "Get sharable link") {
+                    window.open("https://drive.google.com/file/d/1Ti60L71ud6ZSXaR5lwu9RC-xLsrjc5SK/view?usp=drive_link")
+                }
+                $('#custom-menu').hide();
+            });
+        });
+    </script>
+</body>

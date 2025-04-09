@@ -1,4 +1,7 @@
-# MovieServer
+# MovieServer - Local Copy
+This is the local version of MovieServer (without large files) used for the [JCDBME fandubs](https://bit.ly/jcdbme) that I have created in the past. This version will more up to date with the local copy on my computer.
+
+
 This tool creates a Node.js server to serve movies with a pre-built UI. To use this code, you will need:
 | Software | Status |
 | -------- | ------- |

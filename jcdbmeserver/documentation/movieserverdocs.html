@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieServer Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+    body {
+            font-family: Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #20242a;
+            color: #ffffff;
+        }
+
+        .header {
+            background-color: #008bff;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .main {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #282d33;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            color: #ffffff;
+            font-size: 18px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .content {
+            padding: 20px;
+            flex: 1;
+            box-sizing: border-box;
+        }
+
+        .content h2 {
+            color: #ffffff;
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        .command-box {
+            background-color: #333a40;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: monospace;
+            color: #ffffff;
+            position: relative;
+        }
+
+        .command-box:hover {
+            cursor: pointer;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #005a9c;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            opacity: 0;
+            cursor: pointer;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .command-box:hover .copy-button {
+            opacity: 1;
+        }
+
+        .copy-button:hover {
+            background-color: #007bff;
+        }
+
+        a {
+            text-decoration: none;
+            color: #008bff;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .other {
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;  
+        }
+
+        a:hover {
+            color: #008cffda;
+            text-decoration: underline;
+        }
+
+    .other:hover {
+            text-decoration: underline;  
+        }
+
+        h4 {
+            font-size: 18px;
+        }
+
+        /* Hide the hamburger menu by default on larger screens */
+.hamburger-menu {
+  display: none;
+}
+
+.sidebar {
+    display: block;
+}
+
+/* Media query for small screens (phones) */
+@media (max-width: 768px) {
+    /* Hide the sidebar on small screens */
+    .sidebar {
+        display: none;
+    }
+
+    /* Show the hamburger menu on small screens */
+    .hamburger-menu {
+        display: block;
+        background-color: #333;
+        color: white;
+        font-size: 30px;
+        border: none;
+        padding: 15px;
+        cursor: pointer;
+        position: absolute;
+        top: 10px; /* Adjust this to provide some space from the top */
+        left: 10px; /* Adjust this to ensure the button is away from the left edge */
+        z-index: 20; /* Ensure it stays on top of other elements */
+    }
+
+    /* Modify the content layout for smaller screens */
+    #content {
+        margin-left: 0;
+    }
+
+    /* If necessary, add padding or margin to header to avoid overlap */
+    .header {
+        padding-top: 80px; /* Adjust this to give space for the hamburger menu */
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>MovieServer Documentation</h1>
+        <h1>Getting Started</h1>
+    </div>
+    <div class="main">
+        <button id="hamburger-menu" class="hamburger-menu">&#9776;</button>
+        <div class="sidebar">
+            <ul>
+                <li><b>Getting Started</b></li>
+                <li class="other"><a href="./adding-movies.html">Adding Movies to Stream</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>Getting Started</h1>
+            <p>Welcome to the MovieServer documentation page!</p>
+            <h2>Installation</h2>
+            <p>First, go ahead and visit <a href="https://github.com/A-Star100/MovieServer/releases/latest">the MovieServer Installer page</a> and choose the right installer for your operating system.</p>
+            <small><i>The Windows installer is a .bat file, and the Mac and Linux installers are .sh files.</i></small>
+
+            <h4>Windows</h4>
+            <p>Download the <i>MovieServer-Installer-Win.bat</i> file and open it in File Explorer. If you see a Windows Defender warning (a dialog that appears before you open the file with a button named <i>Run Anyway</i>), click <i>More Info...</i>, then click <i>Run Anyway</i>. Then open <i>ip.bat</i> in the MovieServer folder. You will receive the same Windows Defender warning. Click <i>More Info...</i>, then <i>Run Anyway</i>.</p>
+            <p>Once the necessary tools are installed, and the MovieServer source code is installed, you should see a directory called <i>MovieServer</i> in your home directory.</p>
+
+            <h4>Mac/Linux</h4>
+            <p>Download the MovieServer-Installer-Mac.sh/MovieServer-Installer-Debian-Linux.sh file and open the <i>Terminal</i> app on your computer. Then type:</p>
+            <div class="command-box">
+                <p id="code1">
+                    cd ~/Downloads/</p>
+                <button class="copy-button" id="copy-button1" onclick="copyToClipboard('code1')">Copy to clipboard</button>
+            </div>
+            <small>Assuming installer <i>.sh</i> file is in Downloads folder.</small>
+            
+
+            <p>Then execute the script.</p>
+
+            <div class="command-box">
+                <p id="code2">
+                    # On Mac
+                    <br></br>
+                    ./MovieServer-Installer-Mac.sh</p>
+                <button class="copy-button" id="copy-button2" onclick="copyToClipboard('code2')">Copy to clipboard</button>
+            </div>
+
+            <div class="command-box">
+                <p id="code3">
+                    # On Linux
+                    <br></br>
+                    ./MovieServer-Installer-Debian-Linux.sh</p>
+                <button class="copy-button" id="copy-button3" onclick="copyToClipboard('code3')">Copy to clipboard</button>
+            </div>
+ <h3> </h3>
+            <h2>Modification</h2>
+            <p>Now that you've installed the dependencies and downloaded the source code, it is time to modify any IP addresses in files.</p>
+
+            <h4>Windows</h4>
+            <p>First, you need to find out your IP address on Windows. Open the <i>Terminal</i> app on your computer, then type:</p>
+            <div class="command-box">
+                <p id="code4">ipconfig | findstr IPv4</p>
+                <button class="copy-button" id="copy-button4" onclick="copyToClipboard('code4')">Copy to clipboard</button>
+            </div>
+            <p>You should see your IPv4 address. Copy-paste it and close Terminal.</p>
+            <p>Then open <i>ip.bat</i> in the MovieServer folder. If you see a Windows Defender warning (a dialog that appears before you open the <i>ip.bat</i> file with a button named <i>Run Anyway</i>), click <i>More Info...</i>, then click <i>Run Anyway</i>. You should now be prompted to enter an IP address.</p>
+            <p>Once you've entered your IP address, the program will look for all mentions of <i>192.168.254.137</i> in the MovieServer directory, and will replace them with the IP address you entered. Then, backup files with the <i>.bak</i> extension will be created in a folder called <i>backups</i>. This is done so that in the rare case of an error occurring and the modified files are damaged, you can refer to the backed-up versions and try to redo the process, or as a last resort, modify the program in any text editor or IDE.</p>
+            <h4>Mac/Linux</h4>
+        <p>First, you need to find out your IP address. Open the <i>Terminal</i> app on your computer, then type:</p>
+        <div class="command-box">
+            <p id="code5">
+                # On Mac<br></br>
+                ipconfig getifaddr en0</p>
+            <button class="copy-button" id="copy-button5" onclick="copyToClipboard('code5')">Copy to clipboard</button>
+        </div>
+        <br></br>
+        <p>You should see your IPv4 address. Copy-paste it and close Terminal.</p>
+        <div class="command-box">
+            <p id="code6">
+                # On Linux<br></br>
+                hostname -I | awk '{ print $1 }'</p>
+            <button class="copy-button" id="copy-button6" onclick="copyToClipboard('code6')">Copy to clipboard</button>
+        </div>
+        <br></br>
+        <p>You should see your IPv4 address. Copy-paste it and close Terminal.</p>
+        <p>Then execute <i>ip.sh</i> in Terminal.</p>
+
+            <div class="command-box">
+                <p id="code7">
+                    # On Mac & Linux
+                    <br></br>
+                    ~/MovieServer/ip.sh</p>
+                <button class="copy-button" id="copy-button7" onclick="copyToClipboard('code7')">Copy to clipboard</button>
+            </div>
+            <p>You should be prompted for an IP address. Enter the IPv4 address you found earlier, and then you should be ready to go.</p>
+            <p>The program does the same thing that the Windows version does on Mac and Linux.</p>
+            <h3>Starting the server</h3>
+        <p>Now that you have finally modified all the IP addresses and installed all dependencies, we can now start the server. In the next chapter, we'll review how to add the movies to watch.</p>
+            <h4>Windows</h4>
+        <p>On Windows, type in:</p>
+        <div class="command-box">
+                <p id="code8">
+                    cd %USERPROFILE%\MovieServer && node server.js
+                </p>
+                <button class="copy-button" id="copy-button8" onclick="copyToClipboard('code8')">Copy to clipboard</button>
+            </div>
+            <p>The servers should be available at your IP address with different ports printed once you start the servers.</p>
+            <h4>Mac/Linux</h4>
+            <p>On Mac/Linux, type in:</p>
+            <div class="command-box">
+                    <p id="code9">
+                        cd ~/MovieServer && node server.js   
+                    </p>
+                    <button class="copy-button" id="copy-button9" onclick="copyToClipboard('code9')">Copy to clipboard</button>
+                </div>
+                <p>The servers should be available at your IP address with different ports printed once you start the servers.</p>
+        </div>
+    </div>
+        </div>
+
+
+    <script>
+        function copyToClipboard(id) {
+    var text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        // Try to find the copy button dynamically
+        var copyBtn = document.getElementById('copy-button' + id.charAt(id.length - 1)); 
+        
+        if (copyBtn) {  // Check if the button exists before modifying it
+            copyBtn.innerHTML = "<i>Copied</i>";
+            setTimeout(function () {
+                copyBtn.innerHTML = "Copy";
+            }, 2000);
+        }
+    }).catch(err => {
+        console.error("Failed to copy text: ", err);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+    const sidebar = document.querySelector('.sidebar');
+
+    // Ensure the elements exist before adding event listeners
+    if (hamburgerMenu && sidebar) {
+        hamburgerMenu.addEventListener('click', () => {
+            // Toggle sidebar visibility
+            if (sidebar.style.display === 'block') {
+                sidebar.style.display = 'none';
+            } else {
+                sidebar.style.display = 'block';
+            }
+        });
+    }
+});
+
+
+
+    </script>
+</body>
+</html>

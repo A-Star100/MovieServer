@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="/Users/sevuganfamily/jcdbmeserver/images.ico">
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JCDBME Server - Sonic Adventure 2 JCDBME</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+            background-color: black;
+        }
+        label {
+            color: white;
+        }
+        #subtitle {
+            position: fixed; /* Use fixed positioning */
+            bottom: 80px; /* Adjust based on your layout */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+        #customControls {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            bottom: 30px;
+            margin-bottom: 20px;
+        }
+        #toggleCaptions, #fullscreenButton, #playPause, #sts, #cast {
+            padding: 5px 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        #toggleCaptions:hover, #fullscreenButton:hover, #playPause:hover, #sts:hover, #cast:hover {
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.7s;
+        }
+
+        /* Slider styles */
+        #progressContainer {
+            width: 100%;
+            cursor: pointer;
+            position: relative;
+            margin-top: 10px; /* Added margin for better spacing */
+        }
+        #progressSlider {
+            width: 100%;
+            -webkit-appearance: none; /* Remove default styles for Webkit */
+            background: #ddd; /* Background color */
+            height: 5px; /* Slider height */
+        }
+        #progressSlider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Remove default styles for Webkit */
+            appearance: none; /* Remove default styles for other browsers */
+            width: 15px; /* Thumb width */
+            height: 15px; /* Thumb height */
+            background: #33a7ff; /* Thumb color */
+            border-radius: 50%; /* Make it round */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+        #progressSlider::-moz-range-thumb {
+            width: 15px; /* Thumb width */
+            height: 15px; /* Thumb height */
+            background: #33a7ff; /* Thumb color */
+            border-radius: 50%; /* Make it round */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        /* Styling options */
+        #stylingOptions {
+            bottom: 0px;
+        }
+        .js-disabled-message {
+            background-color: orange; /* Red background */
+            color: white; /* White text */
+            padding: 20px; /* Padding around the text */
+            text-align: center;
+            font-size: 24px; /* Font size */
+            position: absolute; /* Position it to cover the whole page */
+            top: 0; /* Align to the top */
+            left: 0; /* Align to the left */
+            right: 0; /* Align to the right */
+            bottom: 0; /* Align to the bottom */
+            z-index: 9999; /* Ensure it's on top */
+            width: 1440px;
+            height: 1080px
+        }
+    </style>
+</head>
+<body>
+<noscript>
+    <div class="js-disabled-message" id="jsDisabledMessage">
+    JavaScript is disabled! Please enable JavaScript to view this page properly.
+</div>
+</noscript>
+<div style="position: relative;">
+    <video id="myVideo" width="640" height="720" controls>
+        <source src="http://192.168.254.161:8000/media/SA2B%20Japanese%20Cutscenes%20Dubbed%20by%20me.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <cast-media-player></cast-media-player>
+    
+    <div id="customControls">
+        <button id="playPause">Play</button>
+        <button id="toggleCaptions">Toggle Captions</button>
+        <button onclick="cast()" id="cast">Cast To TV</button></a>
+        <button id="fullscreenButton">Fullscreen</button> <!-- Fullscreen Button -->
+    </div>
+
+    <div id="progressContainer">
+        <input id="progressSlider" type="range" value="0" min="0" max="100" step="1">
+    </div>
+    
+    <div id="subtitle"></div> <!-- Subtitle container -->
+
+    <!-- Styling Options Dropdowns -->
+    <div id="stylingOptions">
+        <label for="videoSize">Video Size:</label>
+        <select id="videoSize">
+            <option value="custom">Custom Video Size</option>
+            <option value="small" selected>Mobile Mode</option>
+        </select>
+
+        <label for="subtitleSize">Subtitle Size:</label>
+        <select id="subtitleSize">
+            <option value="small">Small</option>
+            <option value="medium" selected>Medium (Default)</option>
+            <option value="large">Large</option>
+        </select>
+
+        <label for="subtitleColor">Subtitle Color:</label>
+        <input type="color" id="subtitleColor" value="#FFFFFF" />
+
+        
+        
+    </div>
+</div>
+
+<!-- Embedded WebVTT -->
+<script type="text/vtt" id="vtt-content">
+    WEBVTT
+    Kind: captions
+    Language: en
+    
+    00:00:11.114 --> 00:00:12.834
+    Sonic: What?!
+    
+    00:00:17.000 --> 00:00:18.797
+    Shadow: It all starts with this…
+    
+    00:00:19.114 --> 00:00:21.834
+    A miracle stone of infinite power…
+    
+    00:00:22.114 --> 00:00:25.834
+    Sonic: That’s! - That's a chaos emerald!
+    
+    00:00:29.114 --> 00:00:31.236
+    So you’re the one everybody’s talking about!
+    
+    00:00:31.236 --> 00:00:34.834
+    The military went after me because they confused me for you!
+    
+    00:00:34.834 --> 00:00:39.834
+    Now… that chaos emerald… just whaddya think you’re gonna do with it?!
+    
+    00:00:39.834 --> 00:00:41.834
+    Say something!, you faker!
+    
+    00:00:41.834 --> 00:00:44.834
+    Shadow: Chaos control!
+    
+    00:00:57.834 --> 00:01:01.834
+    Sonic: Tch! - That speed!
+    
+    00:01:01.297 --> 00:01:05.297
+    No - that’s not his true speed! - He's using the Chaos Emerald to warp!
+    
+    00:01:05.297 --> 00:01:09.957
+    Shadow: My name is Shadow. 
+    I’m the sole ultimate lifeform on this planet…
+    
+    00:01:09.297 --> 00:01:13.834
+    I must head back to where I came from -
+    - this game ends now!
+    Sonic: Gah!
+    
+    00:01:14.100 --> 00:01:15.834
+    His name is Shadow?
+    
+    00:01:15.100 --> 00:01:20.000
+    SOLDIERS: Stay where you are and put your hands above your head right now!
+    Sonic: Great…
+    
+    00:01:20.100 --> 00:01:22.100
+    11:56 AM, 11:56 AM, PRISON ISLAND: OFF THE COAST, IN THE SKY
+    
+    00:01:26.100 --> 00:01:28.000
+    Tails: This must be the Island!
+    
+    00:01:28.100 --> 00:01:32.000
+    This is a super strong military base and prison!
+    
+    00:01:32.100 --> 00:01:35.000
+    It’s best known as Prison Island.
+    
+    00:01:36.100 --> 00:01:44.000
+    I’ve heard all the news on Satellite TV, but… - I still can’t believe that Sonic would destroy military buildings or rob a bank…
+    
+    00:01:44.856 --> 00:01:47.000
+    Hold on, Sonic! I’ll get you outta there right away!
+    
+    00:01:48.100 --> 00:01:54.245
+    Huh? —— That’s Amy!… and isn’t that?!… Eggman?!
+    
+    00:01:55.200 --> 00:02:00.000
+    What’s Amy doing here?! —  Nuh-uh, doesn’t matter, I’ve gotta rescue (‘rescue') Amy, too!
+    
+    00:02:00.200 --> 00:02:04.000
+    Tornado! - Mode change!
+    
+    00:02:10.200 --> 00:02:13.000
+    Rouge: Long time no see! You have the rest of my emerald, don’t ya dear?
+    
+    00:02:13.200 --> 00:02:18.000
+    Knuckles: Enough of that! As if telling me to give it to YOU will do anything!
+    
+    00:02:20.200 --> 00:02:25.000
+    Rouge: All right… in that case… I’ll just —— force you to give them to me…
+    
+    00:02:51.600 --> 00:02:54.000
+    MINUTES BEFORE EGGMAN’S ATTACK - ONE MINUTE AND THIRTY SECONDS
+    
+    00:02:55.200 --> 00:02:58.000
+    Tails: Sonic… I did it…
+    
+    00:03:01.200 --> 00:03:04.000
+    Sonic on Walkie-Talkie: Awesome job Tails!
+    
+    00:03:04.200 --> 00:03:07.000
+    Tails: Sonic! — Amy: Hmm? Sonic on Walkie-Talkie: Look outside.
+    
+    00:03:53.200 --> 00:04:11.000
+    The intruder is currently in the north area proceeding to infiltrate the underground base! - All units standby for further orders and deployment! - All units in the current area proceed with basic battle formations! - and prevent the intruder from accessing the restricted area!This is not a drill repeat, this is not a drill!
+    
+    00:04:12.200 --> 00:04:16.400
+    Eggman: Wahaahaa! This is too easy!
+    
+    00:04:18.200 --> 00:04:27.400
+    Let me see what my grandfather had made! ———— Let me see what this top-secret military weapon is!
+    
+    00:04:27.400 --> 00:04:28.400
+    Sonic: That’s!-
+    
+    00:04:31.400 --> 00:04:34.655
+    Shadow: It’s that hedgehog again of all places!-
+    Sonic: I found you!, faker!
+    
+    00:04:36.400 --> 00:04:44.100
+    Shadow: Faker? Aren’t YOU the fake one here? — No… you don’t even deserve to be called my fake… Are you even up to my level?
+    
+    00:04:44.100 --> 00:04:45.655
+    Sonic: I’ll make you eat those words!
+    
+    00:04:49.400 --> 00:05:00.000
+    Sonic: You’re not gonna run away this time…. — You faker! -
+    Eggman: I finally blasted that pest of a hedgehog into outer space! Now then, what shall you do Tails?
+    Should you dare oppose me - I shall offer no mercy!
+    
+    00:05:03.400 --> 00:05:09.135
+    Tails: You’ll pay! - You’ll pay for what you did to Sonic! I won’t let you get away with this!
+    
+    00:05:09.400 --> 00:05:15.400
+    Knuckles: What are you doing!-Rouge: I’m returning them… - they stink like echidnas anyway…
+    
+    00:05:15.400 --> 00:05:19.400
+    Knuckles: Well - if you thought it that way… you should’ve returned them to me in the first place…
+    
+    00:05:25.400 --> 00:05:27.400
+    Finally…
+    
+    00:05:29.400 --> 00:05:34.400
+    Rouge: What?  —— Knuckles: I’m sorry… for acting roughly (for acting so rudely)…’
+    
+    00:06:15.855 --> 00:06:17.400
+    Sonic: Now, Shadow!
+    
+    00:06:19.855 --> 00:06:22.400
+    Sonic and Shadow in Unison: Chaos - Control! 
+    
+    00:06:29.855 --> 00:06:34.400
+    Shadow: Maria… Is this what you wished for?…
+     
+</script>
+
+<script>
+// This film is too large to be converted into a "blob://" resource! :)
+myVideo.removeAttribute('controls');
+
+// Function to cast
+function cast() {
+    alert("To cast in Chrome, click on the three dots, click on Cast, Save, & Share, click on Cast, and choose your preferences. Make sure to set the video size to Casting Mode.")
+}
+
+    // Function to parse WebVTT and extract subtitles
+    function parseWebVTT(vttContent) {
+        const lines = vttContent.split('\n');
+        const subtitles = [];
+        let currentSubtitle = {};
+
+        lines.forEach(line => {
+            const timestampMatch = line.match(/(\d+:\d+:\d+\.\d+) --> (\d+:\d+:\d+\.\d+)/);
+            if (timestampMatch) {
+                if (currentSubtitle.text) {
+                    subtitles.push(currentSubtitle);
+                }
+                currentSubtitle = {
+                    start: parseTime(timestampMatch[1]),
+                    end: parseTime(timestampMatch[2]),
+                    text: ''
+                };
+            } else if (line.trim()) {
+                currentSubtitle.text += (currentSubtitle.text ? ' ' : '') + line.trim();
+            }
+        });
+
+        if (currentSubtitle.text) {
+            subtitles.push(currentSubtitle);
+        }
+
+        return subtitles;
+    }
+
+    function parseTime(timeStr) {
+        const parts = timeStr.split(':');
+        const seconds = parseFloat(parts.pop());
+        return parts.reduceRight((acc, part) => {
+            return acc + parseInt(part, 10) * 60 ** (parts.length - 1);
+        }, seconds);
+    }
+
+    const vttElement = document.getElementById('vtt-content');
+    const subtitles = parseWebVTT(vttElement.textContent.trim());
+
+    const videoElement = document.getElementById('myVideo');
+    const subtitleElement = document.getElementById('subtitle');
+    const playPauseButton = document.getElementById('playPause');
+    const fullscreenButton = document.getElementById('fullscreenButton'); // Fullscreen button
+    const progressSlider = document.getElementById('progressSlider');
+    let captionsVisible = false;
+
+    // Function to display subtitles based on current time
+    function displaySubtitles() {
+        const currentTime = videoElement.currentTime;
+        const currentSubtitle = subtitles.find(sub => currentTime >= sub.start && currentTime <= sub.end);
+
+        if (currentSubtitle) {
+            subtitleElement.textContent = currentSubtitle.text;
+            subtitleElement.style.display = captionsVisible ? 'block' : 'none'; // Show or hide based on toggle
+        } else {
+            subtitleElement.style.display = 'none'; // Hide if no subtitle
+        }
+        const percentage = (currentTime / videoElement.duration) * 100;
+        progressSlider.value = percentage; // Update slider value
+    }
+
+    // Play/Pause function
+    playPauseButton.addEventListener('click', () => {
+        if (videoElement.paused) {
+            videoElement.play();
+            playPauseButton.textContent = 'Pause';
+        } else {
+            videoElement.pause();
+            playPauseButton.textContent = 'Play';
+        }
+    });
+
+
+    // Toggle captions function
+    const toggleCaptionsButton = document.getElementById('toggleCaptions');
+    toggleCaptionsButton.addEventListener('click', () => {
+        captionsVisible = !captionsVisible; // Toggle the visibility state
+        subtitleElement.style.display = captionsVisible ? 'block' : 'none'; // Show or hide captions
+    });
+
+    // Fullscreen functionality for the browser
+    fullscreenButton.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen(); // Request fullscreen for the entire document
+            //videoElement.width = 1440; // Medium size
+            //videoElement.height = 1080;
+            fullscreenButton.textContent = 'Exit Fullscreen'; // Change button text
+        } else {
+            document.exitFullscreen(); // Exit fullscreen
+            //videoElement.width = 1280; // Small size
+            //videoElement.height = 720;
+            fullscreenButton.textContent = 'Fullscreen'; // Change button text back
+        }
+    });
+
+    // Update subtitles as the video plays
+    videoElement.addEventListener('timeupdate', displaySubtitles);
+
+    // Sync slider with video playback
+    progressSlider.addEventListener('input', () => {
+        const percentage = progressSlider.value / 100; // Get slider percentage
+        videoElement.currentTime = percentage * videoElement.duration; // Set video time based on slider
+    });
+
+    // Hide default video controls
+    videoElement.controls = false; // Disable built-in controls
+
+    // Update subtitle position on fullscreen change
+    videoElement.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+            subtitleElement.style.bottom = '20px'; // Adjust for fullscreen
+        } else {
+            subtitleElement.style.bottom = '20px'; // Reset for regular mode
+        }
+    });
+
+    // Video size adjustment
+    const videoSizeSelect = document.getElementById('videoSize');
+    videoSizeSelect.addEventListener('change', () => {
+        const size = videoSizeSelect.value;
+        if (size === 'custom') {
+            let text;
+  let width = prompt("Please enter your custom video size width:", "1440");
+  if (width == null || width == "") {
+    videoElement.width = 1440;
+  } else {
+    videoElement.width = width;
+    console.log("Custom width is: " + width);
+    let text2;
+  let height = prompt("Please enter your custom video size height:", "720");
+  if (height == null || height == "") {
+    videoElement.height = 720;
+  } else {
+    videoElement.height = height;
+    console.log("Custom height is: " + height);
+  }
+  }
+
+        }
+         else if (size === 'cast') {
+            videoElement.width = 1200; // Casting size
+            videoElement.height = 1100;
+        } else if (size === 'small') {   
+            videoElement.width = 640; // Small size
+            videoElement.height = 720;
+        } else if (size === 'medium') {
+            videoElement.width = 1440; // Medium size
+            videoElement.height = 1080;
+        } else if (size === 'large') {
+            videoElement.width = 1720; // Large size
+            videoElement.height = 1080;
+        }
+    });
+
+    // Subtitle size adjustment
+    const subtitleSizeSelect = document.getElementById('subtitleSize');
+    subtitleSizeSelect.addEventListener('change', () => {
+        const size = subtitleSizeSelect.value;
+        if (size === 'small') {
+            subtitleElement.style.fontSize = '12px'; // Small size
+        } else if (size === 'medium') {
+            subtitleElement.style.fontSize = '16.5px'; // Medium size
+        } else if (size === 'large') {
+            subtitleElement.style.fontSize = '25px'; // Large size
+        }
+    });
+
+    // Subtitle color adjustment
+    const subtitleColorInput = document.getElementById('subtitleColor');
+    subtitleColorInput.addEventListener('input', () => {
+        subtitleElement.style.color = subtitleColorInput.value; // Update subtitle color
+    });
+</script>
+
+</body>
+</html>

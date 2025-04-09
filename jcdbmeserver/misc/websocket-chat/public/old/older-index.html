@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JCDBME Chat</title>
+  <style>
+   /* Global Resets */
+   * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Default (Light) Mode Styles */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f5f5f5;
+      color: #121212;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 10px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    h1 {
+      margin: 10px 0;
+      color: #121212;
+    }
+
+    #mainContainer {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    #jellyfinIframe {
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    #sideMenu {
+      background-color: #ffffff;
+      color: #121212;
+      width: 300px;
+      position: fixed;
+      top: 0;
+      right: -300px;
+      height: 100%;
+      transition: right 0.3s ease;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    #sideMenu.open {
+      right: 0;
+    }
+
+    #messages {
+      list-style-type: none;
+      padding: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      background-color: #fafafa;
+      border-radius: 5px;
+    }
+
+    #messages li {
+      padding: 5px 10px;
+      border-radius: 3px;
+      margin: 5px 0;
+      background-color: #e1e1e1;
+      color: #121212;
+    }
+
+    #messageInput {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      background-color: #ffffff;
+      color: #121212;
+    }
+
+    #sendBtn, #sendBtn2, #sendBtn3 {
+      cursor: pointer;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background-color: #555555;
+      color: #ffffff;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: background-color 0.2s ease;
+    }
+
+    #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover {
+      background-color: #777777;
+    }
+
+    #sendBtn2 {
+      display: none;
+    }
+    /* Arrow Button */
+    #menuArrow {
+      position: fixed;
+      top: 20px;
+      right: 10px;
+      background-color: #555555;
+      border: none;
+      color: #ffffff;
+      padding: 8px 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      width: 30px;
+      height: 30px;
+    }
+
+    #menuArrow.open {
+      transform: rotate(180deg);
+    }
+
+    #menuArrow:hover {
+      background-color: #777777;
+    }
+
+    .border-box {
+  height: 20px;
+}
+    /* Mobile Responsiveness */
+    @media (max-width: 767px) {
+      #sideMenu.open {
+      width: 100%;
+    }
+    #sendBtn2 {
+      display: block;
+    }
+
+}
+    /* DARK MODE (prefers-color-scheme: dark) */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #ffffff;
+      }
+
+      h1 {
+        color: #ffffff;
+      }
+
+      #sideMenu {
+        background-color: #333333;
+        color: #ffffff;
+      }
+
+      #messages {
+        background-color: #222222;
+        border: 1px solid #555;
+      }
+
+      #messages li {
+        background-color: #555555;
+        color: #ffffff;
+      }
+
+      #messageInput {
+        background-color: #333333;
+        color: #ffffff;
+      }
+
+      #sendBtn, #sendBtn2, #sendBtn3 {
+        background-color: #555555;
+        color: #ffffff;
+      }
+
+      #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover {
+        background-color: #777777;
+      }
+
+      #menuArrow {
+        background-color: #555555;
+        color: #ffffff;
+      }
+
+      #menuArrow:hover {
+        background-color: #777777;
+      }
+    }
+
+    /* LIGHT MODE (prefers-color-scheme: light) */
+    @media (prefers-color-scheme: light) {
+      body {
+        background-color: #f5f5f5;
+        color: #121212;
+      }
+
+      h1 {
+        color: #121212;
+      }
+
+      #sideMenu {
+        background-color: #ffffff;
+        color: #121212;
+      }
+
+      #messages {
+        background-color: #fafafa;
+        border: 1px solid #ccc;
+      }
+
+      #messages li {
+        background-color: #e1e1e1;
+        color: #121212;
+      }
+
+      #messageInput {
+        background-color: #ffffff;
+        color: #121212;
+      }
+
+      #sendBtn, #sendBtn2, #sendBtn3 {
+        background-color: #555555;
+        color: #ffffff;
+      }
+
+      #sendBtn:hover, #sendBtn2:hover, #sendBtn3:hover{
+        background-color: #777777;
+      }
+
+      #menuArrow {
+        background-color: #555555;
+        color: #ffffff;
+      }
+
+      #menuArrow:hover {
+        background-color: #777777;
+      }
+    }
+    html, body {
+  overflow: hidden;
+}
+  </style>
+</head>
+
+<body>
+  <!-- Arrow Menu for toggling -->
+  <button id="menuArrow">→</button>
+
+  <!-- Main container holding iframe -->
+  <div id="mainContainer">
+    <iframe width="100%" height="685px" id="jellyfinIframe" src="http://192.168.254.177:8096" scrolling="yes" allowfullscreen></iframe>
+  </div>
+
+  <!-- Side Menu for Chat -->
+  <div id="sideMenu">
+    <h2>JCDBME Chat</h2>
+    <div class="border-box"></div>
+    <ul id="messages"></ul>
+    <input id="messageInput" type="text" placeholder="Type a message" />
+    <button id="sendBtn">Send</button>
+    <div class="border-box"></div>
+    <small id="heythere"></small>
+    <div class="border-box"></div>
+    <button id="sendBtn2" onclick="closeChatBox()">Close chatbox</button>
+    <div class="border-box"></div>
+    <button id="sendBtn3">Clear Messages</button>
+  </div>
+
+
+  <script src="/chat.js"></script>
+  <noscript>
+    <style>
+      body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.overlay {
+    display: none; /* Hide overlay by default */
+    text-align: center; 
+    margin: auto;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding-top: 100px;
+    font-size: 18px;
+    z-index: 1000;
+    display: block;
+}
+
+.overlay-content {
+  text-align: center; 
+    display: inline-block;
+    max-width: 80%;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    color: white;
+    border-radius: 5px;
+}
+
+.border-box {
+  height: 200px;
+}
+
+p {
+    margin: 0;
+}
+
+    </style>
+      <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            <p>Hey there! This chat won't work with JavaScript disabled, nor will streaming. Please enable JavaScript in your browser and come back once you're done!</p>
+            <div class="border-box"></div>
+            <!--<a href="http://192.168.254.137:3000"><button>Ok!</button></a>-->
+        </div>
+    </div>
+  </noscript>
+
+  <script>
+    const clearBtn = document.getElementById('sendBtn3');
+    const smallText = document.getElementById('heythere');
+    smallText.style.display = "block";
+    const menuArrow = document.getElementById('menuArrow');
+    const sideMenu = document.getElementById('sideMenu');
+    let isMenuOpen = false;
+
+    menuArrow.addEventListener('click', () => {
+      isMenuOpen = !isMenuOpen;
+
+      if (isMenuOpen) {
+        sideMenu.classList.add('open');
+        menuArrow.classList.add('open');
+        menuArrow.style.right = "300px"
+      } else {
+        sideMenu.classList.remove('open');
+        menuArrow.classList.remove('open');
+        menuArrow.style.right = "10px"
+      }
+    });
+    function closeChatBox() {
+      sideMenu.classList.remove('open');
+        menuArrow.classList.remove('open');
+        menuArrow.style.right = "10px"
+    }
+    smallText.innerHTML = `<i>Try not to spam messages, and be kind while you chat, <b>${username}</b>.</i>`
+    // Clear localStorage when the "Clear Messages" button is clicked
+    clearBtn.addEventListener('click', () => {
+      const confirmationMessage = "Are you sure you want to clear all messages? Messages that have been remembered will be deleted and won't be accessible again.";
+
+      if (confirm(confirmationMessage)) {
+        localStorage.removeItem('messages'); // Remove messages from localStorage
+        messagesList.innerHTML = '';  // Clear the message list from the page
+        console.log('Messages cleared from localStorage');
+        smallText.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>

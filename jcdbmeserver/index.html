@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JCDBME Server</title>
+    <style>
+    /* Global reset */
+    .noscript-status {
+        color:orange;
+    }
+
+    #download-dialog {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust positioning to truly center */
+    width: 100%; /* Make the dialog fill the entire width */
+    height: 100%; /* Make the dialog fill the entire height */
+    display: none; /* Hidden by default */
+    justify-content: center; /* Horizontally center content */
+    align-items: center; /* Vertically center content */
+    color: black; /* Set text color */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove underline */
+    z-index: 99999; /* Ensure the dialog appears on top of other elements */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+   #download-dialog2 {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust positioning to truly center */
+    width: 100%; /* Make the dialog fill the entire width */
+    height: 100%; /* Make the dialog fill the entire height */
+    display: none; /* Hidden by default */
+    justify-content: center; /* Horizontally center content */
+    align-items: center; /* Vertically center content */
+    color: black; /* Set text color */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove underline */
+    z-index: 99999; /* Ensure the dialog appears on top of other elements */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+   }
+
+ .dialog-content, .dialog-content2 {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        #download-dialog, #download-dialog2 .dialog-content, .dialog-content2 h3 {
+            margin: 0 0 20px 0;
+            color: #000;
+        }
+
+        .download-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .download-button:hover {
+            background-color: #0056b3;
+        }
+
+        .volume-container {
+      display: flex;
+      align-items: center;
+      margin: 20px;
+      position: fixed;
+      bottom: 15px; /* Distance from the bottom */
+      right: 90px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      z-index: 9999;
+    }
+    .volume-slider {
+      width: 200px;
+      margin-right: 10px;
+    }
+    .volume-percentage {
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    .volume-icon {
+      font-size: 24px;
+    }
+
+    #muteButton {
+      position: fixed;
+      bottom: 40px; /* Distance from the bottom */
+      right: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      z-index: 99999;
+    }
+
+    #muteButton:hover {
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Icon styles */
+    .file-icon, .clapper-icon, .oldserver-icon, .where {
+        position: fixed;
+        bottom: 40px; /* Distance from the bottom */
+        width: 50px;  /* Icon size */
+        height: 50px; /* Icon size */
+        background-size: contain; /* Makes sure the icon fits the container */
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 1000; /* Ensure it stays on top of other elements */
+        background-color: #fff;
+        border: 2px solid #333;
+        color: #333;
+        font-size: 1rem;
+        padding: 15px 30px;
+        cursor: pointer;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .file-icon {
+        left: 90px; /* Distance from the left */
+        background-image: url('/images/past.png'); /* Path to your icon */
+    }
+
+    .clapper-icon {
+        left: 20px; /* Distance from the left */
+        background-image: url('/images/behindthescenes.png'); /* Path to your icon */
+    }
+
+    .oldserver-icon {
+        left: 160.5px; /* Distance from the left */
+        background-image: url('/images/party-popper.png'); /* Path to your icon */
+    }
+
+    .where {
+        left: 230.5px; /* Distance from the left */
+        background-image: url('https://cdn-icons-png.flaticon.com/512/0/375.png')
+    }
+
+    .file-icon:hover, .clapper-icon:hover, .oldserver-icon:hover, .where:hover {
+        background-color: #333;
+        transform: scale(1.23);
+    }
+
+    .file-icon:active, .clapper-icon:active, .oldserver-icon:active, .where:active {
+        transform: scale(0.93);
+    }
+    
+    .misciconcontainer {
+        display: flex;
+        gap: 70px; /* Spacing between buttons */
+    }
+    html, body {
+        font-family: Arial, sans-serif;
+        height: 100%;
+        margin: 0;
+    }
+
+    .backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height:100vh;
+        object-fit: cover; /* Ensures the video covers the entire screen */
+        z-index: -1; /* Place the video behind other content */
+    }
+
+    body {
+        background-color: #f4f4f4; /* Light background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: 'Inter', sans-serif;
+    }
+    /* Container for centering content */
+    .container {
+        text-align: center;
+    }
+
+    /* Heading styles */
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    /* Button container for alignment */
+    .button-container, .button-container2 {
+        display: flex;
+        justify-content: center;
+        top: 80px;
+    display: flex; /* Use flexbox to center the text */
+    justify-content: center; /* Horizontally center the text */
+    align-items: center; /* Vertically center the text */
+    color: black; /* White text */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove the underline from the link */
+    /*font-weight: bold; /* Make the text bold */
+        gap: 20px; /* Spacing between buttons */
+    }
+
+    .select {
+    top: 370px;
+    color: white;
+}
+
+
+
+    /* Button styles */
+    .movie-button {
+        justify-content: center;
+        background-color: #fff;
+        border: 2px solid #333;
+        color: #333;
+        font-size: 1rem;
+        padding: 15px 30px;
+        cursor: pointer;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    /* Mobile styles */
+    @media (max-width: 943px) {
+        .video-container {
+        height: 100%; /* Ensure the body and html take full height of the viewport */
+    margin: 0; /* Remove default margin */
+    display: flex; /* Use flexbox to align items */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+        }
+        video {
+            height: 100vh;
+        }
+
+        /*.movie-button {
+            font-size: 0.75rem; /* Smaller font size */
+            /*padding: 10px 20px; /* Reduced padding */
+            /*border-radius: 8px; /* Smaller border radius */
+            /*max-width: 90%; /* Set max-width */
+            /*margin: 10px auto; /* Center the button */
+            /*width: fit-content;
+            height: fit-content;
+    left: 50%; /* Center horizontally */
+    /*transform: translateX(-50%); /* Centering transformation */
+    /*margin: 10px; /* Add margin to prevent them from touching edges */
+        /*}*/
+
+    /* Button styles */
+    .movie-button {
+        justify-content: center;
+        background-color: #fff;
+        border: 2px solid #333;
+        color: #333;
+        font-size: 1rem;
+        padding: 15px 30px;
+        cursor: pointer;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+        .button-container {
+display: flex;               /* Enable flexbox */
+    justify-content: center;     /* Horizontally center */
+    gap: 10px;                   /* Optional, to add space between buttons */
+    top: 120px;
+    flex-wrap: wrap;             /* Allow buttons to wrap if needed */
+}
+
+        .file-icon, .clapper-icon, .oldserver-icon, .where {
+            width: 40px; /* Smaller icon size */
+            height: 40px; /* Smaller icon size */
+            margin-bottom: -10px;
+            padding: 8px 16px; /* Adjust padding */
+            font-size: 0.75rem; /* Smaller font size for icons */
+        }
+
+        .preview {
+            width: 240px;
+            height: 140px;
+        }
+
+        .backdrop {
+            width: 100%;
+            height: 120%;
+        }
+        .border-box {
+        height: 0px;
+    }
+        .preview {
+          margin-right: 30px;  
+        }
+        .status {
+            top: 170px
+        }
+        /* Hover effect */
+    .movie-button:hover {
+        background-color: #333;
+        color: #fff;
+        transform: scale(1.03);
+    }
+    .border-box-large {
+        height: 100px;
+    }
+    }
+    
+    /* Hover effect */
+    .movie-button:hover {
+        background-color: #333;
+        color: #fff;
+        transform: scale(1.03);
+    }
+
+    /* Active state (when clicked) */
+    .movie-button:active {
+        transform: scale(0.98);
+    }
+
+    .whereicon {
+        align-items: center;
+    }
+
+
+    img {
+        padding: 20px;
+        border-radius: 25px;
+    }
+    .status {
+        color:red;
+        margin-bottom: 80px
+    }
+    
+    .border-box {
+        height: 110px;
+    }
+    .border-box {
+        height: 40px;
+    }
+
+
+/* In portrait mode, adjust bottom distance */
+@media (max-width: 943px) and (orientation: portrait) {
+    .movie-button {
+        bottom: 50px; /* Increase space from the bottom */
+    }
+}
+
+/* UI Elements, such as the H1, should not get covered by buttons */
+/* Ensure other elements don't overlap or get pushed by the buttons */
+body, html {
+    padding-bottom: 80px; /* Add padding to the bottom of the body to avoid overlap */
+}
+
+/* Ensure buttons don't overlap other UI elements */
+.button-container {
+    position: relative;
+    z-index: 100; /* Make sure they are behind the movie buttons */
+}
+
+/* For small screens, ensure button stacking is handled properly */
+.button-container {
+    display: flex;
+    gap: 15px; /* Adjust gap between buttons */
+    align-items: center; /* Center buttons horizontally */
+    position: relative;
+    z-index: 1000;
+}
+
+.border-box-large {
+    height: 400px;
+}
+
+#androidOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      display: none;
+      z-index: 999;
+    }
+    </style>
+</head>
+<body>
+    <div id="download-dialog">
+        <div class="dialog-content">
+            <h3>Party Mode!</h3>
+            <p id="advice"></p>
+            <div class="border-box2"></div>
+            <button id="close-button" onclick="closeDownloadDialog()">Ok!</button>
+        </div>
+    </div>
+    <div id="download-dialog2">
+        <div class="dialog-content2">
+            <h3>Other places to stream JCDBMEs (all of them):</h3>
+            <a href="http://192.168.254.161:8000/"><img class="whereicon" width="80" height="80" src="https://cdn-icons-png.flaticon.com/512/6213/6213305.png" title="JCDBME Hub - Nice UI to stream JCDBMEs"></img></a>
+            <a href="http://192.168.254.161:3000/"><img class="whereicon"  width="80" height="80" src="https://cdn.iconscout.com/icon/free/png-256/free-chat-icon-download-in-svg-png-gif-file-formats--message-communication-chatting-conversation-feedback-pack-business-icons-1794829.png?f=webp&w=256" title="JCDBME Chat (JCDBME Hub with a chatbox to chat on)"></img></a>
+            <a href="http://192.168.254.161:8096"><img class="whereicon"  width="80" height="80" src="https://static-00.iconduck.com/assets.00/jellyfin-icon-1024x1024-udvadsvh.png" title="JCDBME Jellyfin Server"></img></a>
+            <a href="https://bit.ly/jcdbme"><img class="whereicon"  width="80" height="80" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz4WOVGbHZuy0mm0dH05QhngzjqWNQOm7mmw&s" title="JCDBME Website"></img></a>
+            <div class="border-box2"></div>
+            <button id="close-button" onclick="closeDownloadDialog2()">Ok!</button>
+        </div>
+    </div>
+    <div id="status"></div>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/src/howler.core.js"></script>
+    <div class="video-container">
+    <video autoplay muted loop class="backdrop" id="backdrop">
+        <source src="background.webm" type="video/webm">
+        Your browser does not support the video tag.
+    </video>
+</div>
+    <div class="container">
+        <div class="border-box-large"></div>
+        <div class="border-box"></div>
+        <h1 id="select" class="select">Select a Movie</h1>
+        <div class="button-container">
+            <a href="/sonicxshadowhls/stream.html"><button class="movie-button" id="sonicxshadow">Sonic X Shadow - JCDBME Short
+                <h3>  </h3>
+                <img width="480" height="290" class="preview" src="/images/previewimg1.png">
+            </button>
+            </a>
+            <a href="/knuxmpegdash/stream.html"><button class="movie-button" id="knuckles">Knuckles's Story - JCDBME Short
+                <h3>  </h3>
+                <img width="480" height="290" class="preview" src="/images/previewimg2.png">
+            </button>
+            </a>
+        </div>
+        <div id="androidOverlay">
+            <div id="downloadDialog">
+              <p>Join everybody on the Android app</p>
+              <div class="dialog-buttons">
+                <button id="downloadBtn">Download</button>
+                <button id="noThanksBtn">No Thanks</button>
+              </div>
+            </div>
+            </div>
+        <div class="border-box"></div>
+        <div class="border-box"></div>
+        <div class="border-box"></div>
+        </div>
+        <div class="container">
+            <div class="button-container2">
+                <a href="/teamsonichls/stream.html"><button class="movie-button" id="teamsonic">Team Sonic - JCDBME Short
+                    <h3>  </h3>
+                    <img width="480" height="290" class="preview" src="/images/previewimg3.png">
+                </button>
+               <!-- <a href="https://bit.ly/jcdbme"><button class="movie-button" id="knuckles">JCDBME Website
+                    <h3>  </h3>
+                    <img width="480" height="290" class="preview" src="/images/previewimg3.jpg">
+                </button> --> 
+            </div>
+        <div class="misciconcontainer">
+            <a class="clapper-icon" href="https://192.168.254.161:8090" title="Documentation for MovieServer, created by Anirudh Sevugan, who also created this UI that relies on MovieServer."></a>
+            <!--<a class="file-icon" href="" title="File browser to browse root directory of server."></a>-->
+            <a onclick="partyMode()" title="Party Mode - Where a random sentence will make up what you have to do for the time being." class="oldserver-icon"></a>
+            <a href="http://192.168.254.161:4443/oldserver/select.html" title="Older layout of JCDBME Server for its Electron app (which no longer works)." class="file-icon"></a>
+            <a onclick="where()" title="Where to stream" class="where"></a>
+        </div>
+    </div>
+    <div class="volume-container">
+        <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="50">
+        <span id="volume-percentage" class="volume-percentage">100%</span>
+        <span id="volume-icon" class="volume-icon">🔊</span>
+      </div>
+    <button id="muteButton">🔉</button>
+    <noscript>
+        <div id="noscript-status"><B>JavaScript has been disabled. Parts of the site may not function as expected.</B></div>
+        <audio id="menuost">
+            <source src="/audio/what-u-need-sonicrush.mp3" type="audio/mp3">
+            <!-- Fallback content for unsupported browsers -->
+            Your browser does not support the audio tag.
+        </audio> 
+    </noscript>
+<script>
+    // Create a Howler sound object
+    var sound = new Howl({
+      src: ['/audio/what-u-need-sonicrush.mp3'], // Your sound file
+      volume: 0.5,
+      loop: true,
+    });
+    sound.play();
+ 
+    // Volume slider functionality
+  const volumeSlider = document.getElementById('volume-slider');
+  const volumePercentage = document.getElementById('volume-percentage');
+  const volumeIcon = document.getElementById('volume-icon');
+
+  // Update Howler volume and UI elements based on slider
+  volumeSlider.addEventListener('input', function() {
+    const volume = volumeSlider.value / 100;
+    sound.volume(volume);
+
+    // Update volume percentage text
+    volumePercentage.textContent = `${volumeSlider.value}%`;
+
+    // Change volume icon/text based on volume level
+    if (volume === 0) {
+      volumeIcon.textContent = '🔇';  // Mute icon
+    } else if (volume <= 0.33) {
+      volumeIcon.textContent = '🔈';  // Low volume icon
+    } else if (volume <= 0.66) {
+      volumeIcon.textContent = '🔉';  // Medium volume icon
+    } else {
+      volumeIcon.textContent = '🔊';  // High volume icon
+    }
+  });
+
+  // Initialize volume to match the slider's initial position
+  volumeSlider.value = sound.volume() * 100;
+  volumePercentage.textContent = `${volumeSlider.value}%`;
+
+window.onload = function () {
+      window.scrollTo(0, document.body.scrollHeight);
+    };
+
+    function checkServerStatus() {
+            // Try fetching the server's status (use your API endpoint or any valid route)
+            // Get the current port from the URL
+            const currentPort = window.location.port;
+
+
+            // Example: Redirect if the port is not the one expected (e.g., not 8080)
+            if (currentPort !== '8080') {
+                fetch('http://192.168.254.161:4443')  // Replace with your server's URL
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Server is down');
+                        console.error('Server is down')
+                    }
+                    document.getElementById('status').innerHTML = ''; // Clear any error messages
+                    document.getElementById('status').style.display = 'none'; // Clear any error messages
+                })
+                .catch(error => {
+                    document.getElementById('status').style.display = 'block'; // Clear any error messages
+                    // If the server is down or unreachable, show an alert
+                    console.error('Server is down/unreachable - expect videos to freeze if not fully downloaded on any page of site')
+                    document.getElementById('status').style.color = 'red';
+                    document.getElementById('status').innerHTML = '<b>Server has shut down or files on it aren\'t accessible for now, you\'ll need to wait to be able to stream or visit the site again.</b>';
+                    alert("Server has shut down or files on it aren't accessible for now")
+                    clearInterval(intervalId);
+                });
+                if (self == top) {
+                    document.documentElement.style.display = 'block'; 
+                } else {
+                    document.documentElement.style.display = 'none'; 
+                    alert("This page is being embedded/iframed. For security reasons, this iframe has been blocked. If you really want to iframe this page, try iframing http://192.168.254.161:4443/iframe.html instead. Port 8080 uses a CSP for extra security so any page won't work on port 8080 when iframing.")
+                }
+            } else {
+                fetch('https://192.168.254.161:8080/')  // Replace with your server's URL
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Server is down');
+                        console.error('Server is down')
+                    }
+                    document.getElementById('status').innerHTML = ''; // Clear any error messages
+                    document.getElementById('status').style.display = 'none'; // Clear any error messages
+                })
+                .catch(error => {
+                    document.getElementById('status').style.display = 'block'; // Clear any error messages
+                    // If the server is down or unreachable, show an alert
+                    console.error('Server is down/unreachable - expect videos to freeze if not fully downloaded on any page of site')
+                    document.getElementById('status').style.color = 'red';
+                    document.getElementById('status').innerHTML = '<b>Server has shut down or files on it aren\'t accessible for now, you\'ll need to wait to be able to stream or visit the site again.</b>';
+                    alert("Server has shut down or files on it aren't accessible for now")
+                    clearInterval(intervalId);
+                });
+        }
+            }
+
+        window.onload = closeDownloadDialog()
+
+        // Check server status every 10 seconds (adjust as needed)
+        intervalId = setInterval(checkServerStatus, 3000);  // 10000ms = 10 seconds
+
+        // Initial check on page load
+        checkServerStatus();
+    
+        function handleVisibilityChange() {
+            if (document.hidden) {
+                // Page is hidden (minimized or switched to a background tab)
+                //console.log('Page is hidden. Pausing sound.');
+                sound.pause();  // Pause the sound
+            } else {
+                // Page is visible (user returns to the tab)
+                //console.log('Page is visible. Resuming sound.');
+                sound.play();   // Resume the sound
+            }
+        }
+
+        // Check for the visibilitychange event (works in modern browsers)
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        // Initial check (if the page was already hidden before the script loaded)
+        if (document.hidden) {
+            sound.pause();
+        } else {
+            sound.play();
+        }
+        // Mute/Unmute button functionality
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const muteButton = document.getElementById('muteButton');
+      let isMuted = false;
+
+      muteButton.addEventListener('click', () => {
+        isMuted = !isMuted;  // Toggle mute state
+
+        if (isMuted) {
+            const volumeSlider = document.getElementById('volume-slider');
+  const volumePercentage = document.getElementById('volume-percentage');
+  const volumeIcon = document.getElementById('volume-icon');   
+          sound.mute(true);  // Mute the sound
+          muteButton.textContent = '🔇';  // Change button text
+            // Volume slider functionality
+  volumeSlider.value = 0;
+          volumeIcon.textContent = '🔇';  // Mute icon
+          volumePercentage.textContent = `${volumeSlider.value}%`;
+        } else {
+          sound.mute(false);  // Unmute the sound
+          const volumeSlider = document.getElementById('volume-slider');
+  const volumePercentage = document.getElementById('volume-percentage');
+  const volumeIcon = document.getElementById('volume-icon');
+          volumeSlider.value = sound.volume() * 100;;
+          const volume = volumeSlider.value / 100;
+          if (volume === 0) {
+      volumeIcon.textContent = '🔇';  // Mute icon
+    } else if (volume <= 0.33) {
+      volumeIcon.textContent = '🔈';  // Low volume icon
+    } else if (volume <= 0.66) {
+      volumeIcon.textContent = '🔉';  // Medium volume icon
+    } else {
+      volumeIcon.textContent = '🔊';  // High volume icon
+    }
+  ;
+          volumePercentage.textContent = `${volumeSlider.value}%`;
+          muteButton.textContent = volumeIcon.textContent;  // Change button text
+        }
+      });
+    });
+    function partyMode() {
+        var adviceElement = document.getElementById("advice")
+        var advice = Math.floor(Math.random() * 4) + 1;  
+        var dialog = document.getElementById("download-dialog")
+        dialog.style.display = 'flex';
+        adviceElement.innerHTML = "Get a dice and roll it. Then, the number you rolled is the number of a scene in the movie you watched, which you must then try to draw one frame of.  If you presume are more than 6 scenes in the video, roll the dice twice and add the numbers you rolled each time, then round the sum, and draw one frame from the <i>rounded</i> scene of the video (e.g if the rounded number is 10 the 10th scene of the video)"     
+       
+        if (advice == 1) {
+            adviceElement.innerText = "Watch a movie of your choice with a friend or two nearby, then tell each other what you liked best about your experience!"
+        } 
+        
+        if (advice == 2) {
+            adviceElement.innerText = "Cosplay (with or without costumes) as the character you liked the best in the movie you chose to watch, then take on the adventure of thinking of what you would\'ve wanted to happen and bring it to life! (That is, if you want to)"    
+        }
+
+        if (advice == 4) {
+            adviceElement.innerHTML = "Take a piece of paper and cut it out to make 5 cards. Draw a small frame of each movie on each card and try to get your friends to guess which movie the frame was from! If they guess correctly, they can pick a random challenge from Party Mode."    
+            // OLD 4TH CHALLENGE "Take a piece of paper and cut it out to make 5 cards. The first card should say: <i>Which movie do you choose? Movie 1 or 2?</i>. The second card should say: <i>Congratulations if you have found this card... but it's useless...</i>. Make the third and fourth card say what the second card says and make the fifth card say what the first card does. Lay the cards around in random places. Whoever returns the first and fifth cards gets to choose another challenge from Party Mode. If the challenge is this same one, retry it again but place all the cards in reverse order from where you placed them earlier."
+        }
+     
+     
+        $('#download-dialog').show(); // Show the "download ready" dialog 
+    }
+    function where() {
+        var dialog2 = document.getElementById("download-dialog2")
+        dialog2.style.display = 'flex';
+    }
+    function closeDownloadDialog() {
+        $('#download-dialog').hide(); // Hide the "download ready" dialog  
+    }
+    function closeDownloadDialog2() {
+        $('#download-dialog2').hide(); // Hide the "download ready" dialog  
+    }
+function downloadVideo() {
+    window.open("h264.mp4")
+}
+function checkOrientation() {
+    const movieButtons = document.getElementsByClassName("movie-button");
+    const backdrop = document.getElementById("backdrop");
+    const volumes = document.getElementsByClassName("volume-container");
+
+    // Check if we are in portrait mode
+    const isPortrait = window.screen.orientation.type.startsWith("portrait");
+    const isSmallScreen = window.matchMedia("(max-width: 943px)").matches;
+
+    if (isSmallScreen) {
+        if (isPortrait) {
+            // In portrait mode, transform buttons into text
+            for (let i = 0; i < movieButtons.length; i++) {
+                // In portrait mode, transform buttons into text
+            for (let i = 0; i < movieButtons.length; i++) {
+                const movieButton = movieButtons[i];
+                
+                movieButton.style.position = "relative"; // Remove fixed position
+                movieButton.style.bottom = "auto"; // No bottom positioning
+                movieButton.style.margin = "10px auto"; // Center the buttons with margin
+                movieButton.style.display = "block"; // Stack buttons vertically
+                movieButton.style.textAlign = "center"; // Align text to the center
+                movieButton.style.fontSize = "1rem"; // Make text larger if needed
+                movieButton.style.padding = "10px"; // Add some padding to the text
+                movieButton.style.width = "80%"; // Set width for text-based button
+
+                // Center the image/icon inside the button if exists
+                const buttonImage = movieButton.querySelector("img");
+                if (buttonImage) {
+                    buttonImage.style.display = "block"; // Make image block to center it
+                    buttonImage.style.margin = "0 auto"; // Center image horizontally
+                    buttonImage.style.maxWidth = "100%"; // Make sure it fits inside the button
+                }
+            }
+            }
+        } else if (isSmallScreen) {
+            // In landscape mode, revert back to normal buttons
+            for (let i = 0; i < movieButtons.length; i++) {
+                const movieButton = movieButtons[i];
+
+movieButton.style.position = "relative"; // Remove fixed position
+                movieButton.style.bottom = "auto"; // No bottom positioning
+                movieButton.style.margin = "10px auto"; // Center the buttons with margin
+                movieButton.style.display = "flex"; // Stack buttons vertically
+                movieButton.style.margin = "auto";
+                movieButton.style.textAlign = "center"; // Align text to the center
+                movieButton.style.fontSize = "1rem"; // Make text larger if needed
+                movieButton.style.padding = "10px"; // Add some padding to the text
+                movieButton.style.width = "80%"; // Set width for text-based button
+                
+            }
+        }
+    }
+
+    // Adjust backdrop and volumes accordingly
+    if (backdrop) {
+        if (isPortrait) {
+            backdrop.style.height = "100%";
+            backdrop.style.width = "100%";
+            for (let i = 0; i < volumes.length; i++) {
+                volumes[i].style.display = "none"; // Hide volumes in portrait
+            }
+        } else {
+            backdrop.style.height = "fit-content";
+            backdrop.style.width = "100%";
+            for (let i = 0; i < volumes.length; i++) {
+                volumes[i].style.display = "block"; // Show volumes in landscape
+            }
+        }
+    }
+}
+
+// Ensure the DOM is loaded before trying to manipulate elements
+document.addEventListener("DOMContentLoaded", function() {
+    checkOrientation();
+    window.addEventListener('orientationchange', checkOrientation);
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const dialog = document.getElementById('downloadDialog');
+    const androidOverlay = document.getElementById('androidOverlay');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const noThanksBtn = document.getElementById('noThanksBtn');
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Check if the dialog has already been shown
+    if (!localStorage.getItem('dialogShown')) {
+if (/android/i.test(userAgent)) {
+        showDialog()
+    }
+    }
+
+    function showDialog() {
+      dialog.style.display = 'block';
+      androidOverlay.style.display = 'block';
+    }
+
+    function hideDialog() {
+      dialog.style.display = 'none';
+      androidOverlay.style.display = 'none';
+    }
+
+    // When "Download" is clicked
+    downloadBtn.addEventListener('click', function () {
+      localStorage.setItem('dialogShown', 'true');
+      hideDialog();
+      window.open('/JCDBMEServer.apk');
+    });
+
+    // When "No Thanks" is clicked
+    noThanksBtn.addEventListener('click', function () {
+      localStorage.setItem('dialogShown', 'true');
+      hideDialog();
+    });
+
+    // Close the dialog if clicking on overlay
+    androidOverlay.addEventListener('click', hideDialog);
+  });
+
+
+</script>
+</body>
+</html>

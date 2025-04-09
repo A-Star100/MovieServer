@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="/Users/sevuganfamily/jcdbmeserver/images.ico">
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JCDBME Server - Sonic Riders: Zero Gravity JCDBME</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+            background-color: black;
+        }
+        label {
+            color: white;
+        }
+        #subtitle {
+            position: fixed; /* Use fixed positioning */
+            bottom: 80px; /* Adjust based on your layout */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+        #customControls {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            bottom: 30px;
+            margin-bottom: 20px;
+        }
+        #toggleCaptions, #fullscreenButton, #playPause, #sts, #cast {
+            padding: 5px 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        #toggleCaptions:hover, #fullscreenButton:hover, #playPause:hover, #sts:hover, #cast:hover {
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.7s;
+        }
+
+        /* Slider styles */
+        #progressContainer {
+            width: 100%;
+            cursor: pointer;
+            position: relative;
+            margin-top: 10px; /* Added margin for better spacing */
+        }
+        #progressSlider {
+            width: 100%;
+            -webkit-appearance: none; /* Remove default styles for Webkit */
+            background: #ddd; /* Background color */
+            height: 5px; /* Slider height */
+        }
+        #progressSlider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Remove default styles for Webkit */
+            appearance: none; /* Remove default styles for other browsers */
+            width: 15px; /* Thumb width */
+            height: 15px; /* Thumb height */
+            background: #33a7ff; /* Thumb color */
+            border-radius: 50%; /* Make it round */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+        #progressSlider::-moz-range-thumb {
+            width: 15px; /* Thumb width */
+            height: 15px; /* Thumb height */
+            background: #33a7ff; /* Thumb color */
+            border-radius: 50%; /* Make it round */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        /* Styling options */
+        #stylingOptions {
+            bottom: 0px;
+        }
+        .js-disabled-message {
+            background-color: orange; /* Red background */
+            color: white; /* White text */
+            padding: 20px; /* Padding around the text */
+            text-align: center;
+            font-size: 24px; /* Font size */
+            position: absolute; /* Position it to cover the whole page */
+            top: 0; /* Align to the top */
+            left: 0; /* Align to the left */
+            right: 0; /* Align to the right */
+            bottom: 0; /* Align to the bottom */
+            z-index: 9999; /* Ensure it's on top */
+            width: 1440px;
+            height: 1080px
+        }
+    </style>
+</head>
+<body>
+<noscript>
+    <div class="js-disabled-message" id="jsDisabledMessage">
+    JavaScript is disabled! Please enable JavaScript to view this page properly.
+</div>
+</noscript>
+<div style="position: relative;">
+    <video id="myVideo" width="640" height="720" controls>
+        <source src="http://192.168.254.161:8000/media/Sonic%20Riders%20Zero%20Gravity%20JCDBME/Finished%20Film/film.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <cast-media-player></cast-media-player>
+    
+    <div id="customControls">
+        <button id="playPause">Play</button>
+        <button id="toggleCaptions">Toggle Captions</button>
+        <button onclick="cast()" id="cast">Cast To TV</button></a>
+        <button id="fullscreenButton">Fullscreen</button> <!-- Fullscreen Button -->
+    </div>
+
+    <div id="progressContainer">
+        <input id="progressSlider" type="range" value="0" min="0" max="100" step="1">
+    </div>
+    
+    <div id="subtitle"></div> <!-- Subtitle container -->
+
+    <!-- Styling Options Dropdowns -->
+    <div id="stylingOptions">
+        <label for="videoSize">Video Size:</label>
+        <select id="videoSize">
+            <option value="custom">Custom Video Size</option>
+            <option value="small" selected>Mobile Mode</option>
+        </select>
+
+        <label for="subtitleSize">Subtitle Size:</label>
+        <select id="subtitleSize">
+            <option value="small">Small</option>
+            <option value="medium" selected>Medium (Default)</option>
+            <option value="large">Large</option>
+        </select>
+
+        <label for="subtitleColor">Subtitle Color:</label>
+        <input type="color" id="subtitleColor" value="#FFFFFF" />
+
+        
+        
+    </div>
+</div>
+
+<!-- Embedded WebVTT -->
+<script type="text/vtt" id="vtt-content">
+    WEBVTT
+    Kind: captions
+    Language:   en
+    
+    00:00:42.079 --> 00:00:48.640
+    The robots produced by infallible Meteor
+    Tech that is popular all over the world
+    
+    00:00:46.719 --> 00:00:51.760
+    with an excellent security system are
+    apparently running amok in various
+    
+    00:00:50.079 --> 00:00:55.280
+    places. The international security
+    organization G.U.N is now investigating
+    
+    00:00:53.520 --> 00:00:58.879
+    the event. Apparently there have been no
+    official comments from...
+    
+    00:00:56.559 --> 00:01:02.160
+    [Sonic] Is this the meteor that fell last night?
+    [Tails] Yeah, it really surprised me when I was
+    
+    00:01:01.120 --> 00:01:06.799
+    sleeping.
+    I woke up and found this at the door.
+    
+    00:01:09.119 --> 00:01:13.840
+    (Knuckles yawns) We'll be at Megalo Station in no time
+    Knux!
+    
+    00:01:19.439 --> 00:01:26.840
+    TARGET DETECTED...
+    INITIATING DEFENSE MECHANISIMS NOW
+    
+    00:01:27.520 --> 00:01:29.759
+    [Knuckles] What?
+    
+    00:01:31.439 --> 00:01:33.640
+    [Tails] Whoa!
+    What do we do, Sonic?!
+    
+    00:01:33.641 --> 00:01:36.699
+    [Sonic] Get to that elevator!
+    
+    00:01:41.600 --> 00:01:43.599
+    [Knuckles] Why the heck are they chasing us?...
+    
+    00:01:43.600 --> 00:01:46.159
+    [Tails] Could those be the robots the news was
+    talking about earlier?
+    
+    00:01:47.000 --> 00:01:51.159
+    [Sonic] Look out! The door may open!
+    
+    00:02:03.680 --> 00:02:07.320
+    [Sonic] Brace yourself!
+    
+    00:02:11.840 --> 00:02:14.560
+    [Tails] Sonic!
+    
+    00:02:20.800 --> 00:02:29.560
+    [Sonic] Why am I not falling? Could this be the stone's power?!
+    
+    00:02:26.319 --> 00:02:29.560
+    All right! YAHOOOOO!
+    
+    00:03:01.599 --> 00:03:05.840
+    [Jet] Looks like there's nothing to worry about!
+    
+    00:03:27.040 --> 00:03:30.760
+    I got it!
+    
+    00:03:40.159 --> 00:03:45.239
+    [Wave] That's a shooting star! Interesting.
+    
+    00:03:46.239 --> 00:03:52.959
+    [Storm] Whatcha doing back there Wave?
+    [Wave] Ahem! I'm making a wish!
+    
+    00:03:51.360 --> 00:03:56.200
+    Isn't it said that if we make a wish
+    before the shooting star disappears it will come true?!
+    
+    00:03:55.799 --> 00:04:04.319
+    [Storm] Are you a kindergartner?!
+    It's such a kiddie thing! Right, boss?
+    
+    00:04:02.000 --> 00:04:04.319
+    What!
+    
+    00:04:05.599 --> 00:04:11.480
+    [Jet] Oh star, grant me the power to defeat that blue little pest!
+    
+    00:04:19.199 --> 00:04:22.199
+    Augghhhh!
+    
+    00:04:37.680 --> 00:04:41.400
+    Oh no! The trap!
+    
+    00:05:07.280 --> 00:05:12.680
+    Looks like my wish has come true!
+    
+    00:05:25.360 --> 00:05:26.280
+    [Wave] Got it, Master Jet. I'll show you the info!
+    
+    00:05:27.880 --> 00:05:34.560
+    [Jet] So, show it to me!
+    [Wave] Just as I guessed, this stone, called the Ark Of Cosmos, is an
+    
+    00:05:35.199 --> 00:05:42.560
+    engine unit for the Babylon Garden developed by our ancestors long ago.
+    [Jet] So it's an engine part, huh?!
+    
+    00:05:40.560 --> 00:05:47.120
+    [Wave] No, it's not just a part!
+    I can't say anything unless I study a
+    
+    00:05:44.720 --> 00:05:50.800
+    bit more about this structure,
+    but this stone's magnetic field converts
+    
+    00:05:49.199 --> 00:05:52.080
+    the mass energy of the planet and in doing so it...
+    
+    00:05:52.880 --> 00:06:00.320
+    [Jet] Aaah, cut to the chase! In short, what's this stone useful for.
+    [Wave] To put it simply, it converts
+    
+    00:05:58.240 --> 00:06:04.319
+    gravity into different energy and with
+    that power the Babylon Garden is capable
+    
+    00:06:02.639 --> 00:06:06.600
+    of warping to different areas. I'll research a little more.
+    [Jet] I see, so that
+    
+    00:06:06.960 --> 00:06:13.520
+    power was gravity that saved us.
+    [Wave] Oh, one more thing. According to the
+    
+    00:06:11.600 --> 00:06:17.840
+    ancient documents of Babylon, there are 5 Arks Of The Cosmos, and one of them
+    
+    00:06:15.600 --> 00:06:20.880
+    is the master unit. The other four are lead to
+    the master unit
+    
+    00:06:19.360 --> 00:06:24.080
+    and attract each other.
+    [Jet] I don't quite understand what this all
+    
+    00:06:22.560 --> 00:06:28.880
+    means, but if they're drawn to one
+    another we can make a detection radar
+    
+    00:06:25.840 --> 00:06:33.039
+    for them. Get to work right now!
+    [Wave] Understood...
+    [Storm] Boss!
+    
+    00:06:30.720 --> 00:06:36.960
+    [Jet] What's with all this noise!
+    [Storm] Boss, take a look at this!
+    
+    00:06:35.840 --> 00:06:41.120
+    [Newscaster] Repeat.
+    This morning, a Meteor Tech security robot
+    
+    00:06:39.440 --> 00:06:45.840
+    that was in charge of guarding the Megalo
+    City Museum, robbed the meteorite on
+    
+    00:06:43.440 --> 00:06:51.440
+    display and is currently on the run near
+    the Megalo Station City!
+    [Jet] That's the ark
+    
+    00:06:48.639 --> 00:07:00.840
+    of cosmos! Storm! Set the course for
+    megalo station at full throttle!
+    [Storm] Yes boss!
+    
+    00:06:55.280 --> 00:07:00.840
+    [Jet] So, I guess it's a wild goose chase, huh?
+    
+    00:07:04.319 --> 00:07:08.440
+    Again? Too easy!
+    
+    00:07:16.160 --> 00:07:19.160
+    Augh! Oh no!
+    
+    00:07:38.319 --> 00:07:42.440
+    [Wave] Master Jet!
+    [Storm] Boss!
+    
+    00:07:48.080 --> 00:07:53.840
+    [Amy] Fated lovers are always destined to be drawn together, silly!
+    
+    00:07:52.240 --> 00:08:01.759
+    [Sonic] Amy!
+    [Amy] Actually, I ran away from those robots that
+    
+    00:07:56.000 --> 00:08:01.759
+    were chasing after me! I was so scared!
+    
+    00:08:05.280 --> 00:08:11.440
+    [Tails] Amy, I think those robots were after that stone you had!
+    [Sonic] In order to solve this we
+    
+    00:08:09.360 --> 00:08:16.319
+    have to investigate in Meteor Tech's headquarters!
+    [Wave] We've already gathered the
+    
+    00:08:13.599 --> 00:08:19.440
+    information. So let's outrun them and go
+    before they can spot us.
+    
+    00:08:19.599 --> 00:08:26.400
+    [Jet] So, it's up to us to decide who's the
+    fastest one in the world! You won't be
+    
+    00:08:24.319 --> 00:08:30.000
+    holding the title for long!
+    [Knuckles] Sonic, we've got company!
+    
+    00:08:32.320 --> 00:08:38.399
+    [Sonic] Oh, yeah, let's go!
+    
+    00:08:35.919 --> 00:08:38.399
+    Yahoo!
+    
+    00:08:39.440 --> 00:08:42.399
+    Gotta go fast!
+    
+    00:08:46.000 --> 00:08:51.200
+    We need to plan our movements.
+    
+    00:08:51.720 --> 00:08:53.720
+    Wha?!
+    
+    00:08:54.000 --> 00:08:57.000
+    [Knuckles] Darn!
+    
+    00:09:11.120 --> 00:09:17.440
+    [Jet] Long time no see, Sonic The Hedgehog!
+    [Sonic] Jet?
+    
+    00:09:17.760 --> 00:09:23.920
+    [Wave] Long time no see, shorty.
+    [Tails] Wave!
+    
+    00:09:22.160 --> 00:09:27.760
+    [Storm] Time to settle the score from last time, jerk!
+    
+    00:09:26.240 --> 00:09:33.120
+    [Knuckles] Anytime loser, loser albatross.
+    
+    00:09:30.560 --> 00:09:37.120
+    [Jet] Cut it out, Storm! Hey girly!
+    Give me back the Ark Of The
+    
+    00:09:35.120 --> 00:09:41.279
+    Cosmos right now!
+    [Amy] what are you talking about?!
+    
+    00:09:39.040 --> 00:09:45.120
+    [Jet] Don't play dumb with me!
+    You took the Ark Of The Cosmos that we
+    
+    00:09:43.040 --> 00:09:48.560
+    obtained right out of our hands, loser!
+    [Sonic] Wait... girls hate stubborn men, Jet!
+    
+    00:09:47.360 --> 00:09:53.440
+    [Jet] I don't care. Today is the day we finally
+    
+    00:09:51.680 --> 00:09:57.440
+    see which one of us is the fastest thing
+    alive! Held by yours truly!
+    
+    00:09:58.959 --> 00:10:02.320
+    INTRUDERS DETECTED
+    
+    00:10:03.680 --> 00:10:10.480
+    [Tails] Sonic, it's too dangerous here, we have to leave right now!
+    [Sonic] The reunion party's gotta wait!
+    
+    00:10:10.000 --> 00:10:16.160
+    Jet, you stay here!
+    [Jet] Hey, I'm coming with you!
+    
+    00:10:13.519 --> 00:10:22.640
+    [Storm] Uh-oh. I can't let you pass unless you hand me that stone!
+    
+    00:10:19.600 --> 00:10:25.360
+    [Amy] I'm gonna lose sight of Sonic, you loser!
+    
+    00:10:28.079 --> 00:10:31.079
+    [Storm] Wait up!
+    
+    00:10:32.560 --> 00:10:41.040
+    [Jet] You can use it, too?
+    [Sonic] It's pretty handy, am I right?!
+    
+    00:10:37.360 --> 00:10:44.839
+    ENGAGING E.M ALGORITHIMS, MAXIMUM VALUE
+    ACCESSING MOTHER COMPUTER, MOTHER
+    
+    00:10:42.800 --> 00:10:48.959
+    COMPUTER ACCESS DENIED
+    [Eggman] Whyyyy!
+    
+    00:10:47.839 --> 00:10:53.680
+    Huh?
+    What's this racket? And now of all times?!
+    
+    00:10:57.200 --> 00:11:01.560
+    [Knuckles] Did something just fall there!
+    
+    00:11:01.680 --> 00:11:07.040
+    [Eggman] I'm not a ball!
+    [Sonic] Eggman!
+    
+    00:11:04.560 --> 00:11:11.200
+    What are you doing here!
+    [Eggman] What are you talking about, this is my
+    
+    00:11:08.880 --> 00:11:14.079
+    company! Muhahahaha!
+    [Sonic] Eggman!
+    
+    00:11:12.560 --> 00:11:17.360
+    So I guess you're the puppet master behind this scheme, huh?
+    
+    00:11:17.839 --> 00:11:26.720
+    [Eggman] Puppet Master? What are you talking about?!
+    [Sonic] I'm talking about the
+    
+    00:11:24.079 --> 00:11:32.000
+    global robot rampage!
+    [Eggman] Well, I've been having questions about that myself, but
+    
+    00:11:28.800 --> 00:11:36.560
+    my answers are secret!
+    [Knuckles] Tell us you belly!
+    
+    00:11:34.079 --> 00:11:41.440
+    [Eggman] Stop calling me that! Okay, I'll tell you,
+    since we've been friends for such a long time!
+    
+    00:11:39.839 --> 00:11:46.480
+    Even I don't know why they were rampaging that night.
+    
+    00:11:43.600 --> 00:11:50.560
+    But I do know that they have a leader.
+    
+    00:11:48.720 --> 00:11:53.200
+    [Sonic] So Eggman really doesn't know anything, then.
+    
+    00:11:53.839 --> 00:11:58.320
+    [Tails] Maybe since the robots were attacking Amy because of that ring,
+    this ring
+    
+    00:11:57.200 --> 00:12:03.600
+    might have something to do with the
+    rampage!
+    
+    00:12:00.399 --> 00:12:03.600
+    [Eggman] Where did you get that!
+    
+    00:12:06.240 --> 00:12:14.000
+    So you were hiding something all along
+    Egghead!
+    
+    00:12:09.760 --> 00:12:14.000
+    [Knuckles] Tell us everything you know, Eggman!
+    
+    00:12:15.360 --> 00:12:19.040
+    [Eggman] Oh fine, I'll tell you.
+    
+    00:12:22.959 --> 00:12:28.880
+    All of my robot's actions are controlled by the mother computer.
+    As the backbone of the
+    
+    00:12:27.040 --> 00:12:32.639
+    Meteor Tech network, it was
+    supposed to be the perfect computer.
+    
+    00:12:32.720 --> 00:12:40.480
+    However,
+    something went wrong with the external
+    
+    00:12:36.160 --> 00:12:40.480
+    remote control. It stopped working!
+    
+    00:12:41.120 --> 00:12:49.120
+    In reality the mother computer's power
+    unit uses the same stone that you have.
+    
+    00:12:47.279 --> 00:12:52.959
+    According to my analysis it appears that
+    the stone has the ability to convert
+    
+    00:12:50.880 --> 00:12:58.160
+    enormous mass energy into different
+    energy and to create a unique magnetic
+    
+    00:12:55.680 --> 00:12:58.160
+    field.
+    
+    00:12:59.279 --> 00:13:06.160
+    [Sonic] Huh?
+    [Eggman] Shut up and listen! I don't know why but it seems that the
+    
+    00:13:03.680 --> 00:13:11.839
+    leader robot has the stone with the same
+    power as that of the mother computer
+    
+    00:13:07.760 --> 00:13:11.839
+    inserted into it.
+    
+    00:13:16.000 --> 00:13:22.399
+    If my deductions are correct, the leader
+    robot is going around all over the world
+    
+    00:13:20.240 --> 00:13:26.880
+    causing the other robots to go out of
+    control so that they'll collect these
+    
+    00:13:24.240 --> 00:13:30.959
+    mysterious stones.
+    [Sonic] Why do they need these stones?
+    
+    00:13:28.160 --> 00:13:36.880
+    [Eggman] Even I don't know why.
+    [Jet] They're drawn to one another.
+    
+    00:13:34.560 --> 00:13:43.680
+    These aren't just ordinary rocks you'd
+    find at some playground. These rocks are
+    
+    00:13:39.440 --> 00:13:49.519
+    spoken of in the babylon clan as...
+    Hey, girly! Give me back the Ark Of The Cosmos!
+    
+    00:13:47.839 --> 00:13:52.480
+    [Tails] Where's Amy?
+    [Wave] Where's Storm?
+    
+    00:13:59.440 --> 00:14:04.240
+    [Storm] Hold on!
+    Wait for me!
+    
+    00:14:06.320 --> 00:14:10.800
+    [Amy] Geez, you're so stubborn, don't you
+    want to quit?
+    
+    00:14:12.880 --> 00:14:17.839
+    Fine, if you want this stupid stone so
+    bad.
+    
+    00:14:28.399 --> 00:14:31.839
+    Where in the world am I?
+    
+    00:14:36.079 --> 00:14:43.560
+    Thanks to you I got separated from Sonic
+    you idiot!
+    
+    00:14:45.519 --> 00:14:50.240
+    [Amy] Take responsibility and look for the
+    exit for me, got that?
+    
+    00:14:51.040 --> 00:14:54.040
+    [Storm] Yes.
+    
+    00:15:07.279 --> 00:15:10.760
+    [Amy] What's that sound?
+    
+    00:15:40.800 --> 00:15:46.959
+    [Storm] What?! This is it!
+    
+    00:15:45.120 --> 00:15:50.079
+    It's the same stone that I saw at Gigantech rocks!
+    
+    00:15:50.399 --> 00:16:00.399
+    Now I got two!
+    I have to report to Master Jet
+    
+    00:15:54.560 --> 00:16:04.360
+    immediately! Bye girl!
+    [Amy] Come back here! Oh for the love of...
+    
+    00:16:15.839 --> 00:16:20.480
+    [Jet] He's late... What is Storm doing?!!
+    
+    00:16:21.759 --> 00:16:24.800
+    [Storm] Excuse me, boss.
+    
+    00:16:27.040 --> 00:16:33.880
+    [Jet] You're late!
+    [Storm] But I brought a bundle!
+    
+    00:16:37.120 --> 00:16:42.240
+    [Jet] A fine job coming from you Storm! Not
+    half bad!
+    
+    00:16:42.959 --> 00:16:49.600
+    [Wave] Master Jet! [Jet] What is it?
+    [Wave] While I continued analyzing
+    
+    00:16:47.600 --> 00:16:53.600
+    ancient documents, I found this curious
+    description.
+    
+    00:16:51.360 --> 00:16:57.600
+    I'll decipher it so that it fits your
+    small intelligence level.
+    
+    00:16:56.399 --> 00:17:01.920
+    [Jet] Go ahead.
+    [Wave] At last we have reached our decision, we
+    
+    00:17:00.079 --> 00:17:05.520
+    will detach the engine units from the
+    ship,
+    
+    00:17:03.600 --> 00:17:10.079
+    for if we delay the whole engine may
+    eventually get consumed entirely by the
+    
+    00:17:07.600 --> 00:17:10.079
+    lightless black!
+    
+    00:17:11.039 --> 00:17:15.600
+    This is crucial, and we need to worry about this.
+    
+    00:17:16.559 --> 00:17:23.199
+    [Jet] The lightless black you say? What's that about?!
+    
+    00:17:20.240 --> 00:17:27.919
+    [Wave] Who knows? What do you think?
+    [Jet] Heck if I know!
+    
+    00:17:26.160 --> 00:17:33.280
+    Anyway we'll leave thinking about all
+    that stuff for later, right now we've got
+    
+    00:17:30.160 --> 00:17:35.679
+    Arks Of The Cosmos to retrieve.
+    Huh?
+    
+    00:17:39.520 --> 00:17:42.520
+    What... the....
+    
+    00:17:49.600 --> 00:17:51.840
+    HEYY!
+    
+    00:17:53.200 --> 00:18:00.200
+    Let's go full throttle near that dumbhead!
+    
+    00:17:56.720 --> 00:18:00.200
+    Full speed ahead!
+    
+    00:18:06.320 --> 00:18:09.360
+    [Sonic + Tails + Knuckles] Amy!
+    
+    00:18:10.320 --> 00:18:19.120
+    [Amy] Took you long enough!
+    [Tails] What could this be? [Amy] I don't know, but just when it
+    
+    00:18:16.880 --> 00:18:23.200
+    headed towards me at a really fast speed
+    it blew up all of a sudden. [Sonic] It blew up?!
+    
+    00:18:23.440 --> 00:18:28.720
+    [Tails] It charged towards you?
+    Could it be...
+    
+    00:18:26.400 --> 00:18:31.919
+    [Sonic] What's wrong Tails?
+    [Tails] Sorry, I haven't figured all this out yet.
+    
+    00:18:33.840 --> 00:18:42.120
+    [Knuckles] So where's that meathead, Storm?
+    [Amy] He took something out of this robot and
+    
+    00:18:38.559 --> 00:18:42.120
+    ran off somewhere.
+    
+    00:18:48.559 --> 00:18:54.240
+    [Knuckles] Shouldn't the robots stop rampaging
+    everywhere by now?
+    
+    00:18:52.240 --> 00:18:57.600
+    [Tails] It's not that simple, Knux.
+    If the incident started due to Eggman
+    
+    00:18:56.160 --> 00:19:00.880
+    inserting the stone into the mother
+    computer as a power source then I don't
+    
+    00:18:59.280 --> 00:19:06.039
+    think the rampage would stop unless we
+    get the stone out!
+    
+    00:19:02.480 --> 00:19:06.039
+    [Knuckles] So where's that?
+    
+    00:19:10.160 --> 00:19:15.840
+    [Amy] Ah... I remember Storm saying something
+    curious.
+    
+    00:19:14.240 --> 00:19:19.760
+    He said the thing he took out of the
+    robot was identical to the one he found
+    
+    00:19:17.840 --> 00:19:25.799
+    somewhere else... Um
+    where was it he said?
+    
+    00:19:22.799 --> 00:19:25.799
+    Gi-Gi-Gi-Giga, Gigante...
+    
+    00:19:27.600 --> 00:19:32.400
+    [Knuckles] Gigantech Rocks!
+    [Amy] Yeah, that giga thing!
+    
+    00:19:33.039 --> 00:19:38.640
+    [Sonic]You know it, Knuckles?
+    [Knuckles] It's a pretty famous ruin among us treasure hunters... or whatever...
+    
+    00:19:39.039 --> 00:19:42.559
+    There's a legend that
+    
+    00:19:40.559 --> 00:19:47.200
+    speaks of a wish-granting star being
+    sealed there somewhere...
+    
+    00:19:45.280 --> 00:19:50.320
+    [Tails] Legend of shooting stars...!
+    Sonic! Let's go to Gigantech rocks
+    
+    00:19:49.120 --> 00:19:56.559
+    right now!
+    We can find out more about those stones!
+    
+    00:19:54.240 --> 00:20:00.000
+    [Knuckles] Leave the directions to me!
+    But it's said that the star shard is
+    
+    00:19:58.160 --> 00:20:04.559
+    sleeping deep inside the ruins, so
+    getting it won't be easy. No one's ever
+    
+    00:20:01.840 --> 00:20:10.679
+    made it out alive or even there...
+    We'll be putting our lives on the line...
+    
+    00:20:06.400 --> 00:20:10.679
+    [Sonic] It's nothing new, don't worry!
+    
+    00:20:28.400 --> 00:20:32.679
+    Was there an earthquake here or
+    something?
+    
+    00:20:41.440 --> 00:20:44.320
+    [Knuckles] Ah! It's gone
+    
+    00:20:44.559 --> 00:20:52.320
+    [Sonic] What's wrong, Knux?
+    [Knuckles] According to the legend, the star shard
+    
+    00:20:49.600 --> 00:20:56.280
+    is supposed to be on this chalice but...
+    did it roll off somewhere?
+    
+    00:21:02.000 --> 00:21:05.760
+    [Sonic] Hey, Tails what's this painting?
+    
+    00:21:10.480 --> 00:21:18.640
+    [Tails] The divine wings...
+    
+    00:21:16.240 --> 00:21:23.120
+    A legendary bird that gods rode
+    to fly through heavens!
+    
+    00:21:21.679 --> 00:21:25.679
+    Knuckles, let's see if you can read the
+    epitaph.
+    
+    00:21:25.760 --> 00:21:28.760
+    [Knuckles] Okay...
+    
+    00:21:31.360 --> 00:21:38.799
+    The divine wings, straddler of stars, lost
+    their plumes to the lightless black and
+    
+    00:21:36.559 --> 00:21:45.280
+    fell to the surface...
+    The plumes became as stars and returned to
+    
+    00:21:41.200 --> 00:21:47.840
+    this land, we the Babylon clan.
+    [Sonic] Babylon?
+    
+    00:21:48.240 --> 00:21:52.320
+    [Knuckles] How are those stones and those guys
+    connected?
+    
+    00:21:52.400 --> 00:21:57.120
+    [Tails] We don't know yet...
+    but don't you think the stones the
+    
+    00:21:55.440 --> 00:22:02.320
+    robots are after could be the wing
+    plumes written here.
+    
+    00:21:59.760 --> 00:22:07.280
+    The divine wings, straddler of stars, in
+    other words could they be units that
+    
+    00:22:04.240 --> 00:22:10.840
+    control a spaceship or aircraft?
+    [Sonic] So then those divine wings are...
+    
+    00:22:09.919 --> 00:22:15.960
+    [Tails] That's right... the Babylon Garden.
+    
+    00:22:34.640 --> 00:22:38.440
+    [Eggman] Muhahahaha!
+    [Jet on aircraft] Come back here!
+    
+    00:22:40.400 --> 00:22:48.240
+    [Tails] Knuckles what did the rest of this
+    epitaph say?
+    [Knuckles] Uh, hold on
+    
+    00:22:45.520 --> 00:22:52.720
+    We the babylon clan will seal one of the
+    stars here,
+    
+    00:22:50.240 --> 00:22:55.360
+    and another into the down running great
+    hollow
+    
+    00:22:53.840 --> 00:23:00.880
+    until the day,
+    the divine wings are revived...
+    
+    00:22:58.320 --> 00:23:06.000
+    There's still more...
+    
+    00:23:03.679 --> 00:23:13.120
+    The great hollow, lying in the east among
+    the Earth, strained red by the dawn's light...
+    
+    00:23:10.080 --> 00:23:17.679
+    [Tails] That's where Eggman and Jet are headed!
+    The great hollow must be the crater
+    
+    00:23:14.880 --> 00:23:22.720
+    formed when the meteorite struck!
+    I got it! That must be where Eggman found
+    
+    00:23:19.840 --> 00:23:26.080
+    the plume!
+    Do we happen to know where the mother
+    
+    00:23:24.000 --> 00:23:31.520
+    computer is? It's highly possible that
+    it's somewhere here.
+    [Sonic] Let's catch up with
+    
+    00:23:28.240 --> 00:23:31.520
+    them so we can know more.
+    
+    00:23:31.679 --> 00:23:39.760
+    [Wave] Took you long enough you guys...
+    [Storm] Eggman's in there, and we've gotta race to
+    
+    00:23:37.120 --> 00:23:42.640
+    the finish!
+    [Sonic] So what's that loser's goal this time?
+    
+    00:23:40.880 --> 00:23:48.640
+    [Tails] He's probably planning to use the
+    stone's power to command every robot on
+    
+    00:23:45.360 --> 00:23:51.840
+    the globe at once from this facility.
+    There could be more to this...
+    
+    00:23:53.919 --> 00:23:57.840
+    [Jet] So, wanna race for revenge?
+    
+    00:23:58.400 --> 00:24:06.919
+    [Sonic] Sounds nice!
+    [Jet] Whoever wins will be the fastest creature on the Earth!
+    
+    00:24:03.520 --> 00:24:06.919
+    [Sonic] Wait for me!
+    
+    00:24:28.400 --> 00:24:36.880
+    [Wave] Hmm... this must be the master unit...
+    SYSTEM ERROR OCCURED, ALL COMMANDS HAVE
+    
+    00:24:34.480 --> 00:24:40.000
+    BEEN CANCELLED. ERROR, ERROR...
+    
+    00:24:38.000 --> 00:24:43.919
+    [Eggman] I've been planning to create Eggmanland
+    for so long and all of my plans have
+    
+    00:24:41.679 --> 00:24:51.360
+    been destroyed!
+    [Sonic] Accept defeat, Eggman!
+    [Knuckles] Is this a trap
+    
+    00:24:47.120 --> 00:24:51.360
+    again, what did you do you loser!
+    
+    00:24:58.720 --> 00:25:06.080
+    [Wave] It must have resonated with all five
+    units together and came down here on its own.
+    
+    00:25:02.559 --> 00:25:08.320
+    [Jet] So the legend was true, interesting...
+    [Sonic] Here ya go!
+    
+    00:25:08.880 --> 00:25:14.960
+    [Jet] OUR FIGHT ISN'T SETTLED YET, OUR FIGHT AIN'T DONE!
+    
+    00:25:18.000 --> 00:25:25.640
+    [Wave] We have our goal done, Master Jet, so let's hurry back to the Babylon Garden!
+    
+    00:25:32.240 --> 00:25:34.559
+    hmm
+    
+    00:25:39.039 --> 00:25:43.159
+    [Sonic] All right, we're gonna go home too
+    
+    00:25:43.919 --> 00:25:52.880
+    [Tails] Soni,c why do you think the ancestors of
+    the babylon clan sealed the unit into the
+    
+    00:25:48.960 --> 00:25:52.880
+    Gigantech rocks?
+    [Sonic] Who knows?
+    
+    00:25:53.279 --> 00:26:01.360
+    [Tails] Yeah, what was up with that?
+    (mentally) The lightless black that attacked the
+    
+    00:25:59.039 --> 00:26:06.240
+    divine wings...
+    the explosion of the robot that attacked
+    
+    00:26:03.919 --> 00:26:06.240
+    Amy...
+    
+    00:26:06.960 --> 00:26:11.840
+    We can't let those meteorites get near the Babylon Garden!
+    
+    00:26:31.440 --> 00:26:36.640
+    [Sonic] Why is it still functioning Eggman? You
+    told us it wasn't!
+    
+    00:26:37.039 --> 00:26:43.120
+    [Eggman] I don't know
+    [Sonic] What'd you say
+    
+    00:26:41.200 --> 00:26:48.559
+    [Eggman] I do know that some kind of strong
+    electromagnetic wave is being generated
+    
+    00:26:45.120 --> 00:26:53.080
+    nearby, possibly by the stone and also
+    what forcibly executed this program...
+    
+    00:26:54.000 --> 00:27:00.720
+    [Tails] Sonic! The Babylon clan was not able to
+    control the power of those meteorites!
+    
+    00:26:59.279 --> 00:27:05.360
+    [Sonic] What does that mean?
+    [Tails] I figured out how those stones can
+    
+    00:27:02.799 --> 00:27:09.840
+    change gravitational polarity!
+    It's a black hole!
+    
+    00:27:08.080 --> 00:27:14.320
+    The lightless black that attacked the
+    divine wings is a black hole produced by
+    
+    00:27:12.159 --> 00:27:17.320
+    the gravity, amplified by the meteorite's
+    power!
+    
+    00:27:33.760 --> 00:27:38.039
+    [Jet] What the!
+    [Sonic] What?
+    
+    00:27:50.960 --> 00:27:53.840
+    [all characters in unison] What's this?
+    
+    00:28:11.919 --> 00:28:17.120
+    [Tails] At this rate the entire planet will be
+    sucked into the black hole and end!- AAAH!
+    
+    00:28:19.001 --> 00:28:23.450
+    [Tails] Thanks Sonic!
+    [Eggman] The planet is doomed!
+    
+    00:28:25.440 --> 00:28:34.480
+    [Jet] Wave? how do we stop this thunderstorm?
+    [Wave] If we remove the engine room's core unit
+    
+    00:28:32.640 --> 00:28:39.520
+    that powers the Babylon garden's
+    mobility it's likely that this will stop!
+    
+    00:28:37.120 --> 00:28:42.840
+    [Sonic] We'll go on ahead
+    [Tails] Stay safe guys!
+    
+    00:28:52.320 --> 00:29:04.159
+    ♪Straddler of stars, the divine wings
+    all of Babylon...♪
+    
+    00:29:00.799 --> 00:29:11.240
+    ♪It's time to make a sacrifice, it's time
+    to move on♪
+    
+    00:29:06.159 --> 00:29:11.240
+    ♪It's time to go out on adventures♪
+    
+    00:29:12.600 --> 00:29:18.600
+    ♪There are endless possibilities in this universe♪
+    
+    00:29:19.000 --> 00:29:21.600
+    [Wave] What's wrong, Jet?
+    ♪We've gotta move on, to get our groove on♪
+    
+    00:29:21.600 --> 00:29:28.880
+    [Jet] I's hard to ignore the charm of this
+    world, but there's so much more to do in
+    ♪There's so much more in life than just one thing♪
+    
+    00:29:25.679 --> 00:29:32.760
+    life, more than just one thing,
+    besides...
+    ♪Let's adventure!!!♪
+    
+    00:29:35.600 --> 00:29:39.480
+    [Babylon Crew in unison] Yeah!
+    
+    00:29:45.760 --> 00:29:51.600
+    [Amy] In the end, I wonder what those
+    meteorites really were...
+    
+    00:29:49.840 --> 00:29:55.840
+    [Tails] Those meteorites were programmed to be
+    able to gather the units on their own,
+    
+    00:29:58.000 --> 00:30:04.559
+    so after Eggman found the first meteorite
+    and inserted it into the mother computer,
+    
+    00:30:02.080 --> 00:30:11.520
+    the program was executed and caused
+    robots around the world to go out of
+    
+    00:30:06.960 --> 00:30:16.640
+    control... I may be wrong about that though...
+    [Sonic] Who made that program anyway?
+    
+    00:30:14.799 --> 00:30:21.039
+    [Tails] I have no idea...
+    it could be the Babylon ancestors,
+    
+    00:30:19.520 --> 00:30:25.200
+    or it could be something even more
+    mysterious...
+    
+    00:30:23.039 --> 00:30:29.360
+    Maybe it was a warning to humanity that
+    got involved with power beyond control.
+    
+    00:30:29.600 --> 00:30:36.000
+    [Knuckles] But about the Babylonian...
+    [Amy] I can't believe they were the descendants of aliens...
+    
+    00:30:33.679 --> 00:30:40.799
+    [Knuckles] HEY! You interrupted me!
+    [Amy] Long ago they crash-landed on this planet...
+    [Sonic] Wait for Amy, guys...
+    
+    00:30:38.320 --> 00:30:44.000
+    [Amy] So the engine units that they detached
+    at that moment
+    
+    00:30:42.080 --> 00:30:50.799
+    they were praying to the night skies for
+    the units to fall to the surface someday...
+    
+    00:30:46.399 --> 00:30:55.200
+    Every time a shooting star would fall...
+    [Sonic] I bet they were wishing to go back to their home planet...
+    
+    00:30:57.840 --> 00:31:04.679
+    [Amy] That must be why it became a custom to
+    wish upon the shooting stars...
+    
+    00:31:04.720 --> 00:31:07.720
+    [You-know-who] Sonic!
+    
+    00:31:31.720 --> 00:31:51.000
+    Thanks for watching! Also, you-know who was Jet!
+    
+        
+</script>
+
+<script>
+// This film is too large to be converted into a "blob://" resource! :)
+myVideo.removeAttribute('controls');
+
+// Function to cast
+function cast() {
+    alert("To cast in Chrome, click on the three dots, click on Cast, Save, & Share, click on Cast, and choose your preferences. Make sure to set the video size to Casting Mode.")
+}
+
+    // Function to parse WebVTT and extract subtitles
+    function parseWebVTT(vttContent) {
+        const lines = vttContent.split('\n');
+        const subtitles = [];
+        let currentSubtitle = {};
+
+        lines.forEach(line => {
+            const timestampMatch = line.match(/(\d+:\d+:\d+\.\d+) --> (\d+:\d+:\d+\.\d+)/);
+            if (timestampMatch) {
+                if (currentSubtitle.text) {
+                    subtitles.push(currentSubtitle);
+                }
+                currentSubtitle = {
+                    start: parseTime(timestampMatch[1]),
+                    end: parseTime(timestampMatch[2]),
+                    text: ''
+                };
+            } else if (line.trim()) {
+                currentSubtitle.text += (currentSubtitle.text ? ' ' : '') + line.trim();
+            }
+        });
+
+        if (currentSubtitle.text) {
+            subtitles.push(currentSubtitle);
+        }
+
+        return subtitles;
+    }
+
+    function parseTime(timeStr) {
+        const parts = timeStr.split(':');
+        const seconds = parseFloat(parts.pop());
+        return parts.reduceRight((acc, part) => {
+            return acc + parseInt(part, 10) * 60 ** (parts.length - 1);
+        }, seconds);
+    }
+
+    const vttElement = document.getElementById('vtt-content');
+    const subtitles = parseWebVTT(vttElement.textContent.trim());
+
+    const videoElement = document.getElementById('myVideo');
+    const subtitleElement = document.getElementById('subtitle');
+    const playPauseButton = document.getElementById('playPause');
+    const fullscreenButton = document.getElementById('fullscreenButton'); // Fullscreen button
+    const progressSlider = document.getElementById('progressSlider');
+    let captionsVisible = false;
+
+    // Function to display subtitles based on current time
+    function displaySubtitles() {
+        const currentTime = videoElement.currentTime;
+        const currentSubtitle = subtitles.find(sub => currentTime >= sub.start && currentTime <= sub.end);
+
+        if (currentSubtitle) {
+            subtitleElement.textContent = currentSubtitle.text;
+            subtitleElement.style.display = captionsVisible ? 'block' : 'none'; // Show or hide based on toggle
+        } else {
+            subtitleElement.style.display = 'none'; // Hide if no subtitle
+        }
+        const percentage = (currentTime / videoElement.duration) * 100;
+        progressSlider.value = percentage; // Update slider value
+    }
+
+    // Play/Pause function
+    playPauseButton.addEventListener('click', () => {
+        if (videoElement.paused) {
+            videoElement.play();
+            playPauseButton.textContent = 'Pause';
+        } else {
+            videoElement.pause();
+            playPauseButton.textContent = 'Play';
+        }
+    });
+
+
+    // Toggle captions function
+    const toggleCaptionsButton = document.getElementById('toggleCaptions');
+    toggleCaptionsButton.addEventListener('click', () => {
+        captionsVisible = !captionsVisible; // Toggle the visibility state
+        subtitleElement.style.display = captionsVisible ? 'block' : 'none'; // Show or hide captions
+    });
+
+    // Fullscreen functionality for the browser
+    fullscreenButton.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen(); // Request fullscreen for the entire document
+            //videoElement.width = 1440; // Medium size
+            //videoElement.height = 1080;
+            fullscreenButton.textContent = 'Exit Fullscreen'; // Change button text
+        } else {
+            document.exitFullscreen(); // Exit fullscreen
+            //videoElement.width = 1280; // Small size
+            //videoElement.height = 720;
+            fullscreenButton.textContent = 'Fullscreen'; // Change button text back
+        }
+    });
+
+    // Update subtitles as the video plays
+    videoElement.addEventListener('timeupdate', displaySubtitles);
+
+    // Sync slider with video playback
+    progressSlider.addEventListener('input', () => {
+        const percentage = progressSlider.value / 100; // Get slider percentage
+        videoElement.currentTime = percentage * videoElement.duration; // Set video time based on slider
+    });
+
+    // Hide default video controls
+    videoElement.controls = false; // Disable built-in controls
+
+    // Update subtitle position on fullscreen change
+    videoElement.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+            subtitleElement.style.bottom = '20px'; // Adjust for fullscreen
+        } else {
+            subtitleElement.style.bottom = '20px'; // Reset for regular mode
+        }
+    });
+
+    // Video size adjustment
+    const videoSizeSelect = document.getElementById('videoSize');
+    videoSizeSelect.addEventListener('change', () => {
+        const size = videoSizeSelect.value;
+        if (size === 'custom') {
+            let text;
+  let width = prompt("Please enter your custom video size width:", "1440");
+  if (width == null || width == "") {
+    videoElement.width = 1440;
+  } else {
+    videoElement.width = width;
+    console.log("Custom width is: " + width);
+    let text2;
+  let height = prompt("Please enter your custom video size height:", "720");
+  if (height == null || height == "") {
+    videoElement.height = 720;
+  } else {
+    videoElement.height = height;
+    console.log("Custom height is: " + height);
+  }
+  }
+
+        }
+         else if (size === 'cast') {
+            videoElement.width = 1200; // Casting size
+            videoElement.height = 1100;
+        } else if (size === 'small') {   
+            videoElement.width = 640; // Small size
+            videoElement.height = 720;
+        } else if (size === 'medium') {
+            videoElement.width = 1440; // Medium size
+            videoElement.height = 1080;
+        } else if (size === 'large') {
+            videoElement.width = 1720; // Large size
+            videoElement.height = 1080;
+        }
+    });
+
+    // Subtitle size adjustment
+    const subtitleSizeSelect = document.getElementById('subtitleSize');
+    subtitleSizeSelect.addEventListener('change', () => {
+        const size = subtitleSizeSelect.value;
+        if (size === 'small') {
+            subtitleElement.style.fontSize = '12px'; // Small size
+        } else if (size === 'medium') {
+            subtitleElement.style.fontSize = '16.5px'; // Medium size
+        } else if (size === 'large') {
+            subtitleElement.style.fontSize = '25px'; // Large size
+        }
+    });
+
+    // Subtitle color adjustment
+    const subtitleColorInput = document.getElementById('subtitleColor');
+    subtitleColorInput.addEventListener('input', () => {
+        subtitleElement.style.color = subtitleColorInput.value; // Update subtitle color
+    });
+</script>
+
+</body>
+</html>

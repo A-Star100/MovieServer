@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="/Users/sevuganfamily/jcdbmeserver/images.ico">
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JCDBME Server - Sonic Riders JCDBME</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+            background-color: black;
+        }
+        label {
+            color: white;
+        }
+        #subtitle {
+            position: fixed; /* Use fixed positioning */
+            bottom: 80px; /* Adjust based on your layout */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+        #customControls {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            bottom: 30px;
+            margin-bottom: 20px;
+        }
+        #toggleCaptions, #fullscreenButton, #playPause, #sts, #cast {
+            padding: 5px 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        #toggleCaptions:hover, #fullscreenButton:hover, #playPause:hover, #sts:hover, #cast:hover {
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.7s;
+        }
+
+        /* Slider styles */
+        #progressContainer {
+            width: 100%;
+            cursor: pointer;
+            position: relative;
+            margin-top: 10px; /* Added margin for better spacing */
+        }
+        #progressSlider {
+            width: 100%;
+            -webkit-appearance: none; /* Remove default styles for Webkit */
+            background: #ddd; /* Background color */
+            height: 5px; /* Slider height */
+        }
+        #progressSlider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Remove default styles for Webkit */
+            appearance: none; /* Remove default styles for other browsers */
+            width: 15px; /* Thumb width */
+            height: 15px; /* Thumb height */
+            background: #33a7ff; /* Thumb color */
+            border-radius: 50%; /* Make it round */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+        #progressSlider::-moz-range-thumb {
+            width: 15px; /* Thumb width */
+            height: 15px; /* Thumb height */
+            background: #33a7ff; /* Thumb color */
+            border-radius: 50%; /* Make it round */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        /* Styling options */
+        #stylingOptions {
+            bottom: 0px;
+        }
+        .js-disabled-message {
+            background-color: orange; /* Red background */
+            color: white; /* White text */
+            padding: 20px; /* Padding around the text */
+            text-align: center;
+            font-size: 24px; /* Font size */
+            position: absolute; /* Position it to cover the whole page */
+            top: 0; /* Align to the top */
+            left: 0; /* Align to the left */
+            right: 0; /* Align to the right */
+            bottom: 0; /* Align to the bottom */
+            z-index: 9999; /* Ensure it's on top */
+            width: 1440px;
+            height: 1080px
+        }
+    </style>
+</head>
+<body>
+<noscript>
+    <div class="js-disabled-message" id="jsDisabledMessage">
+    JavaScript is disabled! Please enable JavaScript to view this page properly.
+</div>
+</noscript>
+<div style="position: relative;">
+    <video id="myVideo" width="640" height="720" controls>
+        <source src="http://192.168.254.161:8000/media/Sonic%20Riders%20JCDBME.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <cast-media-player></cast-media-player>
+    
+    <div id="customControls">
+        <button id="playPause">Play</button>
+        <button id="toggleCaptions">Toggle Captions</button>
+        <button onclick="cast()" id="cast">Cast To TV</button></a>
+        <button id="fullscreenButton">Fullscreen</button> <!-- Fullscreen Button -->
+    </div>
+
+    <div id="progressContainer">
+        <input id="progressSlider" type="range" value="0" min="0" max="100" step="1">
+    </div>
+    
+    <div id="subtitle"></div> <!-- Subtitle container -->
+
+    <!-- Styling Options Dropdowns -->
+    <div id="stylingOptions">
+        <label for="videoSize">Video Size:</label>
+        <select id="videoSize">
+            <option value="custom">Custom Video Size</option>
+            <option value="small" selected>Mobile Mode</option>
+        </select>
+
+        <label for="subtitleSize">Subtitle Size:</label>
+        <select id="subtitleSize">
+            <option value="small">Small</option>
+            <option value="medium" selected>Medium (Default)</option>
+            <option value="large">Large</option>
+        </select>
+
+        <label for="subtitleColor">Subtitle Color:</label>
+        <input type="color" id="subtitleColor" value="#FFFFFF" />
+
+        
+        
+    </div>
+</div>
+
+<!-- Embedded WebVTT -->
+<script type="text/vtt" id="vtt-content">
+    WEBVTT
+
+    00:00:44.000 --> 00:00:49.000
+    [Sonic] Woo-hoo! And cut! Let the story begin.
+    
+    00:00:57.000 --> 00:00:59.000
+    [Storm] Boss!
+    
+    00:00:59.000 --> 00:00:59.555
+    [Jet] OW!
+    
+    00:00:59.555 --> 00:01:01.330
+    [Storm] We're in trouble, sir!
+    
+    00:01:02.555 --> 00:01:05.330
+    [Wave] Storm. At least learn to knock when you enter a room.
+    
+    00:01:09.555 --> 00:01:11.330
+    [Storm] What's this?!
+    
+    00:01:13.555 --> 00:01:15.330
+    Huh? Could this be?!
+    
+    00:01:15.555 --> 00:01:18.330
+    [Jet] Yeah, it's what I inherited from my grandpa.
+    
+    00:01:19.555 --> 00:01:22.330
+    [Wave] Could this be the key to the legendary Babylon Garden, then?
+    
+    00:01:22.555 --> 00:01:27.330
+    [Storm] Legend says some unbelievable treasure was hidden by our ancestors long ago.
+    
+    00:01:27.555 --> 00:01:30.330
+    Right, right, right?
+    
+    00:01:33.555 --> 00:01:36.555
+    Nuh-uh! If I hand it over to some mech-fanatic like you,
+    
+    00:01:36.555 --> 00:01:40.555
+    you're totally gonna use it for some weird experiment, right?
+    
+    00:01:41.555 --> 00:01:42.555
+    [Wave] Oh, come on! I'll give it back!
+    
+    00:01:43.555 --> 00:01:46.555
+    [Storm] You know how many times you've already SAID you're gonna give it back?
+    
+    00:01:47.555 --> 00:01:53.555
+    I'm TIRED of all this! Like our ancestors' teachings, only ask three wishes in a lifetime-
+    
+    00:01:53.555 --> 00:01:54.555
+    [Jet] Oh, SHUT UP!
+    
+    00:01:56.555 --> 00:01:57.555
+    So, what'd you want?!
+    
+    00:01:57.555 --> 00:02:01.555
+    [Storm] Uh, it's about Ee-e-eeeee....
+    
+    00:02:01.555 --> 00:02:03.555
+    [Wave] A guy called Eggman has business with us-
+    
+    00:02:04.555 --> 00:02:03.555
+    OH!-
+    [Storm] He said he has business with you and that he came aboard on our shiiiip!-
+    
+    00:02:09.555 --> 00:02:10.555
+    [Wave] Hey, CUT IT OUT Storm!
+    
+    00:02:13.555 --> 00:02:16.555
+    [Eggman] My, my, am I interrupting something?!
+    
+    00:02:16.555 --> 00:02:19.555
+    [Jet] Oh!, it's you, huh?, the guy who wants to talk to me.
+    
+    00:02:19.555 --> 00:02:22.555
+    [Eggman] Are you Master Jet, the one said to be the legendary rogue?!
+    
+    00:02:23.555 --> 00:02:26.555
+    I always hear of your actions.
+    
+    00:02:27.555 --> 00:02:29.555
+    [Jet] Enough with the flattery! What do you want?
+    
+    00:02:30.555 --> 00:02:36.555
+    [Eggman] I've heard rumors that you have what is said to be the Babylon Garden key, the legendary of course!
+    
+    00:02:38.555 --> 00:02:40.555
+    [Jet] Hey! What's this... key?
+    
+    00:02:41.555 --> 00:02:47.555
+    [Eggman] You don't have to be so vigilant, I am on your side. Why would I not?
+    
+    00:02:47.555 --> 00:02:52.555
+    Did you know the Babylon Garden's key is... (whispers unintelligible gibberish)
+    
+    00:02:54.555 --> 00:03:00.555
+    [Jet] I see! The point is, we have to collect these... Chaos Emeralds, right?, Eggman, sir?
+    
+    00:03:01.555 --> 00:03:03.555
+    That's easy-peasy!
+    
+    00:03:03.555 --> 00:03:05.555
+    [Eggman] Is it really easy-peasy?
+    
+    00:03:05.777 --> 00:03:11.555
+    [Jet] What do you mean?! Is there something us Babylon Rogues can't steal or what?!
+    
+    00:03:12.777 --> 00:03:11.555
+    [Eggman] No, no! Do you know of this individual, though? He's called Sonic and he's said to be the fastest one on Earth.
+    
+    00:03:20.777 --> 00:03:24.555
+    I've had several failures with this idiotic pest.
+    
+    00:03:24.777 --> 00:03:31.555
+    [Jet] Hmph! I don't know about this fastest guy on Earth or whatever, but as long as I have this Extreme Gear with me,
+    
+    00:03:31.777 --> 00:03:32.555
+    he's just a joke!
+    
+    00:03:40.777 --> 00:03:43.555
+    [Tails] The signal's coming from around here!
+    
+    00:03:48.777 --> 00:03:52.555
+    That's odd. It looks like some jamming waves are coming from somewhere.
+    
+    00:03:53.777 --> 00:03:55.555
+    (Glass breaks loudly)
+    [Sonic, Tails, Knuckles] Huh?!
+    
+    00:03:56.777 --> 00:03:58.555
+    [Knuckles] What's that?!
+    
+    00:04:00.777 --> 00:04:03.555
+    [Tails] Sonic! The emerald's over there!
+    
+    00:04:07.519 --> 00:04:12.519
+    [Sonic] Alright, things are looking good here.
+    
+    00:04:38.400 --> 00:04:41.400
+    [Knuckles] Shoot.
+    
+    00:04:53.280 --> 00:04:56.280
+    [Sonic] Heh.
+    
+    00:05:13.280 --> 00:05:16.080
+    [Jet] Too easy!
+    
+    00:05:19.600 --> 00:05:22.840
+    [Sonic] What the...?
+    
+    00:05:29.840 --> 00:05:35.960
+    [Jet] For the fastest guy in the world, you're nothing. Nothing at all.
+    
+    00:05:41.520 --> 00:05:45.919
+    [Sonic] It's been a while since things have been this fired up!
+    
+    00:05:46.240 --> 00:05:50.080
+    [Eggman] Ladies and gentlemen of the world, long time no see!
+    
+    00:05:50.080 --> 00:05:55.759
+    My, my, you all seem to look bored, yes you do.
+    
+    00:05:57.199 --> 00:06:03.360
+    I have the best present for such bored individuals, yes I do.
+    
+    00:06:03.360 --> 00:06:08.720
+    It's called the EX-World Grand Prix, a race to see who's the fastest in the world.
+    
+    00:06:08.720 --> 00:06:12.639
+    However, it's not just to decide who's the fastest in the world.
+    
+    00:06:12.639 --> 00:06:18.160
+    This time, the race will be an earnest battle with no rules.
+    
+    00:06:18.160 --> 00:06:25.199
+    Participants bring the Chaos Emeralds, and whoever wins in the end can take them all in one fell swoop.
+    
+    00:06:28.479 --> 00:06:35.240
+    I'll be waiting for those who have confidence in their abilities to do this challenge.
+    
+    00:06:36.000 --> 00:06:40.880
+    [Sonic] That blasted Eggman. Yeah, he must be up to something again. One more thing—
+    
+    00:06:40.880 --> 00:06:44.080
+    [Eggman] Now... yes, yes, yes.
+    
+    00:06:44.080 --> 00:06:49.800
+    Here are the guys who have decided to participate so far.
+    
+    00:06:56.479 --> 00:07:00.000
+    [Sonic] That's him!
+    ~For the fastest guy in the world, you're nothing. Nothing at all.~
+    
+    00:07:00.000 --> 00:07:05.360
+    A battle to decide who's the fastest in the world... looks like fun.
+    
+    00:07:05.360 --> 00:07:10.800
+    I'll get you back sooner or later.
+    
+    00:07:13.360 --> 00:07:16.720
+    [Knuckles] Still, what exactly is Eggman planning anyway?
+    
+    00:07:16.720 --> 00:07:21.360
+    [Sonic] Knuckles, I doubt it's anything important.
+    
+    00:07:28.319 --> 00:07:32.880
+    I see you've signed up too, eh?
+    
+    00:07:32.880 --> 00:07:36.080
+    Let me just not listen—this will fix the problem.
+    
+    00:07:36.080 --> 00:07:39.039
+    Perfect, I don't want to go in with all this lovey-lovey stuff.
+    
+    00:07:41.759 --> 00:07:45.080
+    Hey, Tails.
+    
+    00:07:45.520 --> 00:07:48.400
+    [Tails] Mmm... That mark...
+    
+    00:07:49.199 --> 00:07:52.560
+    [Sonic] Mark?
+    
+    00:07:52.560 --> 00:07:56.960
+    Yeah, the board symbol of those guys we encountered in Future City last time, remember?
+    
+    00:07:56.961 --> 00:07:58.120
+    [Tails] Babylon...
+    
+    00:07:58.120 --> 00:08:00.160
+    [Sonic, Knuckles, Amy] Babylon?
+    
+    00:08:00.160 --> 00:08:02.800
+    [Tails] Yeah, the Babylon Rogues!
+    
+    00:08:03.160 --> 00:08:07.800
+    A long time ago, there was an island floating in the sky called the Babylon Garden.
+    
+    00:08:08.160 --> 00:08:10.800
+    The rogues I was talking about lived there...
+    
+    00:08:11.160 --> 00:08:18.800
+    According to the legend, once upon a time, there was a gang of thieves called the Babylon Rogues.
+    
+    00:08:19.160 --> 00:08:27.160
+    All of the Babylonians lived on the Babylon Garden, but they provoked the gods' wrath with their excessive stealing,
+    
+    00:08:27.160 --> 00:08:30.800
+    and the Babylon Garden got submerged deep underground.
+    
+    00:08:31.160 --> 00:08:33.800
+    Since then, the Babylonians fell apart and never returned.
+    
+    00:08:35.160 --> 00:08:40.800
+    But it is said there's still treasure they left in the Babylon Garden, somewhere...
+    
+    00:08:42.160 --> 00:08:40.800
+    It's also said that each of the Babylonians were Extreme Gear specialists!
+    
+    00:08:47.160 --> 00:08:50.160
+    [Knuckles] But how could something like the Babylon Garden be able to float?
+    
+    00:08:50.160 --> 00:08:53.800
+    [Tails] About that...
+    
+    00:08:53.900 --> 00:08:56.800
+    I used the results I got from analyzing the flow of the infinite backwards-inspection service and the viscus
+    
+    00:08:57.160 --> 00:08:59.160
+    efficiency I saw determined by the Kutta-Joukowski theorem-
+    
+    00:08:59.160 --> 00:09:00.800
+    [Knuckles] STOP!!!
+    
+    00:09:02.160 --> 00:09:05.800
+    I got it, so I guess it basically floats through will-power then...
+    
+    00:09:06.160 --> 00:09:08.800
+    (Wave laughs)
+    
+    00:09:09.160 --> 00:09:11.800
+    [Wave] I'm sorry, but it's just too funny, y'know.
+    
+    00:09:12.160 --> 00:09:14.800
+    (sarcastically) Oh! This gear sure is unusual.
+    
+    00:09:16.160 --> 00:09:17.800
+    [Tails] Thanks! I set this gear up myself!
+    
+    00:09:19.160 --> 00:09:25.160
+    [Wave sarcastically] Oh! Really?!
+    ~Let me put this bomb on this stupid gear. They'll lose before you know it. Heh-heh.~
+    
+    00:09:25.160 --> 00:09:29.000
+    (Wave laughs loudly and meanly)
+    
+    00:09:29.160 --> 00:09:37.800
+    I'm sorry, but I can't believe someone would participate with such terrible gear!
+    (Wave laughs loudly and meanly again)
+    
+    00:09:38.160 --> 00:09:44.160
+    Thanks. You showed me something to laugh at. Heh-heh. See ya later, shorty!
+    
+    00:09:44.160 --> 00:09:48.800
+    [Amy] What's up with her! She's disgusting! Oh!!!
+    
+    00:09:49.160 --> 00:09:52.160
+    [Sonic] Right! She made Tails look like a big, fat idiot!
+    
+    00:09:52.160 --> 00:09:57.800
+    [Knuckles] Yeah, and Tails' mecha knowledge is really good, too!
+    
+    00:09:58.160 --> 00:10:00.800
+    [Tails] Grrrrr.......
+    
+    00:10:01.160 --> 00:10:00.800
+    [Omochao] The next race is about to begin. All participants, please hurry to the gate.
+    
+    00:10:08.160 --> 00:10:10.800
+    (Knuckles and Storm run into each other)
+    
+    00:10:15.160 --> 00:10:16.800
+    [Knuckles] It's you!
+    
+    00:10:17.160 --> 00:10:19.800
+    [Storm] You sure got me good the other day...
+    
+    00:10:20.160 --> 00:10:24.800
+    [Knuckles] Hmph! I let you get away last time but I'm not gonna lose to you this time!
+    
+    00:10:25.160 --> 00:10:19.800
+    [Storm] In this race, I'm gonna multiply the pain you gave me by 10, jerk!
+    
+    00:10:32.160 --> 00:10:33.800
+    (Knuckles gasps)
+    [Knuckles] Woah! I'm sorry!
+    
+    00:10:34.160 --> 00:10:42.160
+    (Storm laughs)
+    [Storm] Heh! What do you think you're doing?! This is how you punch knucklehead, yeah!
+    
+    00:10:42.160 --> 00:10:43.800
+    [Knuckles] You're gonna attack?!
+    
+    00:10:45.160 --> 00:10:52.800
+    [Storm] Sorry, I didn't think I'd get ambushed out here by some, some, SOME idiot.
+    
+    00:10:53.160 --> 00:10:54.160
+    Woaaaahh!
+    
+    00:10:54.160 --> 00:10:55.800
+    [Knuckles] You!
+    
+    00:10:57.160 --> 00:11:02.800
+    [Omochao] The race begins soon. All participants who aren't there should come immediately.
+    
+    00:11:03.160 --> 00:11:07.160
+    [Knuckles] If that's how it's gonna go, we're gonna settle this at the race.
+    
+    00:11:07.160 --> 00:11:10.800
+    [Storm] I'll take you on!
+    
+    00:11:15.160 --> 00:11:23.160
+    [Omochao] The semi-finals will be held in 10 minutes. Please gather at the gate when the time comes.
+    
+    00:11:23.160 --> 00:11:26.800
+    [Sonic] Oh, yeah!
+    
+    00:11:27.160 --> 00:11:26.800
+    [Tails] Sonic, that was amazing! When did you learn that trick?
+    
+    00:11:32.160 --> 00:11:37.800
+    [Jet] Is this the fastest guy on Earth?!
+    
+    00:11:38.160 --> 00:11:45.800
+    [Sonic] That's...
+    [Jet] You have that much skill? Hmph! If you run on the ground you may be fast,
+    
+    00:11:46.160 --> 00:11:52.800
+    but with Extreme Gear, it's a totally different story, which of course, you're too dumb to understand.
+    
+    00:11:53.160 --> 00:12:05.800
+    You have to be one with the wind along with your gear. You can't do that like this.
+    So you might as well kiss the ground and say goodbye.
+    
+    00:12:08.160 --> 00:12:11.800
+    [Knuckles] What's with him?!
+    
+    00:12:12.160 --> 00:12:19.160
+    [Sonic] Don't know, but his confidence isn't a lie, he's got confidence, alright.
+    So I don't even know if I can win.
+    
+    00:12:19.160 --> 00:12:27.800
+    ~I'm sorry, but I can't believe someone would participate with such terrible gear!~
+    (Tails mentally sighs)
+    
+    00:12:28.160 --> 00:12:34.800
+    [Tails] Sonic, I haven't gotten 100% efficiency out of the boards yet.
+    I have to unlock the secret!
+    
+    00:12:35.160 --> 00:12:34.800
+    [Sonic] Hey, Tails!, it's not your fault!
+    
+    00:12:38.160 --> 00:12:43.800
+    [Tails] No... but as much as I hate to admit it, our opponent's mechanics are better than ours!
+    
+    00:12:44.000 --> 00:12:50.800
+    Sonic, I'm gonna improve your board so we'll win the finals!
+    
+    00:12:53.000 --> 00:12:50.800
+    [Storm] Boss!!! I'm so sorry to keep you waiting, sir!
+    
+    00:13:01.000 --> 00:13:04.800
+    [Jet] Did you get anything?!
+    
+    00:13:06.000 --> 00:13:09.000
+    [Storm] Yeah, here you go, boss!
+    
+    00:13:09.010 --> 00:13:12.000
+    [Wave] Give that to me.
+    
+    00:13:18.010 --> 00:13:20.000
+    Hmm? What's this?
+    
+    00:13:20.010 --> 00:13:22.000
+    [Jet] What's up, guys?
+    
+    00:13:22.010 --> 00:13:24.500
+    [Storm] Regarding the treasure of Babylon...
+    
+    00:13:25.010 --> 00:13:29.500
+    this looks a lot like Dr. Eggman's diary!
+    
+    00:13:32.010 --> 00:13:34.500
+    (Jet clears his throat)
+    
+    00:13:35.010 --> 00:13:42.500
+    "Hehehe... this worked out really great," (Jet's voice transforms into Eggman's thoughts) ~as it seems those stupid birds think
+    the treasure of Babylon is a gem or something...~
+    
+    00:13:43.010 --> 00:13:50.500
+    ~What fools! The Babylonians possessed the greatest technology in ancient times, and the treasure of Babylon is the fruit of that technology~
+    
+    00:13:51.010 --> 00:13:58.500
+    ~It is said that a boy who made friends with the Babylonians was given a prototype of it, and it's believed he said he's obtained the wings of god.~
+    
+    00:14:00.010 --> 00:14:05.500
+    ~And then apparently he ruled the world by using that power. This is something that can conquer the world at a prototype stage,~
+    
+    00:14:06.010 --> 00:14:11.500
+    ~and I look forward to finding out exactly what is hidden there! Muhahahaha!~
+    
+    00:14:12.010 --> 00:14:15.500
+    [Storm] So I guess it's not a gem after all, right? (Jet sighs)
+    
+    00:14:16.010 --> 00:14:26.500
+    [Jet] I'm done, and I'm terribly mad at Eggman, but we are rogues after all, and, we're not interested in world domination or technology!
+    
+    00:14:27.010 --> 00:14:30.010
+    [Wave] Master, there's something you need to know.
+    
+    00:14:30.010 --> 00:14:40.010
+    Eggman may not look like it, but he is a genius with an IQ of 300. And that technology he's desperate to get must have considerable value, Master Jet.
+    
+    00:14:40.010 --> 00:14:42.500
+    [Jet] So you mean we can make money out of it?!
+    
+    00:14:44.010 --> 00:14:49.500
+    [Wave] It may be so valuable that it could be worth more than gold or silver gems!
+    
+    00:14:52.010 --> 00:14:54.500
+    (Wave's alarm rings)
+    
+    00:14:55.010 --> 00:15:00.500
+    [Jet] I was finally starting to feel good and laugh and you had to come in and spoil it!
+    
+    00:15:01.010 --> 00:15:04.010
+    [Wave] Jet, it seems that it is time for the race to begin.
+    
+    00:15:04.010 --> 00:15:12.500
+    [Jet] Alright! I'll knock 'em all down and get the treasure of Babylon, you see?!
+    
+    00:15:14.010 --> 00:15:23.500
+    [Eggman] Like I said before, the race is an earnest battle with no rules! No matter what methods are used, whoever gets to the goal first is the winner.
+    
+    00:15:24.010 --> 00:15:32.500
+    And said winner gets all of the Chaos Emeralds!
+    
+    00:15:35.010 --> 00:15:41.500
+    [Jet] Heh! So you got to the finals with that fighting spirit you have, eh? Am I right?
+    
+    00:15:42.010 --> 00:15:44.500
+    [Sonic] I won't lose this time!
+    
+    00:15:47.010 --> 00:15:54.500
+    (Eggman laughs)
+    [Eggman] With that said, it is time for the final race to begin! FINALLY!
+    
+    00:16:02.010 --> 00:16:13.500
+    [Jet] ~We lost all of the races, well, until now. I better cheat to win if I have to! Now!~
+    
+    00:16:24.010 --> 00:16:33.500
+    [Wave] ~The bomb I put on that gear previously will make Sonic's board explode. And we will finally win! Haha.~
+    
+    00:16:53.010 --> 00:16:56.500
+    [Jet] Ha! I guess the ground suits you best.
+    
+    00:16:57.010 --> 00:17:01.500
+    [Sonic] Grrrrrrr....
+    
+    00:17:14.010 --> 00:17:17.500
+    [Jet] ~Sonic lost! Haha!~
+    
+    00:17:18.010 --> 00:17:20.500
+    Hehehe!
+    
+    00:17:42.010 --> 00:17:48.500
+    ~I wonder what'll happen. Well, let's see...~
+    
+    00:18:25.010 --> 00:18:31.010
+    This is... the Babylon Garden!
+    
+    00:18:31.010 --> 00:18:33.500
+    (Eggman laughs)
+    
+    00:18:34.010 --> 00:18:37.010
+    [Eggman] I'll get the treasure of Babylon!
+    
+    00:18:37.010 --> 00:18:40.500
+    [Amy] This is bad!
+    
+    00:18:45.010 --> 00:18:48.010
+    [Jet] Eggman!!!
+    
+    00:18:48.010 --> 00:18:53.500
+    [Sonic] Tails, Knuckles! We're going after him!
+    
+    00:18:54.010 --> 00:18:53.500
+    [Knuckles] Wait up!
+    (Tails pants)
+    
+    00:18:55.010 --> 00:19:04.010
+    [Omochao] Special news, ladies and gentlemen! A mysterious flying object appeared above the venue where the EX World Grand Prix finals were being held!
+    
+    00:19:04.010 --> 00:19:14.500
+    It seems that Sonic and his friends headed into that flying object to investigate, but we don't know the details! Could this object really be?...
+    
+    00:19:16.010 --> 00:19:20.010
+    [Wave] Oh! I see that shorty and his friend came here too!
+    
+    00:19:20.010 --> 00:19:23.500
+    [Knuckles] You wanna fight?!
+    
+    00:19:28.010 --> 00:19:32.500
+    [Robot] .arget detected. Get them.
+    
+    00:19:36.010 --> 00:19:41.010
+    [Tails] Knuckles! This isn't the time to fight right now!
+    
+    00:19:41.010 --> 00:19:48.500
+    [Wave] You said something wise, for a shorty. Leave that thing alone and let's go, Storm!
+    
+    00:19:49.010 --> 00:19:51.500
+    [Knuckles] DID SHE SAY "THAT THING"?!!!!!
+    
+    00:19:52.010 --> 00:19:54.010
+    GET BACK HERE!!!
+    
+    00:19:54.010 --> 00:19:56.500
+    [Tails] Wait for me, Knuckles!
+    
+    00:20:13.010 --> 00:20:15.500
+    [Sonic] Found him!
+    
+    00:20:19.010 --> 00:20:22.500
+    [Tails] Wait up! Here's this!
+    
+    00:20:24.010 --> 00:20:27.500
+    [Sonic] Woahhhhh-a...
+    
+    00:20:28.010 --> 00:20:31.500
+    What's this?
+    [Tails] This is special gear that I prepared for when something like this happened.
+    
+    00:20:33.010 --> 00:20:35.500
+    [Sonic] Not bad, Tails! Thank you!
+    
+    00:20:45.010 --> 00:20:47.500
+    You?
+    
+    00:20:53.010 --> 00:20:57.010
+    [Jet] You can't catch up with him, so give up!
+    
+    00:20:57.010 --> 00:21:00.500
+    [Sonic] We'll see about that!
+    
+    00:21:01.010 --> 00:21:07.500
+    I'll show you a world of speed you've never experienced before!
+    
+    00:21:12.010 --> 00:21:17.010
+    Even without wings, I can still become one with the wind!
+    
+    00:21:17.010 --> 00:21:19.500
+    Right?
+    
+    00:21:29.010 --> 00:21:34.010
+    Wait! Stop right there!
+    
+    00:21:34.010 --> 00:21:37.010
+    [Eggman] Wait up! Look at this!
+    
+    00:21:37.010 --> 00:21:39.500
+    [Sonic] No!
+    
+    00:21:41.010 --> 00:21:46.500
+    [Eggman] That's it! Keep still like that, hedgehog!
+    
+    00:21:47.010 --> 00:21:49.500
+    [Sonic] Now!
+    
+    00:21:54.640 --> 00:21:59.320
+    Let's see if you can see through this wind.
+    
+    00:22:00.400 --> 00:22:02.720
+    [Eggman] What?
+    
+    00:22:04.080 --> 00:22:07.840
+    Where are you?
+    [Sonic] I'm here.
+    
+    00:22:07.840 --> 00:22:10.840
+    [Eggman] Oh.
+    
+    00:22:17.440 --> 00:22:21.440
+    [Sonic] Here you go.
+    [Jet] What?
+    
+    00:22:22.799 --> 00:22:28.640
+    [Jet] Don't mess with me! I lost against you!
+    Remember? So there's no reason for you to pity me!
+    
+    00:22:28.640 --> 00:22:35.200
+    [Wave] What are you saying?
+    They don't want it, so let's take it!
+    
+    00:22:35.200 --> 00:22:38.919
+    Treasure is treasure.
+    
+    00:22:46.480 --> 00:22:50.159
+    [Sonic] Well, I guess we should be going, right, Tails?
+    
+    00:22:50.159 --> 00:22:52.159
+    [Tails] Uh-huh.
+    [Amy] Sonic!
+    
+    00:22:52.159 --> 00:22:54.840
+    [Sonic] Amy!!!
+    
+    00:22:56.159 --> 00:22:58.880
+    AMY!!!
+    
+    00:22:59.360 --> 00:23:04.559
+    I'm begging you, please stop this!!!
+    
+    00:23:06.720 --> 00:23:09.840
+    [Wave] Come on.
+    
+    00:23:17.200 --> 00:23:21.320
+    [Jet] All right, here goes.
+    
+    00:23:51.200 --> 00:23:55.320
+    (Monster screams loudly)
+    
+    00:23:57.200 --> 00:23:55.320
+    [Sonic] ~What the?!~
+    
+    00:24:01.360 --> 00:24:05.840
+    Looks like something interesting is going on!
+    
+    00:24:13.360 --> 00:24:16.840
+    (Monster screams loudly again)
+    
+    00:24:24.080 --> 00:24:29.880
+    [Tails] Look, Sonic! The doors are closing!
+    [Sonic] Let's hurry!
+    
+    00:24:40.640 --> 00:24:46.880
+    [Monster] You fools!... who are going after the treasure!
+    
+    00:24:46.880 --> 00:24:50.000
+    Who is this guy?
+    
+    00:24:54.480 --> 00:25:05.640
+    [Entire cast except Eggman] Yeah! (Once a character)
+    
+    00:25:07.440 --> 00:25:09.760
+    No!
+    
+    00:25:10.640 --> 00:25:14.200
+    [Entire cast except Eggman] This is!—
+    
+    00:25:14.320 --> 00:25:19.320
+    (Eggman laughs)
+    [Eggman] I guess you were too ecstatic about the treasure to notice me!
+    
+    00:25:20.320 --> 00:25:21.279
+    [Sonic] Eggman!
+    
+    00:25:21.279 --> 00:25:23.279
+    [Eggman] Now hand over the treasure!
+    
+    00:25:23.279 --> 00:25:24.720
+    (Everyone except Eggman laughs)
+    
+    00:25:24.720 --> 00:25:28.120
+    [Eggman] What's so funny?! Hand over the treasure right now!
+    
+    00:25:28.720 --> 00:25:30.120
+    [Jet] Here you go!
+    
+    00:25:32.799 --> 00:25:36.400
+    (Eggman laughs)
+    [Eggman] I finally obtained the treasure of Babylon!
+    
+    00:25:36.400 --> 00:25:42.440
+    What's this?
+    A piece of cloth?!
+    
+    00:25:48.240 --> 00:25:54.000
+    What do we have here?
+    "At last, we have completed this groundbreaking invention,"
+    
+    00:25:54.000 --> 00:26:02.559
+    "As long as we have this, we will be able to fly without needing any heavy labor to do and live an easygoing life.
+    STOLEN --- THE THIRTEENTH LEADER OF THE BABYLON ROGUES".
+    
+    00:26:05.360 --> 00:26:07.840
+    This carpet's tender texture is out of this world!
+    
+    00:26:08.640 --> 00:26:13.840
+    Only the Babylonians could create such an amazing thing.
+    
+    00:26:16.320 --> 00:26:22.559
+    All the rich men in the world will surely want this carpet, they say.
+    
+    00:26:25.679 --> 00:26:35.880
+    I can't believe this!
+    I opened the World Grand Prix for this... thing?!
+    
+    00:26:40.320 --> 00:26:47.440
+    [Tails] Huh, could this be?
+    [Wave] Oh, not bad! Looks like you noticed it too, shorty.
+    
+    00:26:47.440 --> 00:26:50.880
+    [Sonic] Hey! What do you mean?
+    [Wave] This is no ordinary carpet.
+    
+    00:26:50.960 --> 00:26:56.960
+    [Tails] Uh-huh! Check out its material!
+    It's the same stuff that the Extreme Gears use!
+    
+    00:26:56.960 --> 00:26:58.960
+    [Jet] What'd you say?!
+    
+    00:27:04.080 --> 00:27:07.640
+    [Sonic] Could that be?
+    
+    00:27:08.720 --> 00:27:12.080
+    [Wave] It's likely that this is a prototype gear!
+    
+    00:27:12.080 --> 00:27:24.440
+    [Sonic] A magic carpet?! I thought that was just in fairy tales!
+    [Jet] To think that our ancestors were the spirits that appeared in those legendary stories—cool!
+    
+    00:27:27.840 --> 00:27:35.120
+    [Sonic] Are you sure you're not gonna stay?
+    [Jet] Yeah, there was a sentence carved in the back of the carpet. It said, "We're inventing this to obtain the world's treasures."
+    
+    00:27:37.360 --> 00:27:43.360
+    If I stay here, I can't face the ancestors. I can't.
+    Besides that though, listen up, Sonic.
+    
+    00:27:45.760 --> 00:27:53.360
+    You'd better prepare yourself. The next time you appear before us, the Babylon Rogues.
+    [Sonic] Gotcha!
+    
+    00:27:54.640 --> 00:28:00.559
+    [Wave] Now then, Master Jet, we should get-
+    [Storm] We should get going now, right?
+    
+    00:28:01.200 --> 00:28:06.200
+    [Tails] We gotta get going too, right, Sonic?
+    [Sonic] Yeah.
+    
+    00:28:06.200 --> 00:28:09.600
+    ♪Get mine - Coming out to stun♪
+    
+    00:28:10.200 --> 00:28:13.600
+    ♪Buck wild! - Your chance is none♪
+    
+    00:28:14.200 --> 00:28:20.600
+    ♪Get mine - Coming out to stun♪
+    ♪Catch me if you can- Buck wild!♪
+    
+    00:28:21.200 --> 00:28:23.360
+    ♪There's no turning back♪
+    
+    00:28:23.360 --> 00:28:26.360
+    ♪Get mine - Reach but never catch♪
+    
+    00:28:28.360 --> 00:28:33.360
+    ♪Buck wild! - You can't fathom that♪
+    ♪Get mine-♪
+    
+    00:28:33.520 --> 00:28:38.240
+    [Jet] The fastest guy on Earth, huh?
+    I'll remember that.
+    
+    00:28:38.240 --> 00:28:41.760
+    Sonic the Hedgehog.
+    
+    00:28:42.000 --> 00:28:45.000
+    [Wave & Storm] Mm-hmm.
+    
+    00:29:00.520 --> 00:29:03.520
+    CREDITS
+    
+    00:29:03.520 --> 00:29:07.760
+    [Eggman] What? Just a puny carpet? (Groans)
+    
+    00:29:08.399 --> 00:29:14.799
+    [Jet] I can't believe we could be descendants from genies. This is amazing!
+    
+    00:29:14.799 --> 00:29:19.360
+    [Sonic] Oh, yeah.
+    [Tails]And the technology in this is amazing too.
+    
+    00:29:19.360 --> 00:29:24.880
+    [Jet] I guess we solved the mystery and finished everything.
+    [Sonic] So, Jet.
+    
+    00:29:28.080 --> 00:29:31.919
+    You're probably gonna be ready for the next round, right?
+    
+    00:29:31.919 --> 00:29:37.159
+    [Jet] Am I ever! I won't give up.
+    
+    00:29:41.039 --> 00:29:45.679
+    Also, my name is Jet the Hawk. What's your name?
+    
+    00:29:45.679 --> 00:29:49.679
+    [Sonic] My name's Sonic the Hedgehog. Nice to meet you, Jet.
+    
+    00:29:49.679 --> 00:29:56.399
+    [Sonic] I guess we're no longer rivals, right?
+    
+    00:29:56.399 --> 00:30:02.559
+    [Jet] For now.
+    I'll meet you in the next race, and you better be ready.
+    
+    00:30:02.640 --> 00:30:06.720
+    Because I might just beat you next time.
+    
+    00:30:06.799 --> 00:30:11.840
+    [Sonic] We'll see, yeah.
+    Oh yeah!
+    
+    00:30:11.840 --> 00:30:14.880
+    [Storm] Hey, knucklehead.
+    
+    00:30:14.880 --> 00:30:20.080
+    I don't know why I keep calling you knucklehead, but
+    let's let that slide. My name is Storm.
+    
+    00:30:20.080 --> 00:30:27.039
+    The Albatross. What's your name?
+    [Knuckles] Well, well, well.
+    
+    00:30:28.799 --> 00:30:33.919
+    My name is Knuckles the Echidna, and it's pretty nice to meet you.
+    
+    00:30:33.919 --> 00:30:43.600
+    [Wave] Yeah, yeah, yeah. Let's get this over with. It's just a friendly reunion. My name is Wave the Swallow. Nice to meet you, Tails.
+    
+    00:30:45.440 --> 00:30:49.960
+    [Tails] Also, was my gear immature?
+    
+    00:30:50.000 --> 00:30:55.039
+    [Wave] Well, it wasn't bad, but not like I'd expected.
+    
+    00:30:56.880 --> 00:30:59.760
+    [Tails] While I improve my gear, you want to see it?
+    
+    00:30:59.760 --> 00:31:05.080
+    [Wave] Yeah, some other time if I can.
+    
+    00:31:07.120 --> 00:31:12.960
+    [Eggman] And my name is Dr. Eggman, everybody.
+    [Entire cast except Eggman] WE KNOW THAT!
+    
+    00:31:12.960 --> 00:31:17.960
+    [Jet] So we call him Egghead?
+    [Sonic] Yeah, why not?
+    
+    00:31:21.960 --> 00:31:25.960
+    [Most of the cast] Bye! (Multiple times)
+    
+    00:31:26.960 --> 00:31:30.000
+    [Sonic] And again......, cut!
+    
+    00:31:30.000 --> 00:31:33.679
+    Also, what Eggman did was basically escape.
+    
+    00:31:33.679 --> 00:31:36.679
+    [Jet] It was a scheme?!
+    
+    00:31:36.679 --> 00:31:40.679
+    (Jet angrily attacks Eggman)
+    
+    00:31:40.679 --> 00:31:46.720
+    [Eggman] HELP! Please SOME HONESTY PLEASE!!! PLEEEEEAAAAAASSSSSEEEEEE!!!!
+    
+    00:31:47.679 --> 00:31:50.720
+    Fine, I give up. It was a scheme after all.   
+</script>
+
+<script>
+// This film is too large to be converted into a "blob://" resource! :)
+myVideo.removeAttribute('controls');
+
+// Function to cast
+function cast() {
+    alert("To cast in Chrome, click on the three dots, click on Cast, Save, & Share, click on Cast, and choose your preferences. Make sure to set the video size to Casting Mode.")
+}
+
+    // Function to parse WebVTT and extract subtitles
+    function parseWebVTT(vttContent) {
+        const lines = vttContent.split('\n');
+        const subtitles = [];
+        let currentSubtitle = {};
+
+        lines.forEach(line => {
+            const timestampMatch = line.match(/(\d+:\d+:\d+\.\d+) --> (\d+:\d+:\d+\.\d+)/);
+            if (timestampMatch) {
+                if (currentSubtitle.text) {
+                    subtitles.push(currentSubtitle);
+                }
+                currentSubtitle = {
+                    start: parseTime(timestampMatch[1]),
+                    end: parseTime(timestampMatch[2]),
+                    text: ''
+                };
+            } else if (line.trim()) {
+                currentSubtitle.text += (currentSubtitle.text ? ' ' : '') + line.trim();
+            }
+        });
+
+        if (currentSubtitle.text) {
+            subtitles.push(currentSubtitle);
+        }
+
+        return subtitles;
+    }
+
+    function parseTime(timeStr) {
+        const parts = timeStr.split(':');
+        const seconds = parseFloat(parts.pop());
+        return parts.reduceRight((acc, part) => {
+            return acc + parseInt(part, 10) * 60 ** (parts.length - 1);
+        }, seconds);
+    }
+
+    const vttElement = document.getElementById('vtt-content');
+    const subtitles = parseWebVTT(vttElement.textContent.trim());
+
+    const videoElement = document.getElementById('myVideo');
+    const subtitleElement = document.getElementById('subtitle');
+    const playPauseButton = document.getElementById('playPause');
+    const fullscreenButton = document.getElementById('fullscreenButton'); // Fullscreen button
+    const progressSlider = document.getElementById('progressSlider');
+    let captionsVisible = false;
+
+    // Function to display subtitles based on current time
+    function displaySubtitles() {
+        const currentTime = videoElement.currentTime;
+        const currentSubtitle = subtitles.find(sub => currentTime >= sub.start && currentTime <= sub.end);
+
+        if (currentSubtitle) {
+            subtitleElement.textContent = currentSubtitle.text;
+            subtitleElement.style.display = captionsVisible ? 'block' : 'none'; // Show or hide based on toggle
+        } else {
+            subtitleElement.style.display = 'none'; // Hide if no subtitle
+        }
+        const percentage = (currentTime / videoElement.duration) * 100;
+        progressSlider.value = percentage; // Update slider value
+    }
+
+    // Play/Pause function
+    playPauseButton.addEventListener('click', () => {
+        if (videoElement.paused) {
+            videoElement.play();
+            playPauseButton.textContent = 'Pause';
+        } else {
+            videoElement.pause();
+            playPauseButton.textContent = 'Play';
+        }
+    });
+
+
+    // Toggle captions function
+    const toggleCaptionsButton = document.getElementById('toggleCaptions');
+    toggleCaptionsButton.addEventListener('click', () => {
+        captionsVisible = !captionsVisible; // Toggle the visibility state
+        subtitleElement.style.display = captionsVisible ? 'block' : 'none'; // Show or hide captions
+    });
+
+    // Fullscreen functionality for the browser
+    fullscreenButton.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen(); // Request fullscreen for the entire document
+            //videoElement.width = 1440; // Medium size
+            //videoElement.height = 1080;
+            fullscreenButton.textContent = 'Exit Fullscreen'; // Change button text
+        } else {
+            document.exitFullscreen(); // Exit fullscreen
+            //videoElement.width = 1280; // Small size
+            //videoElement.height = 720;
+            fullscreenButton.textContent = 'Fullscreen'; // Change button text back
+        }
+    });
+
+    // Update subtitles as the video plays
+    videoElement.addEventListener('timeupdate', displaySubtitles);
+
+    // Sync slider with video playback
+    progressSlider.addEventListener('input', () => {
+        const percentage = progressSlider.value / 100; // Get slider percentage
+        videoElement.currentTime = percentage * videoElement.duration; // Set video time based on slider
+    });
+
+    // Hide default video controls
+    videoElement.controls = false; // Disable built-in controls
+
+    // Update subtitle position on fullscreen change
+    videoElement.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+            subtitleElement.style.bottom = '20px'; // Adjust for fullscreen
+        } else {
+            subtitleElement.style.bottom = '20px'; // Reset for regular mode
+        }
+    });
+
+    // Video size adjustment
+    const videoSizeSelect = document.getElementById('videoSize');
+    videoSizeSelect.addEventListener('change', () => {
+        const size = videoSizeSelect.value;
+        if (size === 'custom') {
+            let text;
+  let width = prompt("Please enter your custom video size width:", "1440");
+  if (width == null || width == "") {
+    videoElement.width = 1440;
+  } else {
+    videoElement.width = width;
+    console.log("Custom width is: " + width);
+    let text2;
+  let height = prompt("Please enter your custom video size height:", "720");
+  if (height == null || height == "") {
+    videoElement.height = 720;
+  } else {
+    videoElement.height = height;
+    console.log("Custom height is: " + height);
+  }
+  }
+
+        }
+         else if (size === 'cast') {
+            videoElement.width = 1200; // Casting size
+            videoElement.height = 1100;
+        } else if (size === 'small') {   
+            videoElement.width = 640; // Small size
+            videoElement.height = 720;
+        } else if (size === 'medium') {
+            videoElement.width = 1440; // Medium size
+            videoElement.height = 1080;
+        } else if (size === 'large') {
+            videoElement.width = 1720; // Large size
+            videoElement.height = 1080;
+        }
+    });
+
+    // Subtitle size adjustment
+    const subtitleSizeSelect = document.getElementById('subtitleSize');
+    subtitleSizeSelect.addEventListener('change', () => {
+        const size = subtitleSizeSelect.value;
+        if (size === 'small') {
+            subtitleElement.style.fontSize = '12px'; // Small size
+        } else if (size === 'medium') {
+            subtitleElement.style.fontSize = '16.5px'; // Medium size
+        } else if (size === 'large') {
+            subtitleElement.style.fontSize = '25px'; // Large size
+        }
+    });
+
+    // Subtitle color adjustment
+    const subtitleColorInput = document.getElementById('subtitleColor');
+    subtitleColorInput.addEventListener('input', () => {
+        subtitleElement.style.color = subtitleColorInput.value; // Update subtitle color
+    });
+</script>
+
+</body>
+</html>
