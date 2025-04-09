@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/src/howler.core.js"></script>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
@@ -9,6 +10,10 @@
     <title>JCDBME Server</title>
     <style>
     /* Global reset */
+    * {
+       font-family: "Inter", Arial, sans-serif;
+    }
+
     .noscript-status {
         color:orange;
     }
@@ -433,7 +438,6 @@ body, html {
         </div>
     </div>
     <div id="status"></div>
-    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/src/howler.core.js"></script>
     <div class="video-container">
     <video autoplay muted loop class="backdrop" id="backdrop">
         <source src="background.webm" type="video/webm">
@@ -570,6 +574,12 @@ window.onload = function () {
                     alert("Server has shut down or files on it aren't accessible for now")
                     clearInterval(intervalId);
                 });
+                if (self == top) {
+                    document.documentElement.style.display = 'block'; 
+                } else {
+                    document.documentElement.style.display = 'none'; 
+                    alert("This page is being embedded/iframed. For security reasons, this iframe has been blocked. If you really want to iframe this page, try iframing http://192.168.254.161:4443/iframe.html instead. Port 8080 uses a CSP for extra security so any page won't work on port 8080 when iframing.")
+                }
             } else {
                 fetch('https://192.168.254.161:8080/')  // Replace with your server's URL
                 .then(response => {
@@ -784,12 +794,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const noThanksBtn = document.getElementById('noThanksBtn');
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-    // Check if the dialog has already been shown
-    if (!localStorage.getItem('dialogShown')) {
-if (/android/i.test(userAgent)) {
-        showDialog()
-    }
-    }
 
     function showDialog() {
       dialog.style.display = 'block';

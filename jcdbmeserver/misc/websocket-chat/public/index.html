@@ -373,7 +373,7 @@
             transform: translateY(-3px);
         }
 
-        .color-button {
+.color-button {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -431,14 +431,13 @@
   <!-- Main container holding iframe -->
   <div id="mainContainer">
     <iframe width="100%" height="685px" id="jellyfinIframe" src="http://192.168.254.161:8000/site-root/iframe.html" scrolling="yes" allowfullscreen></iframe>
-    <div class="buttons" style="display: none;">
-      <!-- Custom buttons to control iframe history -->
-      <button id="backBtn">Back</button>
-      <button id="forwardBtn">Forward</button>
+    <div class="buttons">
        <!-- Button with a color icon -->
     <button id="colorButton" class="color-button">
       <span id="colorIcon" class="color-icon"></span>
   </button>
+  </div>
+</div>
     </div>
     <h1></h1>
     
@@ -466,7 +465,7 @@
     <!-- Room Selection Dropdown -->
 <select id="roomSelect">
   <option value="" disabled selected>Select a room</option>
-  <option value="Blah" selected>Select...</option>
+  <option value="Select" selected>Select...</option>
   <option value="Room 1">Room 1</option>
   <option value="Room 2">Room 2</option>
   <option value="Room 3">Room 3</option>
@@ -477,9 +476,10 @@
   <option value="Room 8">Room 8</option>
   <!-- Add more rooms here as necessary -->
 </select>
-    <button id="sendBtn2" onclick="closeChatBox()">Close chatbox</button>
+<div class="border-box-small"></div>
+<button id="sendBtn3">Clear Messages</button>
     <div class="border-box-small"></div>
-    <button id="sendBtn3">Clear Messages</button>
+    <button id="sendBtn2" onclick="closeChatBox()">Close chatbox</button>
     <div class="border-box-small"></div>
     <!--<a href="http://192.168.254.161:3000/"><button id="sendBtn4">BETA - Chat with AI</button></a>-->
   </div>
@@ -489,7 +489,7 @@
   <noscript>
     <style>
       body {
-    font-family: Inter, sans-serif;
+    font-family: "Inter", Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -625,13 +625,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const noThanksBtn = document.getElementById('noThanksBtn');
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-    // Check if the dialog has already been shown
-    if (!localStorage.getItem('dialogShown')) {
-if (/android/i.test(userAgent)) {
-        showDialog()
-    }
-    }
-
     function showDialog() {
       dialog.style.display = 'block';
       androidOverlay.style.display = 'block';
@@ -661,6 +654,7 @@ if (/android/i.test(userAgent)) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const messages = document.getElementById('messages');
+    colorButton.style.display = 'block';
 
     // Function to scroll to the bottom
     function scrollToBottom() {
@@ -698,7 +692,7 @@ usernameInput.addEventListener("keydown", function(event) {
 
 const iframe = document.getElementById('jellyfinIframe');
 
-// Send "back" or "forward" to the iframe
+/* Send "back" or "forward" to the iframe
 document.getElementById("backBtn").addEventListener("click", () => {
   iframe.contentWindow.postMessage("back", "http://192.168.254.137:8000/site-root/iframe.html");
 });
@@ -706,6 +700,7 @@ document.getElementById("backBtn").addEventListener("click", () => {
 document.getElementById("forwardBtn").addEventListener("click", () => {
   iframe.contentWindow.postMessage("forward", "http://192.168.254.137:8000/site-root/iframe.html");
 });
+*/
 
 function more() {
         window.open("http://192.168.254.137:8000/Unreleased%20JCDBMEs/", '_self')
@@ -726,21 +721,30 @@ function changeBackgroundColor(color) {
             document.body.style.background = "linear-gradient(135deg, #4a90e2, #1375fe)";
             sideMenu.style.background = "linear-gradient(135deg, #4a90e2, #1375fe)";
             sideMenu.style.color = "#f5f5f5";
-            iframe.contentWindow.postMessage("black", "http://192.168.254.137:8000/site-root/iframe.html");
-            break;
+            document.body.style.color = "white";
+          if (iframe.src === "http://192.168.254.161:8000/site-root/iframe.html") {
+            iframe.contentWindow.postMessage("default", "http://192.168.254.161:8000/site-root/iframe.html");
+          }
+          break;
         case "black":
             // Change to black background for both body and sideMenu
             document.body.style.background = "#121212";
             sideMenu.style.background = "#121212";
             sideMenu.style.color = "#f5f5f5";
-            iframe.contentWindow.postMessage("white", "http://192.168.254.137:8000/site-root/iframe.html");
-            break;
+            document.body.style.color = "white";
+            if (iframe.src === "http://192.168.254.161:8000/site-root/iframe.html") {
+            iframe.contentWindow.postMessage("white", "http://192.168.254.161:8000/site-root/iframe.html");
+            }
+          break;
         case "white":
             // Change to white background for both body and sideMenu
             document.body.style.background = "#f5f5f5";
+            document.body.style.color = "black";
             sideMenu.style.background = "#f5f5f5";
             sideMenu.style.color = "#121212";
-            iframe.contentWindow.postMessage("black", "http://192.168.254.137:8000/site-root/iframe.html");
+            if (iframe.src === "http://192.168.254.161:8000/site-root/iframe.html") {
+            iframe.contentWindow.postMessage("black", "http://192.168.254.161:8000/site-root/iframe.html");
+            }
             break;
     }
 }

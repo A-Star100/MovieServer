@@ -1,0 +1,475 @@
+<!DOCTYPE HTML>
+<head>
+    <title>Sonic Riders JCDBME</title>
+    <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <link
+      href="https://unpkg.com/@videojs/themes@1/dist/forest/index.css"
+      rel="stylesheet"
+    />
+    <style>
+    html, body {margin: 0; height: 100%;}
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <style>
+        body {
+            font-family:  Helvetica, Arial, sans-serif;
+            background-color: black;
+        }
+        .glossy-yellow-text {
+            font-weight: bold;
+            color: #FFD700; /* Yellow color */
+            background: linear-gradient(45deg, #ffeb3b, #fdd835);
+            background-clip: text;
+            -webkit-background-clip: text; /* For Safari */
+            display: inline;
+            text-shadow: 0 0 5px rgba(255, 223, 0, 0.7), 0 0 10px rgba(255, 223, 0, 0.4);
+        }
+        .video-js {
+            width: 88vw;
+            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+  font-size: inherit;
+  background: inherit;
+  border: none;
+  box-shadow: none;
+        }
+        .video-js .vjs-control-bar {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+}
+
+.video-js .vjs-play-control,
+.video-js .vjs-volume-panel,
+.video-js .vjs-current-time-display,
+.video-js .vjs-time-divider,
+.video-js .vjs-duration-display,
+.video-js .vjs-fullscreen-control {
+  color: inherit;
+}
+
+/* Play button style */
+.video-js .vjs-big-play-button {
+  border: none;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Remove logo if using one */
+.video-js .vjs-control-bar {
+  display: flex;}
+        
+        #context-area {
+            display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40px;
+  margin-bottom: 3px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+        }
+        #download-dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #download-dialog .dialog-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 600px;
+            text-align: center;
+        }
+
+        #download-dialog .dialog-content h3 {
+            margin: 0 0 20px 0;
+            color: #000;
+        }
+
+        .download-button, .download-hls-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .download-hls-button {
+            background-color: green;
+        }
+
+        .download-button:hover {
+            background-color: #0056b3;
+        }
+
+        .download-hls-button:hover {
+            background-color: darkgreen;
+        }
+        #vjs-no-js {
+            z-index: 9999;
+        }
+        #custom-menu {
+                display: none;
+                position: absolute;
+                background-color: white;
+                border: 1px solid #ccc;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+                list-style-type: none;
+                padding: 5px;
+            }
+            #custom-menu li {
+                padding: 8px 12px;
+                cursor: pointer;
+            }
+            #custom-menu li:hover {
+                background-color: #f0f0f0;
+            }
+            .dialog {
+        display: none; /* Hide dialog by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    }
+
+    .dialog-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+    }
+
+    .close-button {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40px;
+  margin-bottom: 3px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+    }
+
+    .close-button:hover,
+    .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+
+
+   </style>
+</head>
+
+<body>
+<div id="context-area">
+  <video
+    id="my-video"
+    class="video-js vjs-theme-forest"
+    controls
+    preload="auto"
+    width="1280"
+    height="720"
+    data-setup="{}"
+    autoplay
+    src="http://192.168.254.161:8000/media/Sonic%20Riders%20JCDBME.mp4"
+  >
+     <track src="http://192.168.254.161:8000/media/riders.vtt" label="English"
+     kind="subtitles"
+     srclang="en">
+  </video>
+</div>
+<!-- JavaScript disabled fallback-->
+<noscript>
+    <video src="http://192.168.254.161:8000/media/Sonic%20Riders%20JCDBME.mp4" id="watchButton" autoplay class="overlay-button">
+        <track src="http://192.168.254.161:8000/media/riders.vtt" label="English"
+     kind="subtitles"
+     srclang="en">
+    </video>
+<style>
+    /* Style for the full-screen overlay button */
+.overlay-button {
+    position: fixed;
+    top: 0; /* Position the button at the top */
+    left: 0; /* Position the button at the left */
+    width: 100%; /* Make the button fill the entire width */
+    height: 100%; /* Make the button fill the entire height */
+    display: flex; /* Use flexbox to center the text */
+    justify-content: center; /* Horizontally center the text */
+    align-items: center; /* Vertically center the text */
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+    color: white; /* White text */
+    font-size: 2rem; /* Large font size */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove the underline from the link */
+    /*font-weight: bold; /* Make the text bold */
+    z-index: 1000; /* Ensure the button is on top of other elements */
+    transition: background-color 0.3s ease; /* Smooth background color change */
+}
+
+/* Hover effect for the button */
+.overlay-button:hover {
+    background-color: rgba(0, 0, 0, 0.9); /* Darken the background on hover */
+}
+
+/* Adjust subtitle position using ::cue */
+track {
+    position: absolute; /* This allows us to control placement */
+    bottom: 20px; /* Move subtitles closer to the bottom */
+    text-align: center;
+    color: white; /* Change the color of the captions */
+    background: rgba(0, 0, 0, 0.5); /* Optional: add background for better readability */
+    padding: 5px;
+}
+
+</style>
+</noscript>
+<!-- End of JavaScript disabled fallback-->
+
+<ul id="custom-menu">
+    <li id="menu-item-4">Enable video looping</li>
+    <li id="menu-item-5">Get sharable link</li>
+    <li id="menu-item-6">Download Video</li>
+    <li id="menu-item-7" style="display:none;">Close Menu</li>
+</ul>
+
+<style>
+    .download-hls-button:disabled {
+        background-color: #d3d3d3; /* Light gray background */
+  color: #808080; /* Gray text */
+  cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+  border: 1px solid #ccc; /* Optional: change border to match disabled look */
+    }
+</style>
+<div id="download-dialog">
+    <div class="dialog-content">
+        <h3>Download Options</h3>
+        <button class="download-hls-button" title="WEBM download supported on most browsers and some video players, usually smaller than an MP4 download with similar conveniency." id="download-btn" disabled><img height="70px" width="80px" src="http://192.168.254.161:4443/images/downloadimg.png">
+            <h4></h4>
+            WEBM
+        </button>
+    </a>
+        <button class="download-button" title="MP4 download that can be used on most devices offline, which is viewable through most video players." id="download-btn" onclick="downloadVideo()"><img height="70px" width="80px" src="http://192.168.254.161:4443/images/downloadimg.png">
+            <h4></h4>
+            MP4
+            <p><span class="glossy-yellow-text">Recommended</span></p>
+        </button>
+    </a>
+    <button class="download-hls-button" title="M3U8 download intended to be used with the HLS streaming technology, which isn't viewable without extra software or tools." id="download-btn" disabled><img height="70px" width="80px" src="http://192.168.254.161:4443/images/downloadimg.png">
+        <h4></h4>
+        M3U8/MPD 
+    </button>
+</a>
+        <h3>  </h3>
+        <button id="close-button" onclick="closeDownloadDialog()">X</button>
+    </div>
+</div>
+
+<script>
+// Function to detect mobile devices using user agent string
+function isMobileDevice() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const mobileUserAgents = [
+                'android', 'iphone', 'ipod', 'ipad', 'windows phone',
+                'blackberry', 'mobile', 'kindle', 'silk', 'opera mini'
+            ];
+            return mobileUserAgents.some(agent => userAgent.includes(agent));
+        }
+    // Path to M3U8 file
+
+    var video = document.getElementById('my-video');
+     // Initialize Video.js player
+     var player = videojs('my-video')
+
+     document.addEventListener('keydown', function(event) {
+    switch (event.key.toLowerCase()) {
+      case 'f': // F key - Toggle fullscreen
+      if (player.isFullscreen()) {
+        player.exitFullscreen();
+      } else {
+        player.requestFullscreen();
+      }
+      break;
+      case 'm': // M key - Mute/unmute the video
+        player.muted(!player.muted());
+        break;
+      case 'j': // J key - Rewind 10 seconds
+        player.currentTime(player.currentTime() - 10);
+        break;
+      case 'l': // L key - Fast forward 10 seconds
+        player.currentTime(player.currentTime() + 10);
+        break;
+      case 'k': // K key - Pause/play the video
+        if (player.paused()) {
+          player.play();
+        } else {
+          player.pause();
+        }
+        break;
+      case 'c': // C key - Enable/disable captions
+        var textTracks = player.textTracks();
+        // Loop through all text tracks (subtitles, captions)
+        for (var i = 0; i < textTracks.length; i++) {
+          var track = textTracks[i];
+          // Toggle caption visibility (activate/deactivate)
+          track.mode = (track.mode === 'showing') ? 'disabled' : 'showing';
+        }
+        break;
+      default:
+        break;
+    }
+  });
+
+    // Custom context menu
+$(document).ready(function () {
+    $('#context-area').on('contextmenu', function (e) {
+        e.preventDefault();
+        $('#custom-menu')
+            .css({
+                top: e.pageY + 'px',
+                left: e.pageX + 'px'
+            })
+            .show();
+    });
+
+    $(document).on('click', function () {
+        $('#custom-menu').hide();
+    });
+
+    $('#custom-menu li').on('click', function () {
+        if ($(this).text() === "Download Video") {
+            $('#download-dialog').show(); // Show the "download ready" dialog
+
+        } else if ($(this).text() === "Get sharable link") {
+            window.open("https://drive.google.com/file/d/1sIaJ9mUb7EEjWn6ou89P1iKEtkjB3cKQ/view");
+        } else if ($(this).text() === "Enable video looping") {
+            var loopElement = document.getElementById("menu-item-4")
+            const videoElement = videojs('my-video');
+            videoElement.loop(true);
+            loopElement.innerText = "Disable video looping"
+            console.log("Looping enabled");
+        } else if ($(this).text() === "Disable video looping") {
+            var loopElement = document.getElementById("menu-item-4")
+            const videoElement = videojs('my-video');
+            videoElement.loop(false);
+            loopElement.innerText = "Enable video looping"
+            console.log("Looping disabled");
+        } else if ($(this).text() === "Close Menu") {
+            $('#custom-menu').hide();
+        }
+    });
+});
+
+
+function closeDownloadDialog() {
+    $('#download-dialog').hide(); // Show the "download ready" dialog 
+}
+function downloadVideo() {
+    window.open(video.src)
+}
+
+window.onload = function () {
+      window.scrollTo(0, document.body.scrollHeight);
+    };
+
+let pressTimer;
+
+var contextMenu = document.getElementById("custom-menu")
+
+if (isMobileDevice()) {
+    $('#menu-item-7').show(); // Show the "download ready" dialog 
+// Detect long press on the context menu div
+contextMenu.addEventListener('touchstart', function(e) {
+    // Start a timer to detect long press
+    pressTimer = setTimeout(function() {
+        // Trigger the dialog to open after long press
+        $('#custom-menu').show(); // Show the "download ready" dialog 
+    }, 1000); // 1000ms (1 second) for long press
+});
+
+// If the touch ends before 1 second, cancel the action
+contextMenu.addEventListener('touchend', function(e) {
+    clearTimeout(pressTimer); // Clear the timer if the press was too short
+});
+
+}
+
+</script>
+
+<style>
+    .tip-container {
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      font-size: 16px;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      text-align:center;
+    }
+
+    .tip-container.show {
+      opacity: 1;
+    }
+  </style>
+
+
+  <div class="tip-container" id="tipMessage">
+    Tip! On mobile devices, you can long press to activate a menu with extra features!
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tipMessage = document.getElementById('tipMessage');
+      const tipShown = localStorage.getItem('tipShown');
+
+      if (isMobileDevice()) {
+      if (!tipShown) {
+        // Show the tip message after a slight delay
+        setTimeout(() => {
+          tipMessage.classList.add('show');
+        }, 100); // 1-second delay
+
+        // Hide the tip message after a longer delay
+        setTimeout(() => {
+          tipMessage.classList.remove('show');
+        }, 4000); // 10 seconds display duration
+
+        // Store in localStorage to prevent re-showing
+        localStorage.setItem('tipShown', 'true');
+      }
+      }
+    });
+  </script>
+
+
+</html>

@@ -794,12 +794,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const noThanksBtn = document.getElementById('noThanksBtn');
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-    // Check if the dialog has already been shown
-    if (!localStorage.getItem('dialogShown')) {
-if (/android/i.test(userAgent)) {
-        showDialog()
-    }
-    }
 
     function showDialog() {
       dialog.style.display = 'block';

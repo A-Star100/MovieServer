@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Every JCDBME</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+/* Reset */
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+/* General styles */
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    text-decoration: none;
+    background: linear-gradient(135deg, #4a90e2, #1375fe);
+    color: #fff;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    place-items: center; /* Center both horizontally and vertically */
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+    color: #fff;
+}
+
+/* Movie container */
+.movie-container {
+    display: grid;  /* Use Grid Layout */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));  /* Automatically adjust column numbers */
+    gap: 20px;  /* Space between cards */
+    justify-items: center;  /* Center items horizontally */
+    align-items: center;    /* Center items vertically */
+    width: 90%;
+    max-width: 1200px;  /* Max width for large screens */
+    margin: 0 auto;  /* Center the grid horizontally */
+    margin-bottom: 50px;
+}
+
+/* Movie card */
+.movie-card {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    border-radius: 15px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column; /* Stack text and buttons vertically */
+    justify-content: flex-end; /* Align content to the bottom */
+}
+
+/* Hover effect for movie card */
+.movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Overlay */
+.movie-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    transition: 0.3s ease;
+}
+
+.movie-card:hover .overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/* Title */
+.movie-card .title {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 26px;
+    font-weight: 600;
+    z-index: 1;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    max-width: 80%; /* Prevent title from overflowing */
+    word-wrap: break-word; /* Ensure long titles wrap */
+}
+
+/* Description */
+.movie-card .description {
+    align-items: center; /* Center buttons horizontally */
+    justify-content: center; /* Center buttons vertically */
+    position: absolute;
+    bottom: 40px; /* Give space for buttons */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    z-index: 1;
+    max-width: 80%; /* Prevent description from overflowing */
+    word-wrap: break-word; /* Ensure description wraps */
+}
+
+/* Button */
+.more-button {
+    padding: 12px 30px;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px; /* Space between description and button */
+    letter-spacing: 1px;
+    min-width: 150px; /* Ensure button has a minimum width */
+    max-width: 90%; /* Ensure button does not overflow */
+    width: auto;
+    text-align: center; /* Center button text */
+}
+
+.more-button:hover {
+    background-color: #d64545;
+    transform: translateY(-3px);
+}
+
+/* Footer */
+footer {
+    margin-top: 50px;
+    font-size: 0.9rem;
+}
+
+.flexbox {
+    display: flex;  /* Enable Flexbox */
+    flex-direction: column;  /* Stack items vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center;     /* Center content horizontally */
+    height: 130vh;           /* Take full viewport height */
+}
+
+/* Style for the buttons */
+.buttons {
+    margin: 20px;
+}
+
+.border-box {
+    height: 30px;
+}
+
+/* Mobile and landscape adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .movie-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .movie-card {
+        height: 280px;
+    }
+
+    .movie-card .title {
+        font-size: 20px;
+    }
+
+    .movie-card .description {
+        font-size: 12px;
+    }
+
+    .more-button {
+        font-size: 1rem;
+        padding: 10px 20px;
+        min-width: 140px;
+    }
+}
+
+/* Portrait Mode */
+@media (max-width: 768px) and (orientation: portrait) {
+    .movie-container {
+        grid-template-columns: repeat(1, 1fr);  /* Single item per row */
+        gap: 10px;  /* Adjust gap between movie cards */
+        margin-bottom: 30px;  /* Space between movie cards */
+    }
+
+    /* Button adjustments for portrait mode */
+    .more-button {
+        font-size: 1rem;
+        padding: 12px 20px;  /* Adjust padding for better button fit */
+        min-width: 280px;  /* Ensure buttons are wide enough */
+        margin: 10px 0;  /* Space between buttons */
+        box-sizing: border-box;
+    }
+
+    /* Buttons container adjustments */
+    .buttons {
+        width: 100%;  /* Ensure buttons container stretches across the screen */
+        display: flex;
+        flex-direction: column;
+        align-items: center;  /* Center the buttons */
+        padding: 0 15px;  /* Add padding to prevent text clipping */
+    }
+
+}
+
+/* Landscape Mode */
+@media (max-width: 768px) and (orientation: landscape) {
+    .movie-container {
+        grid-template-columns: repeat(2, 1fr);  /* Two items per row */
+        gap: 15px;  /* Adjust gap between movie cards */
+        margin-bottom: 30px;  /* Maintain space between movie cards */
+    }
+
+    /* Button adjustments for landscape mode */
+    .more-button {
+        font-size: 1.1rem;  /* Increase font size for better readability */
+        padding: 12px 25px;  /* Adjust padding for wider buttons */
+        min-width: 380px;  /* Make sure buttons are wide enough in landscape */
+        margin: 10px 0;  /* Space between buttons */
+        box-sizing: border-box;  /* Ensure padding is included in width */
+    }
+
+    /* Buttons container adjustments */
+    .buttons {
+        width: 100%;  /* Ensure buttons container stretches across the screen */
+        display: flex;
+        flex-direction: column;
+        align-items: center;  /* Center the buttons */
+        padding: 0 15px;  /* Add padding to prevent text clipping */
+    }
+    .flexbox {
+    height: 340vh; 
+  }  
+}
+
+
+@media (max-width: 768px) and (orientation: landscape) {
+    /* Adjust the movie-container grid layout for landscape */
+    .movie-container {
+        grid-template-columns: repeat(2, 1fr);  /* Two items per row */
+        gap: 15px;  /* Adjust gap between movie cards */
+        margin-bottom: 30px;  /* Maintain space between movie cards */
+    }
+
+    /* Adjust movie-card height */
+    .movie-card {
+        height: 240px;  /* Lower card height */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Space out content */
+    }
+
+    /* Title and description adjustments to avoid overlap */
+    .movie-card .title {
+        font-size: 18px;  /* Reduce font size */
+        max-width: 90%;  /* Prevent overflow */
+        word-wrap: break-word;  /* Allow word wrapping */
+        text-overflow: ellipsis;  /* Handle overflow text */
+        white-space: normal;  /* Allow text to wrap */
+        line-height: 1.2;
+    }
+
+    .movie-card .description {
+        font-size: 12px;  /* Adjust description font size */
+        max-width: 90%;  /* Prevent overflow */
+        word-wrap: break-word;  /* Prevent text from overflowing */
+        text-overflow: ellipsis;
+        line-height: 1.4;
+    }
+
+    /* Adjusting button width and padding */
+    .more-button {
+        font-size: 1.1rem;  /* Increase font size for better readability */
+        padding: 15px 25px;  /* Increase padding for wider buttons */
+        min-width: 450px;  /* Make sure buttons are wide enough */
+        width: auto;  /* Allow width to auto-adjust based on content */
+        margin: 10px 0;  /* Add space between buttons */
+        box-sizing: border-box;  /* Ensure padding is included in the width */
+        text-align: center;  /* Center text in buttons */
+    }
+
+    /* Buttons container adjustments */
+    .buttons {
+        
+        width: 100%;  /* Ensure buttons container stretches across the screen */
+        display: flex;
+        flex-direction: column;
+        align-items: center;  /* Center the buttons */
+        padding: 0 15px;  /* Add padding to prevent text clipping */
+    }
+   h1 {
+    height: 130px;
+   }
+}
+/* height: 130vh;           /* Take full viewport height */
+@media (max-width: 768px) {
+  .flexbox {
+    height: 270vh; 
+  }  
+}
+
+
+
+
+    </style>
+</head>
+<body>
+
+    <h1>Every JCDBME</h1>
+
+<div class="flexbox">
+    <div class="movie-container">
+       <div class="movie-card" onclick="sa2()" style="background-image: url('./images/img1.png');">
+            <div class="overlay"></div>
+            <div class="title">SA2B JCDBME</div>
+            <div class="description">A fast-paced adventure featuring two iconic hedgehogs.
+                <h3> </h3>
+            <small><b>An interesting, short title.</b></small>
+            </div>
+        </div>
+        <div class="movie-card" onclick="unleash()" style="background-image: url('./images/img2.png');">
+            <div class="overlay"></div>
+            <div class="title">Sonic Unleashed JCDBME</div>
+            <div class="description">A scary monster takes over Sonic, can he get back in business?
+                <h3> </h3>
+            <small><b>A speedy adventure.</b></small>
+            </div>
+        </div>
+        <div class="movie-card" onclick="riders()" style="background-image: url('./images/img3.png');">
+            <div class="overlay"></div>
+            <div class="title" >Sonic Riders JCDBME</div>
+            <div class="description">Sonic encounters the Babylon Rogues, who have secrets in store...
+                <h3> </h3>
+                <small><b>A comedic title 🤣!</b></small>
+            </div>
+        </div>
+        <div class="movie-card" onclick="zg()" style="background-image: url('./images/img4.png');">
+            <div class="overlay"></div>
+            <div class="title">Sonic Riders: ZG JCDBME</div>
+            <div class="description">Sonic again encounters the Babylon Rogues in a race involving ancient history.
+                <h3> </h3>
+                <small><b>A thrilling, deep-dive adventure.</b></small>
+            </div>
+        </div>
+        <div class="movie-card" onclick="colors()" style="background-image: url('./images/img5.png');">
+            <div class="overlay"></div>
+            <div class="title">Sonic Colors JCDBME</div>
+            <h3></h3>
+            <div class="description">Sonic and Tails wind up in an amusement park filled with aliens! What could <i>possibly</i> go wrong?!
+                <h3> </h3>
+                <small><b>An interstellar adventure!</b></small>
+            </div>
+        </div>
+        <div class="movie-card" onclick="gens()" style="background-image: url('./images/img6.png');">
+            <div class="overlay"></div>
+            <div class="title">JCDBME Generations</div>
+            <div class="description">Sonic gets sucked up by an evil monster that winds him back through time! Will he survive?
+                <h3> </h3>
+                <small><b>A title that travels through titles.</b></small>
+            </div>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <div class="border-box"></div>
+        <button class="more-button" onclick="more()">Browse Unreleased JCDBMEs</button>
+        <button class="more-button" onclick="more4()">Browse in Jellyfin</button>
+        <button class="more-button" onclick="more3()">Browse JCDBME Shorts</button>
+        <button class="more-button" onclick="more2()">Browse Extras</button>
+      </div>
+</div>
+
+<script>
+    function riders() {
+        window.open("http://192.168.254.161:8000/site-root/riders.html", '_self')
+    }
+    function sa2() {
+        window.open("http://192.168.254.161:8000/site-root/sa2.html", '_self')
+    }
+    function unleash() {
+        window.open("http://192.168.254.161:8000/site-root/unleashed.html", '_self')
+    }
+    function zg() {
+        window.open("http://192.168.254.161:8000/site-root/zg.html", '_self')
+    }
+    function colors() {
+        window.open("http://192.168.254.161:8000/site-root/colors.html", '_self')
+    }
+    function gens() {
+        window.open("http://192.168.254.161:8000/site-root/gens.html", '_self')
+    }
+    function more() {
+        window.open("http://192.168.254.161:8000/media/Unreleased%20JCDBMEs/", '_self')
+    }
+    function more2() {
+        window.open("http://192.168.254.161:8000/media/Miscellaneous/", '_self')
+    }
+    function more3() {
+        window.open("https://192.168.254.161:8080", '_self')
+    }
+    function more4() {
+        window.open("http://192.168.254.161:8096", '_self')
+    }
+</script>
+
+</body>
+</html>
