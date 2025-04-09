@@ -330,6 +330,13 @@ function isMobileDevice() {
           player.pause();
         }
         break;
+      case 'space': // Space key - Pause/play the video
+        if (player.paused()) {
+          player.play();
+        } else {
+          player.pause();
+        }
+      break;
       case 'c': // C key - Enable/disable captions
         var textTracks = player.textTracks();
         // Loop through all text tracks (subtitles, captions)

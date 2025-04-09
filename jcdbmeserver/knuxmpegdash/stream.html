@@ -305,7 +305,7 @@ window.onload = function () {
         var vjsPlayer = videojs("my-video")
       // Ensure that the player is fully ready before performing actions
   // Listen for 'loadedmetadata' event to ensure the Dash.js player is ready
-  document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function(event) {
   switch (event.key.toLowerCase()) {
     case 'f': // F key - Toggle fullscreen
       if (vjsPlayer.isFullscreen()) {
@@ -323,6 +323,13 @@ window.onload = function () {
     vjsPlayer.currentTime(vjsPlayer.currentTime() + 10);
       break;
     case 'k': // K key - Pause/play the video
+      if (vjsPlayer.paused()) {
+        vjsPlayer.play();
+      } else {
+        vjsPlayer.pause();
+      }
+      break;
+    case 'space': // Space key - Pause/play the video
       if (vjsPlayer.paused()) {
         vjsPlayer.play();
       } else {
