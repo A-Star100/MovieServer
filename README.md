@@ -5,8 +5,7 @@ This tool creates a Node.js server to serve movies with a pre-built UI. To use t
 | Node.js & npx  | **Mandatory**    |
 | Jellyfin/Plex    | **Optional** |
 
-Any Node.js libraries will be included in the node_modules folder(s)
-Installers for the tools will be included.
+Any Node.js libraries should be installed via `npm install`.
 
 For a more comprehensive guide, take a look at [DOCUMENTATION.pdf](https://github.com/A-Star100/MovieServer/blob/main/DOCUMENTATION.pdf).
 
