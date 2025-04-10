@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <head>
-    <title>JCDBME Generations</title>
+    <title>Sonic Riders: Zero Gravity JCDBME</title>
     <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
     <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -158,6 +158,7 @@
         width: 80%; /* Could be more or less, depending on screen size */
     }
 
+
     .close-button {
         color: #aaa;
         float: right;
@@ -179,8 +180,6 @@
         text-decoration: none;
         cursor: pointer;
     }
-
-
    </style>
 </head>
 
@@ -193,15 +192,21 @@
     preload="auto"
     width="1280"
     height="720"
-    data-setup="{}"
+    data-setup='{ "playbackRates": [0.5, 1, 1.5, 2] }'
     autoplay
-    src="http://192.168.254.161:8000/media/JCDBME%20Generations.mp4"
+    src="http://192.168.254.161:8000/media/Sonic%20Riders%20Zero%20Gravity%20JCDBME/Finished%20Film/film.mp4"
   >
+     <track src="http://192.168.254.161:8000/media/Sonic%20Riders%20Zero%20Gravity%20JCDBME/Finished%20Film/subtitles.vtt" label="English"
+     kind="subtitles"
+     srclang="en">
   </video>
 </div>
 <!-- JavaScript disabled fallback-->
 <noscript>
-    <video src="http://192.168.254.161:8000/media/JCDBME%20Generations.mp4" id="watchButton" autoplay class="overlay-button">
+    <video src="http://192.168.254.161:8000/media/Sonic%20Riders%20Zero%20Gravity%20JCDBME/Finished%20Film/film.mp4" id="watchButton" autoplay class="overlay-button">
+        <track src="http://192.168.254.161:8000/media/Sonic%20Riders%20Zero%20Gravity%20JCDBME/Finished%20Film/subtitles.vtt" label="English"
+     kind="subtitles"
+     srclang="en">
     </video>
 <style>
     /* Style for the full-screen overlay button */
@@ -323,13 +328,13 @@ function isMobileDevice() {
           player.pause();
         }
         break;
-      case ' ': // Space key - Pause/play the video
+      case ' ': // K key - Pause/play the video
         if (player.paused()) {
           player.play();
         } else {
           player.pause();
         }
-      break;
+        break;
       case 'c': // C key - Enable/disable captions
         var textTracks = player.textTracks();
         // Loop through all text tracks (subtitles, captions)
@@ -343,6 +348,7 @@ function isMobileDevice() {
         break;
     }
   });
+
     // Custom context menu
 $(document).ready(function () {
     $('#context-area').on('contextmenu', function (e) {
@@ -364,7 +370,7 @@ $(document).ready(function () {
             $('#download-dialog').show(); // Show the "download ready" dialog
 
         } else if ($(this).text() === "Get sharable link") {
-            window.open("https://drive.google.com/file/d/1jFj4VpeWlkJXJTeI1Ieffx56iIG1bthV/view");
+            window.open("https://drive.google.com/file/d/1saaAb2evHdrJcn6u4EZ6RcCdTL3ClcP_/view");
         } else if ($(this).text() === "Enable video looping") {
             var loopElement = document.getElementById("menu-item-4")
             const videoElement = videojs('my-video');
@@ -388,6 +394,7 @@ function closeDownloadDialog() {
     $('#download-dialog').hide(); // Show the "download ready" dialog 
 }
 function downloadVideo() {
+  const video = document.getElementById("my-video")
     window.open(video.src)
 }
 

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <head>
-    <title>Sonic Colors JCDBME</title>
+    <title>SA2B JCDBME</title>
     <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
     <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -51,6 +51,8 @@
 .video-js .vjs-fullscreen-control {
   color: inherit;
 }
+
+
 
 /* Play button style */
 .video-js .vjs-big-play-button {
@@ -179,8 +181,6 @@
         text-decoration: none;
         cursor: pointer;
     }
-
-
    </style>
 </head>
 
@@ -193,15 +193,21 @@
     preload="auto"
     width="1280"
     height="720"
-    data-setup="{}"
+    data-setup='{ "playbackRates": [0.5, 1, 1.5, 2] }'
     autoplay
-    src="http://192.168.254.161:8000/media/Sonic%20Colors%20JCDBME.mp4"
+    src="http://192.168.254.161:8000/media/SA2B%20Japanese%20Cutscenes%20Dubbed%20by%20me.mp4"
   >
+  <track src="http://192.168.254.161:8000/media/sa2.vtt" label="English"
+     kind="subtitles"
+     srclang="en">
   </video>
 </div>
 <!-- JavaScript disabled fallback-->
 <noscript>
-    <video src="http://192.168.254.161:8000/media/Sonic%20Colors%20JCDBME.mp4" id="watchButton" autoplay class="overlay-button">
+    <video src="http://192.168.254.161:8000/media/SA2B%20Japanese%20Cutscenes%20Dubbed%20by%20me.mp4" id="watchButton" autoplay class="overlay-button">
+        <track src="http://192.168.254.161:8000/media/sa2.vtt" label="English"
+     kind="subtitles"
+     srclang="en">
     </video>
 <style>
     /* Style for the full-screen overlay button */
@@ -365,7 +371,7 @@ $(document).ready(function () {
             $('#download-dialog').show(); // Show the "download ready" dialog
 
         } else if ($(this).text() === "Get sharable link") {
-            window.open("https://drive.google.com/file/d/1PQpR1pnqOx63Kfy4o3hVhobmswYfGiia/view");
+            window.open("https://drive.google.com/file/d/1O0W1470XpL7-IYdN2-3l-v463z5Tl3rh/view");
         } else if ($(this).text() === "Enable video looping") {
             var loopElement = document.getElementById("menu-item-4")
             const videoElement = videojs('my-video');
