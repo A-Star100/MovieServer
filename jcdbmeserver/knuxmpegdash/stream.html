@@ -286,15 +286,15 @@ window.onload = function () {
       window.scrollTo(0, document.body.scrollHeight);
     };
     if (!('MediaSource' in window)) {
-            console.log('MSE not supported. Falling back to traditional video source.');
+            console.log('MSE not supported. Falling back to MP4.');
 
             // Fallback: If MSE is not supported, use a regular video source
             // For example, you can directly set the src of the video element to a traditional format:
             videoElement.src = 'h264-1.mp4';  // Fallback to a standard video source
-            console.log("MSE is not supported - loading traditional stream")
+            console.log("MSE is not supported - loading MP4")
         } else {
               // Path to your MPD file
-              console.log("MSE is supported - loading MPEG-DASH/HLS stream")
+              console.log("MSE is supported - loading MPEG-DASH stream via DASH.js")
     var mpdUrl = 'output.mpd'; // Replace this with the actual path to your MPD file
     var player = dashjs.MediaPlayer().create();
     
