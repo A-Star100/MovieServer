@@ -449,33 +449,34 @@ contextMenu.addEventListener('touchend', function(e) {
   </style>
 
 
-  <div class="tip-container" id="tipMessage">
-    Tip! On mobile devices, you can long press to activate a menu with extra features!
-  </div>
+  
+<div class="tip-container" id="tipMessage" style="display:none;">
+  Tip! On mobile devices, you can long press to activate a menu with extra features!
+</div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const tipMessage = document.getElementById('tipMessage');
-      const tipShown = localStorage.getItem('tipShown');
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tipMessage = document.getElementById('tipMessage');
+    const tipShown = localStorage.getItem('tipShown');
 
-      if (isMobileDevice()) {
-      if (!tipShown) {
-        // Show the tip message after a slight delay
-        setTimeout(() => {
-          tipMessage.classList.add('show');
-        }, 100); // 1-second delay
+    if (isMobileDevice()) {
+    if (!tipShown) {
+      // Show the tip message after a slight delay
+      setTimeout(() => {
+        tipMessage.style.display = 'block';
+      }, 100); // 1-second delay
 
-        // Hide the tip message after a longer delay
-        setTimeout(() => {
-          tipMessage.classList.remove('show');
-        }, 4000); // 10 seconds display duration
+      // Hide the tip message after a longer delay
+      setTimeout(() => {
+        tipMessage.style.display = 'none';
+      }, 4000); // 10 seconds display duration
 
-        // Store in localStorage to prevent re-showing
-        localStorage.setItem('tipShown', 'true');
-      }
-      }
-    });
-  </script>
+      // Store in localStorage to prevent re-showing
+      localStorage.setItem('tipShown', 'true');
+    }
+    }
+  });
+</script>
 
 
 </html>

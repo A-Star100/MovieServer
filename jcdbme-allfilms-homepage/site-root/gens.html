@@ -441,7 +441,7 @@ contextMenu.addEventListener('touchend', function(e) {
   </style>
 
 
-  <div class="tip-container" id="tipMessage">
+  <div class="tip-container" id="tipMessage" style="display:none;">
     Tip! On mobile devices, you can long press to activate a menu with extra features!
   </div>
 
@@ -454,12 +454,12 @@ contextMenu.addEventListener('touchend', function(e) {
       if (!tipShown) {
         // Show the tip message after a slight delay
         setTimeout(() => {
-          tipMessage.classList.add('show');
+          tipMessage.style.display = 'block';
         }, 100); // 1-second delay
 
         // Hide the tip message after a longer delay
         setTimeout(() => {
-          tipMessage.classList.remove('show');
+          tipMessage.style.display = 'none';
         }, 4000); // 10 seconds display duration
 
         // Store in localStorage to prevent re-showing
